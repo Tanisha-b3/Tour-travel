@@ -181,7 +181,7 @@ export default function TourDetailPage() {
             {/* ── Tabs ── */}
             <div>
               {/* Tab bar */}
-              <div className="flex gap-1 p-1 bg-slate-100 dark:bg-[#0c1a2e] rounded-2xl mb-6 w-fit">
+              <div className="flex gap-1 p-1 bg-slate-100 dark:bg-[#0c1a2e] rounded-2xl mb-6 w-fit overflow-x-auto">
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
@@ -243,7 +243,7 @@ export default function TourDetailPage() {
               {activeTab === "reviews" && (
                 <div className="space-y-4">
                   {/* Aggregate score bar */}
-                  <div className="flex items-center gap-5 p-5 bg-white dark:bg-[#0c1a2e] rounded-2xl border border-slate-100 dark:border-white/5 mb-6">
+                  <div className="flex items-center gap-5 p-5 bg-white dark:bg-[#0c1a2e] rounded-2xl border border-slate-100 dark:border-white/5 mb-6 flex-wrap">
                     <div className="text-center shrink-0">
                       <span className="text-5xl font-extrabold bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] bg-clip-text text-transparent block leading-none mb-1">
                         {tour.rating}

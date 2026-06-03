@@ -270,7 +270,7 @@ export default function WishlistPage() {
                         {/* Remove button */}
                         <button
                           onClick={() => handleRemove(dest.id)}
-                          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-red-500/80 transition-all"
+                          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 hover:bg-red-500/80 transition-all"
                           aria-label="Remove from wishlist"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-white">

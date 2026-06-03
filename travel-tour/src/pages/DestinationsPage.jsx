@@ -174,7 +174,7 @@ export default function DestinationsPage() {
           <div className="dark:bg-[#0d1f35]/80 dark:border-white/8 p-5 md:p-6 rounded-3xl">
 
             {/* Search row */}
-            <form onSubmit={handleSearch} className="flex gap-3 mb-0">
+            <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 mb-0">
               {/* Input */}
               <div className="flex-1 relative">
                 <motion.span

@@ -8,7 +8,7 @@ export default function TestimonialCard({ testimonial, index = 0 }) {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
       whileHover={{ y: -6, transition: { type: "spring", stiffness: 300, damping: 20 } }}
-      className="bg-white dark:bg-[#0c1a2e] rounded-2xl p-7 shadow-[0_4px_16px_rgba(14,165,233,0.07)] hover:shadow-[0_14px_32px_rgba(14,165,233,0.14)] transition-shadow duration-300 flex flex-col h-full border border-slate-100 dark:border-white/10"
+      className="bg-white dark:bg-[#0c1a2e] rounded-2xl p-5 md:p-7 shadow-[0_4px_16px_rgba(14,165,233,0.07)] hover:shadow-[0_14px_32px_rgba(14,165,233,0.14)] transition-shadow duration-300 flex flex-col h-full border border-slate-100 dark:border-white/10"
     >
       {/* Opening quote */}
       <span className="text-5xl text-[#0ea5e9]/15 font-serif leading-none mb-2 block select-none">

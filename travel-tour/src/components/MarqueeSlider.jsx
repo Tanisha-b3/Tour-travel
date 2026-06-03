@@ -8,7 +8,7 @@ export default function MarqueeSlider() {
 
   return (
     <div className="py-3 overflow-hidden bg-gradient-to-r from-[#0c1a2e] via-[#0ea5e9] to-[#3b82f6]">
-      <div className="flex gap-16 animate-marquee hover:[animation-play-state:paused]">
+      <div className="flex gap-8 md:gap-16 animate-marquee hover:[animation-play-state:paused]">
         {doubled.map((name, i) => (
           <span
             key={`${name}-${i}`}

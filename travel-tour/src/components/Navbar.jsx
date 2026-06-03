@@ -95,10 +95,10 @@ export default function Navbar() {
   };
 
   const navBg = transparent
-    ? "bg-transparent py-5"
+    ? "bg-transparent py-4"
     : darkMode
-    ? "bg-[#05101f]/85 backdrop-blur-2xl py-3.5 shadow-[0_1px_0_rgba(255,255,255,0.05)]"
-    : "bg-white/80 backdrop-blur-2xl py-3.5 shadow-[0_1px_0_rgba(0,0,0,0.07)]";
+    ? "bg-[#05101f]/85 backdrop-blur-2xl py-3 shadow-[0_1px_0_rgba(255,255,255,0.05)]"
+    : "bg-white/80 backdrop-blur-2xl py-3 shadow-[0_1px_0_rgba(0,0,0,0.07)]";
 
   return (
     <>
@@ -116,16 +116,16 @@ export default function Navbar() {
         transition={{ duration: 0.55, ease }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}
       >
-        <div className="max-w-[1200px] mx-auto px-5 flex justify-between items-center">
+        <div className="sm:max-w-[1100px] max-w-[600px] mx-auto px-3 sm:px-6 flex justify-between items-center">
 
           {/* ── Logo ── */}
-          <Link to="/" className="flex items-center gap-2.5 no-underline group" aria-label="Airventure home">
+          <Link to="/" className="flex items-center gap-2 no-underline group shrink-0" aria-label="Airventure home">
             <motion.div
               whileHover={{ rotate: 18, scale: 1.18 }}
               transition={{ type: "spring", stiffness: 420, damping: 14 }}
               className="relative"
             >
-              <span className="text-[22px] block leading-none">✈️</span>
+              <span className="text-[17px] sm:text-[20px] block leading-none">✈️</span>
               {/* ping dot */}
               <motion.span
                 animate={{ scale: [1, 1.6, 1], opacity: [0.6, 0, 0.6] }}
@@ -134,7 +134,7 @@ export default function Navbar() {
               />
             </motion.div>
             <span
-              className={`text-[19px] font-black tracking-tight transition-opacity ${
+              className={`text-[17px] sm:text-[19px] font-black tracking-tight transition-opacity ${
                 transparent ? "text-white" : darkMode ? "text-white" : "text-[#0a0f1e]"
               }`}
               style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", letterSpacing: "-0.01em" }}
@@ -263,41 +263,50 @@ export default function Navbar() {
           </div>
 
           {/* ── Mobile controls ── */}
+          {/* FIX: gap-0.5 (was gap-1.5) so controls don't push logo; each button has its own generous touch target */}
           <div className="flex items-center gap-0.5 md:hidden">
-            {/* Wishlist */}
+
+            {/* Wishlist — 44×44 touch target */}
             <Link
               to="/wishlist"
               aria-label={`Wishlist (${wishCount} items)`}
-              className={`relative p-2.5 rounded-xl ${transparent ? "text-white/80" : darkMode ? "text-slate-400" : "text-slate-500"}`}
+              className={`relative w-11 h-11 flex items-center justify-center rounded-xl ${
+                transparent ? "text-white/80" : darkMode ? "text-slate-400" : "text-slate-500"
+              }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                 fill={wishCount > 0 ? "currentColor" : "none"} stroke="currentColor"
                 strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                className={`w-[18px] h-[18px] ${wishCount > 0 ? "text-rose-400" : ""}`}>
+                className={`w-[19px] h-[19px] ${wishCount > 0 ? "text-rose-400" : ""}`}>
                 <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
               </svg>
               <AnimatePresence>
                 {wishCount > 0 && (
                   <motion.span key="mb" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                    className="absolute -top-0.5 -right-0.5 w-[17px] h-[17px] bg-rose-400 text-white text-[9px] rounded-full flex items-center justify-center font-bold">
+                    className="absolute top-1 right-1 w-[16px] h-[16px] bg-rose-400 text-white text-[9px] rounded-full flex items-center justify-center font-bold">
                     {wishCount}
                   </motion.span>
                 )}
               </AnimatePresence>
             </Link>
 
-            {/* Dark toggle */}
-            <button onClick={toggleDarkMode} aria-label="Toggle theme"
-              className={`p-2.5 rounded-xl ${transparent ? "text-white/80" : darkMode ? "text-amber-300" : "text-slate-500"}`}>
+            {/* Dark toggle — 44×44 touch target */}
+            <button
+              onClick={toggleDarkMode}
+              aria-label="Toggle theme"
+              className={`w-11 h-11 flex items-center justify-center rounded-xl ${
+                transparent ? "text-white/80" : darkMode ? "text-amber-300" : "text-slate-500"
+              }`}
+            >
               {darkMode
-                ? <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[17px] h-[17px]"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
-                : <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[17px] h-[17px]"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
+                ? <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
+                : <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
               }
             </button>
 
-            {/* Hamburger */}
+            {/* Hamburger — 44×44 touch target, uniform bar widths */}
             <button
-              className="relative w-10 h-10 flex items-center justify-center rounded-xl cursor-pointer border-none bg-transparent"
+              className={`w-11 h-11 flex items-center justify-center rounded-xl cursor-pointer border-none bg-transparent mr-14`}
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle navigation"
               aria-expanded={isOpen}
@@ -307,14 +316,15 @@ export default function Navbar() {
                   <motion.span
                     key={i}
                     animate={
-                      i === 0 ? (isOpen ? { rotate: 45, y: 7 }     : { rotate: 0, y: 0 }) :
-                      i === 1 ? (isOpen ? { opacity: 0, scaleX: 0 }: { opacity: 1, scaleX: 1 }) :
-                                (isOpen ? { rotate: -45, y: -7 }   : { rotate: 0, y: 0 })
+                      i === 0 ? (isOpen ? { rotate: 45, y: 7 }      : { rotate: 0, y: 0 }) :
+                      i === 1 ? (isOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }) :
+                                (isOpen ? { rotate: -45, y: -7 }    : { rotate: 0, y: 0 })
                     }
                     transition={{ duration: 0.22, ease: "easeInOut" }}
-                    className={`block h-[2px] rounded-full origin-center ${
-                      i === 1 ? "w-4" : "w-5"
-                    } ${transparent ? "bg-white" : darkMode ? "bg-white" : "bg-slate-700"}`}
+                    /* FIX: all bars same width (w-5) — previously middle was w-4, looked uneven */
+                    className={`block h-[2px] w-5 rounded-full origin-center ${
+                      transparent ? "bg-white" : darkMode ? "bg-white" : "bg-slate-700"
+                    }`}
                   />
                 ))}
               </div>
@@ -348,9 +358,10 @@ export default function Navbar() {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={`fixed top-0 right-0 z-50 h-full w-[300px] md:hidden flex flex-col overflow-hidden ${
+            style={{ height: "100dvh" }}
+            className={`fixed top-0 right-0 z-[60] w-[300px] max-w-[90vw] md:hidden flex flex-col overflow-hidden ${
               darkMode ? "bg-[#060f1d]" : "bg-[#fafafa]"
-            } shadow-2xl`}
+            } shadow-2xl mr-10` }
           >
             {/* Ambient blobs */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -361,7 +372,7 @@ export default function Navbar() {
             </div>
 
             {/* Drawer header */}
-            <div className={`relative z-10 flex items-center justify-between px-5 py-4 border-b ${
+            <div className={`relative z-10 flex items-center justify-between px-4 py-3.5 border-b ${
               darkMode ? "border-white/8" : "border-slate-100"
             }`}>
               <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center gap-2 no-underline">
@@ -370,20 +381,21 @@ export default function Navbar() {
                   className={`text-[17px] font-black tracking-tight ${darkMode ? "text-white" : "text-[#0a0f1e]"}`}
                   style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
                 >
-Air<span className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] bg-clip-text text-transparent">venture</span>
+                  Air<span className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] bg-clip-text text-transparent">venture</span>
                 </span>
               </Link>
+              {/* FIX: close button is 40×40 for easy tapping */}
               <motion.button
                 onClick={() => setIsOpen(false)}
                 whileHover={{ rotate: 90, scale: 1.1 }}
                 whileTap={{ scale: 0.88 }}
                 transition={{ duration: 0.2 }}
                 aria-label="Close menu"
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                className={`w-10 h-10 rounded-full flex items-center justify-center ${
                   darkMode ? "text-slate-400 hover:bg-white/8 hover:text-white" : "text-slate-400 hover:bg-slate-100 hover:text-slate-700"
                 } transition-colors`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                   <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
                 </svg>
               </motion.button>
@@ -394,7 +406,7 @@ Air<span className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] bg-clip-text te
               variants={stagger}
               initial="hidden"
               animate="visible"
-              className="relative z-10 flex flex-col gap-1 px-3 py-4 flex-1 overflow-y-auto"
+              className="relative z-10 flex flex-col gap-1 px-3 py-3 flex-1 overflow-y-auto"
               style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
               {DRAWER_LINKS.map((item) => {
@@ -403,7 +415,8 @@ Air<span className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] bg-clip-text te
                   <motion.div key={item.label} variants={slideIn}>
                     <Link
                       to={item.to}
-                      className={`relative flex items-center gap-3.5 px-4 py-3.5 rounded-xl font-medium text-sm transition-all no-underline overflow-hidden group/link ${
+                      /* FIX: min-h-[52px] ensures all links meet 44px tap target; text-base for readability */
+                      className={`relative flex items-center gap-3.5 px-4 min-h-[52px] rounded-xl font-medium text-base transition-all no-underline overflow-hidden group/link ${
                         isActive
                           ? darkMode
                             ? "text-white bg-white/8"
@@ -420,7 +433,7 @@ Air<span className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] bg-clip-text te
                           className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-gradient-to-b from-[#0ea5e9] to-[#3b82f6]"
                         />
                       )}
-                      <span className="text-base">{item.icon}</span>
+                      <span className="text-[18px] leading-none">{item.icon}</span>
                       <span className="flex-1">{item.label}</span>
                       {item.count && wishCount > 0 && (
                         <motion.span
@@ -435,7 +448,7 @@ Air<span className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] bg-clip-text te
                       {!isActive && (
                         <motion.svg
                           xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                          className="w-3 h-3 opacity-0 -translate-x-1 group-hover/link:opacity-40 group-hover/link:translate-x-0 transition-all duration-200"
+                          className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover/link:opacity-40 group-hover/link:translate-x-0 transition-all duration-200"
                         >
                           <path fillRule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
                         </motion.svg>
@@ -451,12 +464,14 @@ Air<span className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] bg-clip-text te
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35, duration: 0.4, ease }}
-              className={`relative z-10 px-5 pb-8 pt-4 border-t ${darkMode ? "border-white/8" : "border-slate-100"}`}
+              /* FIX: uses padding-bottom with safe-area-inset so CTA clears home indicator on iPhone */
+              className={`relative z-10 px-4 pt-4 border-t ${darkMode ? "border-white/8" : "border-slate-100"}`}
+              style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom, 1.5rem))" }}
             >
               <Link
                 to="/tours"
                 onClick={() => setIsOpen(false)}
-                className="flex items-center justify-center gap-2 text-white py-3.5 rounded-full font-semibold no-underline text-sm shadow-lg transition-all hover:-translate-y-0.5"
+                className="flex items-center justify-center gap-2 text-white py-4 rounded-full font-semibold no-underline text-[15px] shadow-lg transition-all active:scale-95"
                 style={{
                   background: "linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #3b82f6 100%)",
                   boxShadow: "0 8px 28px rgba(14,165,233,0.3)",
