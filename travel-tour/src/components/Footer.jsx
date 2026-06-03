@@ -32,7 +32,7 @@ export default function Footer() {
   return (
     <footer className="bg-[#050e1a] text-slate-400">
       {/* Newsletter */}
-      {/* <div className="py-16 px-6" style={{ background: "linear-gradient(135deg, #0c1a2e 0%, #0284c7 60%, #4f46e5 100%)" }}>
+      {/* <div className="py-16 px-6" style={{ background: "linear-gradient(135deg, #0c1a2e 0%, #0ea5e9 60%, #4f46e5 100%)" }}>
         <div className="max-w-[680px] mx-auto text-center text-white">
           <span className="text-3xl mb-3 block">✉️</span>
           <h3 className="text-2xl md:text-3xl font-extrabold mb-2">
@@ -58,7 +58,7 @@ export default function Footer() {
               />
               <button
                 type="submit"
-                className="py-3.5 px-7 bg-[#0ea5e9] text-white rounded-full font-bold text-sm hover:bg-[#2563eb] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#0ea5e9]/40 transition-all cursor-pointer whitespace-nowrap"
+                className="py-3.5 px-7 bg-[#38bdf8] text-white rounded-full font-bold text-sm hover:bg-[#3b82f6] hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#38bdf8]/40 transition-all cursor-pointer whitespace-nowrap"
               >
                 Subscribe
               </button>
@@ -87,7 +87,7 @@ export default function Footer() {
                 { label: "YouTube",  icon: "▶" },
               ].map((s) => (
                 <a key={s.label} href="#" aria-label={s.label}
-                  className="w-9 h-9 rounded-full bg-white/8 flex items-center justify-center text-sm text-slate-400 font-bold hover:bg-gradient-to-r hover:from-[#0ea5e9] hover:to-[#3b82f6] hover:text-white hover:-translate-y-0.5 transition-all">
+                  className="w-9 h-9 rounded-full bg-white/8 flex items-center justify-center text-sm text-slate-400 font-bold hover:bg-gradient-to-r hover:from-[#38bdf8] hover:to-[#60a5fa] hover:text-white hover:-translate-y-0.5 transition-all">
                   {s.icon}
                 </a>
               ))}
@@ -101,8 +101,8 @@ export default function Footer() {
               {quickLinks.map((item) => (
                 <li key={item.name}>
                   <Link to={item.to}
-                    className="text-sm text-slate-500 no-underline hover:text-[#0ea5e9] transition-colors flex items-center gap-2 group">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#0ea5e9] opacity-0 group-hover:opacity-100 transition-opacity" />
+                    className="text-sm text-slate-500 no-underline hover:text-[#38bdf8] transition-colors flex items-center gap-2 group">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#38bdf8] opacity-0 group-hover:opacity-100 transition-opacity" />
                     {item.name}
                   </Link>
                 </li>
@@ -117,8 +117,8 @@ export default function Footer() {
               {topDestinations.map((d) => (
                 <li key={d.id}>
                   <Link to={`/tour/${d.id}`}
-                    className="text-sm text-slate-500 no-underline hover:text-[#0ea5e9] transition-colors flex items-center gap-2 group">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#0ea5e9] opacity-0 group-hover:opacity-100 transition-opacity" />
+                    className="text-sm text-slate-500 no-underline hover:text-[#38bdf8] transition-colors flex items-center gap-2 group">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#38bdf8] opacity-0 group-hover:opacity-100 transition-opacity" />
                     {d.name}
                   </Link>
                 </li>
@@ -149,7 +149,7 @@ export default function Footer() {
           <p>© 2026 Airventure. All rights reserved.</p>
           <div className="flex gap-6">
             {["Privacy Policy", "Terms of Service", "Cookie Policy"].map((t) => (
-              <a key={t} href="#" className="hover:text-[#0ea5e9] transition-colors">{t}</a>
+              <a key={t} href="#" className="hover:text-[#38bdf8] transition-colors">{t}</a>
             ))}
           </div>
         </div>

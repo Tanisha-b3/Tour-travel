@@ -107,7 +107,7 @@ export default function DestinationCard({ destination, index = 0 }) {
         <div className="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-white/10">
           <div className="flex items-baseline gap-0.5">
             <span className="text-xs text-slate-400 dark:text-slate-500">From </span>
-            <span className="text-xl font-extrabold text-[#0ea5e9]">
+            <span className="text-xl font-extrabold text-[#38bdf8]">
               ${destination.price.toLocaleString()}
             </span>
             <span className="text-xs text-slate-400 dark:text-slate-500">/person</span>
@@ -115,7 +115,7 @@ export default function DestinationCard({ destination, index = 0 }) {
           <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}>
             <Link
               to={`/tour/${destination.id}`}
-              className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white px-4 py-2 rounded-full text-xs font-semibold no-underline shadow-sm hover:shadow-lg hover:shadow-[#0ea5e9]/35 transition-shadow"
+              className="bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-4 py-2 rounded-full text-xs font-semibold no-underline shadow-sm hover:shadow-lg hover:shadow-[#38bdf8]/35 transition-shadow"
             >
               View Details →
             </Link>

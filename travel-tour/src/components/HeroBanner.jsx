@@ -105,14 +105,14 @@ export default function HeroBanner() {
           transition={{ duration: 0.6, ease }}
           className="flex items-center gap-2 mb-8"
         >
-          <span className="block w-8 h-px bg-gradient-to-r from-transparent to-[#0ea5e9]" />
+          <span className="block w-8 h-px bg-gradient-to-r from-transparent to-[#38bdf8]" />
           <span
-            className="text-[#0ea5e9] text-xs font-bold tracking-[0.25em] uppercase"
+            className="text-[#38bdf8] text-xs font-bold tracking-[0.25em] uppercase"
             style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
             ✈ Airventure Travel Co.
           </span>
-          <span className="block w-8 h-px bg-gradient-to-l from-transparent to-[#0ea5e9]" />
+          <span className="block w-8 h-px bg-gradient-to-l from-transparent to-[#38bdf8]" />
         </motion.div>
 
         {/* Headline */}
@@ -130,7 +130,7 @@ export default function HeroBanner() {
               className="bg-clip-text text-transparent"
               style={{
                 backgroundImage:
-                  "linear-gradient(110deg, #0ea5e9 0%, #3b82f6 40%, #3b82f6 75%, #0ea5e9 100%)",
+                  "linear-gradient(110deg, #38bdf8 0%, #60a5fa 40%, #60a5fa 75%, #38bdf8 100%)",
               }}
             >
               Travel Now.
@@ -152,7 +152,7 @@ export default function HeroBanner() {
               />
               <defs>
                 <linearGradient id="uline" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#0ea5e9" />
+                  <stop offset="0%" stopColor="#38bdf8" />
                   <stop offset="100%" stopColor="#818cf8" />
                 </linearGradient>
               </defs>
@@ -186,7 +186,7 @@ export default function HeroBanner() {
               to="/destinations"
               className="relative overflow-hidden inline-flex items-center gap-2 px-9 py-4 rounded-full font-semibold no-underline text-white text-base shadow-2xl btn-glow"
               style={{
-                background: "linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #3b82f6 100%)",
+                background: "linear-gradient(135deg, #38bdf8 0%, #60a5fa 50%, #60a5fa 100%)",
                 boxShadow: "0 8px 40px rgba(14,165,233,0.4)",
               }}
             >

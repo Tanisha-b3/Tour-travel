@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 const CONFIG = {
   success: { icon: "✓", gradient: "from-emerald-500 to-teal-500", bar: "bg-emerald-500", ring: "ring-emerald-500/20" },
   error:   { icon: "✕", gradient: "from-red-500 to-rose-500",    bar: "bg-red-500",    ring: "ring-red-500/20" },
-  info:    { icon: "ℹ", gradient: "from-[#0ea5e9] to-[#3b82f6]", bar: "bg-[#0ea5e9]", ring: "ring-[#0ea5e9]/20" },
+  info:    { icon: "ℹ", gradient: "from-[#38bdf8] to-[#60a5fa]", bar: "bg-[#38bdf8]", ring: "ring-[#38bdf8]/20" },
 };
 
 function ToastItem({ toast, onRemove }) {

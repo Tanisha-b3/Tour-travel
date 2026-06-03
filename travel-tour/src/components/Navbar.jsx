@@ -106,7 +106,7 @@ export default function Navbar() {
       {!transparent && (
         <motion.div
           style={{ scaleX, transformOrigin: "left" }}
-          className="fixed top-0 left-0 right-0 z-[60] h-[2px] bg-gradient-to-r from-[#0ea5e9] via-[#3b82f6] to-[#0ea5e9]"
+          className="fixed top-0 left-0 right-0 z-[60] h-[2px] bg-gradient-to-r from-[#38bdf8] via-[#60a5fa] to-[#38bdf8]"
         />
       )}
 
@@ -130,7 +130,7 @@ export default function Navbar() {
               <motion.span
                 animate={{ scale: [1, 1.6, 1], opacity: [0.6, 0, 0.6] }}
                 transition={{ duration: 2.4, repeat: Infinity }}
-                className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#0ea5e9]"
+                className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#38bdf8]"
               />
             </motion.div>
             <span
@@ -139,7 +139,7 @@ export default function Navbar() {
               }`}
               style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", letterSpacing: "-0.01em" }}
             >
-              Air<span className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] bg-clip-text text-transparent">venture</span>
+              Air<span className="bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] bg-clip-text text-transparent">venture</span>
             </span>
           </Link>
 
@@ -243,7 +243,7 @@ export default function Navbar() {
                 to="/tours"
                 className="relative inline-flex items-center gap-1.5 text-white px-5 py-2.5 rounded-full font-semibold no-underline text-[13px] overflow-hidden group/btn"
                 style={{
-                  background: "linear-gradient(135deg, #0ea5e9 0%, #3b82f6 45%, #3b82f6 100%)",
+                  background: "linear-gradient(135deg, #38bdf8 0%, #60a5fa 45%, #60a5fa 100%)",
                   boxShadow: "0 6px 28px rgba(14,165,233,0.35)",
                 }}
               >
@@ -366,7 +366,7 @@ export default function Navbar() {
             {/* Ambient blobs */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
               <div className="absolute -top-24 -right-24 w-56 h-56 rounded-full opacity-20"
-                style={{ background: "radial-gradient(circle, #0ea5e9, transparent 70%)" }} />
+                style={{ background: "radial-gradient(circle, #38bdf8, transparent 70%)" }} />
               <div className="absolute -bottom-24 -left-16 w-48 h-48 rounded-full opacity-15"
                 style={{ background: "radial-gradient(circle, #818cf8, transparent 70%)" }} />
             </div>
@@ -381,7 +381,7 @@ export default function Navbar() {
                   className={`text-[17px] font-black tracking-tight ${darkMode ? "text-white" : "text-[#0a0f1e]"}`}
                   style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
                 >
-                  Air<span className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] bg-clip-text text-transparent">venture</span>
+                  Air<span className="bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] bg-clip-text text-transparent">venture</span>
                 </span>
               </Link>
               {/* FIX: close button is 40×40 for easy tapping */}
@@ -430,7 +430,7 @@ export default function Navbar() {
                       {isActive && (
                         <motion.span
                           layoutId="drawer-active"
-                          className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-gradient-to-b from-[#0ea5e9] to-[#3b82f6]"
+                          className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r-full bg-gradient-to-b from-[#38bdf8] to-[#60a5fa]"
                         />
                       )}
                       <span className="text-[18px] leading-none">{item.icon}</span>
@@ -473,7 +473,7 @@ export default function Navbar() {
                 onClick={() => setIsOpen(false)}
                 className="flex items-center justify-center gap-2 text-white py-4 rounded-full font-semibold no-underline text-[15px] shadow-lg transition-all active:scale-95"
                 style={{
-                  background: "linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #3b82f6 100%)",
+                  background: "linear-gradient(135deg, #38bdf8 0%, #60a5fa 50%, #60a5fa 100%)",
                   boxShadow: "0 8px 28px rgba(14,165,233,0.3)",
                   fontFamily: "'DM Sans', sans-serif",
                 }}

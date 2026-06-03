@@ -61,7 +61,7 @@ function AnimatedRoutes() {
                   </p>
                   <a
                     href="/"
-                    className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white px-9 py-4 rounded-full font-bold no-underline hover:shadow-lg hover:shadow-[#0ea5e9]/40 transition-shadow inline-block"
+                    className="bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-9 py-4 rounded-full font-bold no-underline hover:shadow-lg hover:shadow-[#38bdf8]/40 transition-shadow inline-block"
                   >
                     Back to Home
                   </a>

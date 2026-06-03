@@ -12,7 +12,7 @@ const TYPE_META = {
   beach:     { icon: "🏖️", label: "Beach",     color: "#38bdf8" },
   cultural:  { icon: "🏛️", label: "Cultural",  color: "#a78bfa" },
   adventure: { icon: "⛰️", label: "Adventure", color: "#34d399" },
-  luxury:    { icon: "💎", label: "Luxury",    color: "#0ea5e9" },
+  luxury:    { icon: "💎", label: "Luxury",    color: "#38bdf8" },
 };
 
 const ease = [0.22, 1, 0.36, 1];
@@ -122,8 +122,8 @@ export default function DestinationsPage() {
             transition={{ duration: 0.55, ease }}
             className="flex items-center gap-2 mb-3"
           >
-            <span className="block w-6 h-px bg-gradient-to-r from-transparent to-[#0ea5e9]" />
-            <span className="text-[#0ea5e9] text-[10px] font-bold tracking-[0.22em] uppercase">
+            <span className="block w-6 h-px bg-gradient-to-r from-transparent to-[#38bdf8]" />
+            <span className="text-[#38bdf8] text-[10px] font-bold tracking-[0.22em] uppercase">
               Curated Collection
             </span>
           </motion.div>
@@ -137,7 +137,7 @@ export default function DestinationsPage() {
           >
             Explore{" "}
             <span className="bg-clip-text text-transparent" style={{
-              backgroundImage: "linear-gradient(110deg, #0ea5e9 0%, #3b82f6 50%, #3b82f6 100%)"
+              backgroundImage: "linear-gradient(110deg, #38bdf8 0%, #60a5fa 50%, #60a5fa 100%)"
             }}>
               Destinations
             </span>
@@ -192,7 +192,7 @@ export default function DestinationsPage() {
                   onFocus={() => setFocused(true)}
                   onBlur={() => setFocused(false)}
                   aria-label="Search destinations"
-                  className="w-full py-3.5 pl-11 pr-4 rounded-2xl text-sm outline-none transition-all duration-200 bg-[#f2f0eb] dark:bg-white/6 text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 border-2 border-transparent focus:border-[#0ea5e9] focus:bg-white dark:focus:bg-white/10"
+                  className="w-full py-3.5 pl-11 pr-4 rounded-2xl text-sm outline-none transition-all duration-200 bg-[#f2f0eb] dark:bg-white/6 text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 border-2 border-transparent focus:border-[#38bdf8] focus:bg-white dark:focus:bg-white/10"
                 />
               </div>
 
@@ -203,7 +203,7 @@ export default function DestinationsPage() {
                 whileTap={{ scale: 0.96 }}
                 className="py-3.5 px-7 rounded-2xl font-semibold text-sm text-white cursor-pointer"
                 style={{
-                  background: "linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #3b82f6 100%)",
+                  background: "linear-gradient(135deg, #38bdf8 0%, #60a5fa 50%, #60a5fa 100%)",
                   boxShadow: "0 4px 20px rgba(14,165,233,0.3)",
                 }}
               >
@@ -219,8 +219,8 @@ export default function DestinationsPage() {
                 aria-expanded={showFilters}
                 className={`relative py-3.5 px-5 rounded-2xl text-sm font-semibold cursor-pointer flex items-center gap-2 transition-all border-2 ${
                   showFilters || hasFilters
-                    ? "border-[#0ea5e9] text-[#1d4ed8] bg-[#0ea5e9]/10 dark:text-[#0ea5e9] dark:bg-[#0ea5e9]/8"
-                    : "border-[#e8e4dc] dark:border-white/10 text-slate-500 dark:text-slate-400 bg-transparent hover:border-[#0ea5e9] hover:text-[#1d4ed8]"
+                    ? "border-[#38bdf8] text-[#60a5fa] bg-[#38bdf8]/10 dark:text-[#38bdf8] dark:bg-[#38bdf8]/8"
+                    : "border-[#e8e4dc] dark:border-white/10 text-slate-500 dark:text-slate-400 bg-transparent hover:border-[#38bdf8] hover:text-[#60a5fa]"
                 }`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
@@ -232,7 +232,7 @@ export default function DestinationsPage() {
                     <motion.span
                       key="count"
                       initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                      className="w-5 h-5 bg-gradient-to-br from-[#0ea5e9] to-[#3b82f6] text-white text-[10px] rounded-full flex items-center justify-center font-bold"
+                      className="w-5 h-5 bg-gradient-to-br from-[#38bdf8] to-[#60a5fa] text-white text-[10px] rounded-full flex items-center justify-center font-bold"
                     >
                       {activeFilterCount}
                     </motion.span>
@@ -326,10 +326,10 @@ export default function DestinationsPage() {
                   className={`relative px-5 py-2 rounded-full text-sm font-semibold cursor-pointer transition-all flex items-center gap-1.5 overflow-hidden ${
                     isActive
                       ? "text-white shadow-lg"
-                      : "text-slate-600 dark:text-slate-400 border-2 border-[#e2ddd5] dark:border-white/10 bg-white dark:bg-transparent hover:border-[#0ea5e9] hover:text-[#1d4ed8] dark:hover:text-[#0ea5e9]"
+                      : "text-slate-600 dark:text-slate-400 border-2 border-[#e2ddd5] dark:border-white/10 bg-white dark:bg-transparent hover:border-[#38bdf8] hover:text-[#60a5fa] dark:hover:text-[#38bdf8]"
                   }`}
                   style={isActive ? {
-                    background: "linear-gradient(135deg, #0ea5e9 0%, #3b82f6 55%, #3b82f6 100%)",
+                    background: "linear-gradient(135deg, #38bdf8 0%, #60a5fa 55%, #60a5fa 100%)",
                     boxShadow: "0 4px 18px rgba(14,165,233,0.35)",
                     border: "2px solid transparent",
                   } : {}}
@@ -369,7 +369,7 @@ export default function DestinationsPage() {
                 <motion.button
                   onClick={clearFilters}
                   whileHover={{ scale: 1.03 }}
-                  className="text-[11px] font-semibold text-[#1d4ed8] dark:text-[#0ea5e9] bg-[#0ea5e9]/10 dark:bg-[#0ea5e9]/8 px-3 py-1.5 rounded-full hover:bg-[#0ea5e9]/15 transition-colors flex items-center gap-1.5 cursor-pointer border-none"
+                  className="text-[11px] font-semibold text-[#60a5fa] dark:text-[#38bdf8] bg-[#38bdf8]/10 dark:bg-[#38bdf8]/8 px-3 py-1.5 rounded-full hover:bg-[#38bdf8]/15 transition-colors flex items-center gap-1.5 cursor-pointer border-none"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3">
                     <path d="M5.28 4.22a.75.75 0 0 0-1.06 1.06L6.94 8l-2.72 2.72a.75.75 0 1 0 1.06 1.06L8 9.06l2.72 2.72a.75.75 0 1 0 1.06-1.06L9.06 8l2.72-2.72a.75.75 0 0 0-1.06-1.06L8 6.94 5.28 4.22Z" />
@@ -424,7 +424,7 @@ export default function DestinationsPage() {
               whileTap={{ scale: 0.97 }}
               className="text-white px-9 py-3.5 rounded-full font-semibold cursor-pointer text-sm border-none"
               style={{
-                background: "linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #3b82f6 100%)",
+                background: "linear-gradient(135deg, #38bdf8 0%, #60a5fa 50%, #60a5fa 100%)",
                 boxShadow: "0 6px 24px rgba(14,165,233,0.35)",
               }}
             >
@@ -459,7 +459,7 @@ export default function DestinationsPage() {
                   <div className="h-px flex-1 max-w-[120px] bg-[#e2ddd5] dark:bg-white/8 rounded-full overflow-hidden">
                     <motion.div
                       className="h-full rounded-full"
-                      style={{ background: "linear-gradient(90deg, #0ea5e9, #3b82f6)" }}
+                      style={{ background: "linear-gradient(90deg, #38bdf8, #60a5fa)" }}
                       initial={{ width: 0 }}
                       animate={{ width: `${(displayed.length / data.length) * 100}%` }}
                       transition={{ duration: 0.6, ease }}
@@ -475,7 +475,7 @@ export default function DestinationsPage() {
                   onClick={() => setPage((p) => p + 1)}
                   whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.97 }}
-                  className="bg-transparent border-2 border-[#e2ddd5] dark:border-white/12 text-slate-600 dark:text-slate-300 px-10 py-3.5 rounded-full font-semibold cursor-pointer text-sm hover:border-[#0ea5e9] hover:text-[#1d4ed8] dark:hover:text-[#0ea5e9] dark:hover:border-[#0ea5e9] transition-all flex items-center gap-2.5 mx-auto"
+                  className="bg-transparent border-2 border-[#e2ddd5] dark:border-white/12 text-slate-600 dark:text-slate-300 px-10 py-3.5 rounded-full font-semibold cursor-pointer text-sm hover:border-[#38bdf8] hover:text-[#60a5fa] dark:hover:text-[#38bdf8] dark:hover:border-[#38bdf8] transition-all flex items-center gap-2.5 mx-auto"
                 >
                   <span>Load More</span>
                   <span className="text-slate-400 dark:text-slate-500 text-xs">

@@ -15,11 +15,11 @@ const fadeUp = {
 };
 
 const CATEGORIES = [
-  { value: "all",       label: "All Tours",  icon: "🌍", color: "#0ea5e9" },
+  { value: "all",       label: "All Tours",  icon: "🌍", color: "#38bdf8" },
   { value: "adventure", label: "Adventure",  icon: "⛰️", color: "#34d399" },
   { value: "beach",     label: "Beach",      icon: "🏖️", color: "#38bdf8" },
   { value: "cultural",  label: "Cultural",   icon: "🏛️", color: "#a78bfa" },
-  { value: "luxury",    label: "Luxury",     icon: "💎", color: "#0ea5e9" },
+  { value: "luxury",    label: "Luxury",     icon: "💎", color: "#38bdf8" },
 ];
 
 /* ── Tour card ── */
@@ -77,7 +77,7 @@ function TourCard({ tour }) {
 
           {/* Rating */}
           <div className="absolute top-3.5 right-3.5 flex items-center gap-1 bg-black/40 backdrop-blur-md text-white text-[11px] font-semibold px-2.5 py-1.5 rounded-full">
-            <span className="text-[#0ea5e9]">★</span>
+            <span className="text-[#38bdf8]">★</span>
             <span>{tour.rating}</span>
           </div>
 
@@ -136,7 +136,7 @@ function TourCard({ tour }) {
                 </span>
               ))}
               {tour.facilities.length > 3 && (
-                <span className="text-[10px] font-semibold text-[#0284c7] dark:text-[#0ea5e9] bg-[#0ea5e9]/10 dark:bg-[#0ea5e9]/8 px-2.5 py-1 rounded-full">
+                <span className="text-[10px] font-semibold text-[#0ea5e9] dark:text-[#38bdf8] bg-[#38bdf8]/10 dark:bg-[#38bdf8]/8 px-2.5 py-1 rounded-full">
                   +{tour.facilities.length - 3} more
                 </span>
               )}
@@ -147,7 +147,7 @@ function TourCard({ tour }) {
           <div className="flex gap-2 mt-auto">
             <Link
               to={`/tour/${tour.id}`}
-              className="flex-1 text-center py-2.5 rounded-xl border-2 border-[#e2ddd5] dark:border-white/10 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:border-[#0ea5e9] hover:text-[#0284c7] dark:hover:text-[#0ea5e9] dark:hover:border-[#0ea5e9] transition-all no-underline"
+              className="flex-1 text-center py-2.5 rounded-xl border-2 border-[#e2ddd5] dark:border-white/10 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:border-[#38bdf8] hover:text-[#0ea5e9] dark:hover:text-[#38bdf8] dark:hover:border-[#38bdf8] transition-all no-underline"
             >
               Details
             </Link>
@@ -155,7 +155,7 @@ function TourCard({ tour }) {
               to={`/book/${tour.id}`}
               className="flex-1 text-center py-2.5 rounded-xl text-white text-sm font-semibold no-underline transition-all hover:-translate-y-0.5"
               style={{
-                background: "linear-gradient(135deg, #0ea5e9 0%, #3b82f6 55%, #6366f1 100%)",
+                background: "linear-gradient(135deg, #38bdf8 0%, #60a5fa 55%, #6366f1 100%)",
                 boxShadow: "0 4px 16px rgba(14,165,233,0.28)",
               }}
             >
@@ -225,8 +225,8 @@ export default function ToursPage() {
             transition={{ duration: 0.55, ease }}
             className="flex items-center gap-2 mb-3"
           >
-            <span className="block w-6 h-px bg-gradient-to-r from-transparent to-[#0ea5e9]" />
-            <span className="text-[#0ea5e9] text-[10px] font-bold tracking-[0.22em] uppercase">
+            <span className="block w-6 h-px bg-gradient-to-r from-transparent to-[#38bdf8]" />
+            <span className="text-[#38bdf8] text-[10px] font-bold tracking-[0.22em] uppercase">
               Handpicked Packages
             </span>
           </motion.div>
@@ -240,7 +240,7 @@ export default function ToursPage() {
           >
             Tour{" "}
             <span className="bg-clip-text text-transparent" style={{
-              backgroundImage: "linear-gradient(110deg, #0ea5e9 0%, #3b82f6 50%, #6366f1 100%)"
+              backgroundImage: "linear-gradient(110deg, #38bdf8 0%, #60a5fa 50%, #6366f1 100%)"
             }}>
               Experiences
             </span>
@@ -276,10 +276,10 @@ export default function ToursPage() {
                 className={`relative px-5 py-2.5 rounded-full text-sm font-semibold cursor-pointer transition-all flex items-center gap-1.5 overflow-hidden ${
                   isActive
                     ? "text-white shadow-lg"
-                    : "text-slate-600 dark:text-slate-400 border-2 border-[#e2ddd5] dark:border-white/10 bg-white/80 dark:bg-transparent backdrop-blur-md hover:border-[#0ea5e9] hover:text-[#0284c7] dark:hover:text-[#0ea5e9]"
+                    : "text-slate-600 dark:text-slate-400 border-2 border-[#e2ddd5] dark:border-white/10 bg-white/80 dark:bg-transparent backdrop-blur-md hover:border-[#38bdf8] hover:text-[#0ea5e9] dark:hover:text-[#38bdf8]"
                 }`}
                 style={isActive ? {
-                  background: "linear-gradient(135deg, #0ea5e9 0%, #3b82f6 55%, #6366f1 100%)",
+                  background: "linear-gradient(135deg, #38bdf8 0%, #60a5fa 55%, #6366f1 100%)",
                   boxShadow: "0 4px 18px rgba(14,165,233,0.38)",
                   border: "2px solid transparent",
                 } : {}}
@@ -391,7 +391,7 @@ export default function ToursPage() {
               whileTap={{ scale: 0.97 }}
               className="text-white px-8 py-3 rounded-full font-semibold text-sm border-none cursor-pointer"
               style={{
-                background: "linear-gradient(135deg, #0ea5e9 0%, #3b82f6 50%, #6366f1 100%)",
+                background: "linear-gradient(135deg, #38bdf8 0%, #60a5fa 50%, #6366f1 100%)",
                 boxShadow: "0 6px 24px rgba(14,165,233,0.32)",
               }}
             >

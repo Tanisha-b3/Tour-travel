@@ -3,8 +3,8 @@
 
 @theme {
   /* ── Brand palette ── */
-  --color-primary:      #0ea5e9;   /* sky-500  */
-  --color-primary-dark: #0284c7;   /* sky-600  */
+  --color-primary:      #38bdf8;   /* sky-500  */
+  --color-primary-dark: #0ea5e9;   /* sky-600  */
   --color-secondary:    #6366f1;   /* indigo-500 */
   --color-accent:       #f97316;   /* orange-500 */
   --color-dark:         #0c1a2e;   /* deep navy */
@@ -98,8 +98,8 @@ img { max-width: 100%; display: block; }
 ::-webkit-scrollbar       { width: 5px; }
 ::-webkit-scrollbar-track { background: #f1f5f9; }
 .dark ::-webkit-scrollbar-track { background: #0c1a2e; }
-::-webkit-scrollbar-thumb { background: #0ea5e9; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #0284c7; }
+::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #0ea5e9; }
 
 /* Focus ring */
-:focus-visible { outline: 3px solid #0ea5e9; outline-offset: 2px; }
+:focus-visible { outline: 3px solid #38bdf8; outline-offset: 2px; }

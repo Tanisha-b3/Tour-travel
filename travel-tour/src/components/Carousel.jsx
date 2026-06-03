@@ -55,7 +55,7 @@ export default function Carousel({ items, title, badge }) {
       <div className="max-w-[1200px] mx-auto">
         {badge && (
           <div className="text-center mb-12">
-            <span className="inline-block px-5 py-1.5 bg-[#0ea5e9]/10 text-[#0ea5e9] rounded-full text-xs font-bold tracking-wider mb-4 uppercase">
+            <span className="inline-block px-5 py-1.5 bg-[#38bdf8]/10 text-[#38bdf8] rounded-full text-xs font-bold tracking-wider mb-4 uppercase">
               {badge}
             </span>
             {title && <h2 className="text-3xl md:text-4xl font-extrabold text-slate-800 dark:text-white">{title}</h2>}
@@ -128,7 +128,7 @@ export default function Carousel({ items, title, badge }) {
                     transition={{ duration: 0.3 }}
                   >
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#0ea5e9]/10 text-[#0ea5e9] capitalize">
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#38bdf8]/10 text-[#38bdf8] capitalize">
                         {item.type}
                       </span>
                       <span className="text-sm text-amber-500">★ {item.rating}</span>
@@ -146,7 +146,7 @@ export default function Carousel({ items, title, badge }) {
                     <div className="flex items-center gap-4 mb-6">
                       <div>
                         <span className="text-xs text-slate-400">From</span>
-                        <span className="text-2xl font-extrabold text-[#0ea5e9] block">${item.price.toLocaleString()}</span>
+                        <span className="text-2xl font-extrabold text-[#38bdf8] block">${item.price.toLocaleString()}</span>
                       </div>
                       <span className="text-xs text-slate-400">📅 {item.duration}</span>
                     </div>
@@ -154,13 +154,13 @@ export default function Carousel({ items, title, badge }) {
                     <div className="flex gap-3">
                       <Link
                         to={`/tour/${item.id}`}
-                        className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white px-7 py-3 rounded-full text-sm font-semibold no-underline hover:shadow-lg hover:shadow-[#0ea5e9]/35 transition-shadow"
+                        className="bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-7 py-3 rounded-full text-sm font-semibold no-underline hover:shadow-lg hover:shadow-[#38bdf8]/35 transition-shadow"
                       >
                         View Details →
                       </Link>
                       <Link
                         to={`/book/${item.id}`}
-                        className="border-2 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 px-7 py-3 rounded-full text-sm font-semibold no-underline hover:border-[#0ea5e9] hover:text-[#0ea5e9] transition-colors"
+                        className="border-2 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 px-7 py-3 rounded-full text-sm font-semibold no-underline hover:border-[#38bdf8] hover:text-[#38bdf8] transition-colors"
                       >
                         Book Now
                       </Link>
@@ -179,7 +179,7 @@ export default function Carousel({ items, title, badge }) {
                   key={it.id}
                   onClick={() => goTo(i)}
                   className={`relative shrink-0 rounded-xl overflow-hidden cursor-pointer transition-all border-2 ${
-                    i === current ? "border-[#0ea5e9] opacity-100" : "border-transparent opacity-50 hover:opacity-80"
+                    i === current ? "border-[#38bdf8] opacity-100" : "border-transparent opacity-50 hover:opacity-80"
                   }`}
                 >
                   <img src={it.image} alt="" className="w-16 h-12 object-cover block" loading="lazy" />

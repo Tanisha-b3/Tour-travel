@@ -25,7 +25,7 @@ function StarRow({ rating, max = 5 }) {
 
 function StatBadge({ icon, label, value }) {
   return (
-    <div className="flex flex-col items-center gap-1.5 px-5 py-4 bg-white dark:bg-[#0c1a2e] rounded-2xl shadow-[0_2px_12px_rgba(14,165,233,0.08)] border border-slate-100 dark:border-white/5 hover:border-[#0ea5e9]/30 hover:shadow-[0_4px_20px_rgba(14,165,233,0.14)] transition-all group">
+    <div className="flex flex-col items-center gap-1.5 px-5 py-4 bg-white dark:bg-[#0c1a2e] rounded-2xl shadow-[0_2px_12px_rgba(14,165,233,0.08)] border border-slate-100 dark:border-white/5 hover:border-[#38bdf8]/30 hover:shadow-[0_4px_20px_rgba(14,165,233,0.14)] transition-all group">
       <span className="text-2xl group-hover:scale-110 transition-transform">{icon}</span>
       <span className="text-xs text-slate-400 dark:text-slate-500 font-medium tracking-wide uppercase">{label}</span>
       <span className="text-sm font-bold text-slate-800 dark:text-white text-center leading-tight">{value}</span>
@@ -83,7 +83,7 @@ export default function TourDetailPage() {
         style={{ fontFamily: "'DM Sans', sans-serif" }}
       >
         <div className="text-center px-6 py-20">
-          <div className="w-24 h-24 bg-gradient-to-br from-[#0ea5e9]/20 to-[#3b82f6]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+          <div className="w-24 h-24 bg-gradient-to-br from-[#38bdf8]/20 to-[#60a5fa]/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <span className="text-5xl">😕</span>
           </div>
           <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">Tour Not Found</h2>
@@ -92,7 +92,7 @@ export default function TourDetailPage() {
           </p>
           <Link
             to="/destinations"
-            className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white px-8 py-3.5 rounded-full font-semibold no-underline inline-block hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#0ea5e9]/40 transition-all"
+            className="bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-8 py-3.5 rounded-full font-semibold no-underline inline-block hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#38bdf8]/40 transition-all"
           >
             Browse Tours
           </Link>
@@ -116,8 +116,8 @@ export default function TourDetailPage() {
       {/* ── Hero Strip ───────────────────────────────────────────────── */}
       <div className="relative bg-gradient-to-r from-[#0c2340] via-[#0f3460] to-[#0c2340] overflow-hidden">
         {/* decorative orbs */}
-        <div className="absolute -top-16 -left-16 w-64 h-64 bg-[#0ea5e9]/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-10 right-24 w-48 h-48 bg-[#3b82f6]/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-16 -left-16 w-64 h-64 bg-[#38bdf8]/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-10 right-24 w-48 h-48 bg-[#60a5fa]/20 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-[1200px] mx-auto px-6 py-6 relative z-10">
           {/* Breadcrumb */}
@@ -130,7 +130,7 @@ export default function TourDetailPage() {
           </nav>
 
           <div className="flex flex-wrap items-center gap-3">
-            <span className="capitalize px-3.5 py-1 bg-[#0ea5e9]/20 text-[#38bdf8] border border-[#0ea5e9]/30 rounded-full text-xs font-semibold tracking-wide">
+            <span className="capitalize px-3.5 py-1 bg-[#38bdf8]/20 text-[#38bdf8] border border-[#38bdf8]/30 rounded-full text-xs font-semibold tracking-wide">
               {tour.type}
             </span>
             <span className="text-slate-400 text-xs">📍 {tour.location}</span>
@@ -188,7 +188,7 @@ export default function TourDetailPage() {
                     onClick={() => setActiveTab(tab.id)}
                     className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
                       activeTab === tab.id
-                        ? "bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white shadow-md shadow-[#0ea5e9]/30"
+                        ? "bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white shadow-md shadow-[#38bdf8]/30"
                         : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white"
                     }`}
                   >
@@ -230,7 +230,7 @@ export default function TourDetailPage() {
                       key={i}
                       className="flex items-start gap-3 p-4 bg-white dark:bg-[#0c1a2e] rounded-2xl border border-slate-100 dark:border-white/5 hover:border-sky-300/50 hover:shadow-[0_4px_20px_rgba(14,165,233,0.1)] transition-all group"
                     >
-                      <span className="w-7 h-7 bg-gradient-to-br from-[#0ea5e9] to-[#3b82f6] rounded-lg flex items-center justify-center text-white text-xs font-bold shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
+                      <span className="w-7 h-7 bg-gradient-to-br from-[#38bdf8] to-[#60a5fa] rounded-lg flex items-center justify-center text-white text-xs font-bold shrink-0 mt-0.5 group-hover:scale-110 transition-transform">
                         ✓
                       </span>
                       <span className="text-sm text-slate-600 dark:text-slate-300 leading-snug">{item}</span>
@@ -245,7 +245,7 @@ export default function TourDetailPage() {
                   {/* Aggregate score bar */}
                   <div className="flex items-center gap-5 p-5 bg-white dark:bg-[#0c1a2e] rounded-2xl border border-slate-100 dark:border-white/5 mb-6 flex-wrap">
                     <div className="text-center shrink-0">
-                      <span className="text-5xl font-extrabold bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] bg-clip-text text-transparent block leading-none mb-1">
+                      <span className="text-5xl font-extrabold bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] bg-clip-text text-transparent block leading-none mb-1">
                         {tour.rating}
                       </span>
                       <StarRow rating={Math.round(tour.rating)} />
@@ -282,7 +282,7 @@ export default function TourDetailPage() {
                       <div className="flex justify-between items-start mb-3">
                         <div className="flex items-center gap-3">
                           {/* Avatar placeholder */}
-                          <div className="w-10 h-10 bg-gradient-to-br from-[#0ea5e9] to-[#3b82f6] rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">
+                          <div className="w-10 h-10 bg-gradient-to-br from-[#38bdf8] to-[#60a5fa] rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">
                             {r.name.charAt(0).toUpperCase()}
                           </div>
                           <div>
@@ -307,14 +307,14 @@ export default function TourDetailPage() {
             <div className="bg-white dark:bg-[#0c1a2e] rounded-3xl overflow-hidden shadow-[0_8px_40px_rgba(14,165,233,0.12)] dark:border dark:border-white/5">
 
               {/* Card header gradient band */}
-              <div className="h-2 bg-gradient-to-r from-[#0ea5e9] via-[#38bdf8] to-[#3b82f6]" />
+              <div className="h-2 bg-gradient-to-r from-[#38bdf8] via-[#38bdf8] to-[#60a5fa]" />
 
               <div className="p-7">
                 {/* Price */}
                 <div className="text-center mb-6 pb-6 border-b border-slate-100 dark:border-white/10">
                   <span className="text-xs text-slate-400 tracking-widest uppercase block mb-1">Starting from</span>
                   <div className="flex items-end justify-center gap-1">
-                    <span className="text-5xl font-extrabold bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] bg-clip-text text-transparent">
+                    <span className="text-5xl font-extrabold bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] bg-clip-text text-transparent">
                       ${tour.price.toLocaleString()}
                     </span>
                   </div>
@@ -330,7 +330,7 @@ export default function TourDetailPage() {
                     { icon: "🏷️", label: "Category", value: tour.type.charAt(0).toUpperCase() + tour.type.slice(1) },
                   ].map((item) => (
                     <div key={item.label} className="flex items-center gap-3 group">
-                      <span className="w-10 h-10 bg-[#0ea5e9]/10 dark:bg-[#0ea5e9]/5 border border-[#0ea5e9]/10 rounded-xl flex items-center justify-center text-lg shrink-0 group-hover:bg-[#0ea5e9]/15 transition-colors">
+                      <span className="w-10 h-10 bg-[#38bdf8]/10 dark:bg-[#38bdf8]/5 border border-[#38bdf8]/10 rounded-xl flex items-center justify-center text-lg shrink-0 group-hover:bg-[#38bdf8]/15 transition-colors">
                         {item.icon}
                       </span>
                       <div className="flex-1 flex justify-between items-center">
@@ -344,7 +344,7 @@ export default function TourDetailPage() {
                 {/* CTA Buttons */}
                 <Link
                   to={`/book/${tour.id}`}
-                  className="block text-center py-4 bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white rounded-2xl font-bold text-base no-underline hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#0ea5e9]/35 transition-all mb-3 relative overflow-hidden group"
+                  className="block text-center py-4 bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white rounded-2xl font-bold text-base no-underline hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#38bdf8]/35 transition-all mb-3 relative overflow-hidden group"
                 >
                   {/* shine sweep */}
                   <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 ease-in-out pointer-events-none" />
@@ -364,7 +364,7 @@ export default function TourDetailPage() {
                   className={`w-full py-3.5 border-2 rounded-2xl font-semibold text-sm transition-all cursor-pointer mb-5 flex items-center justify-center gap-2 ${
                     wishlisted
                       ? "border-rose-400 text-rose-500 bg-rose-50 dark:bg-rose-950/40"
-                      : "border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-300 hover:border-[#0ea5e9] hover:text-[#0ea5e9] hover:bg-[#0ea5e9]/5"
+                      : "border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-300 hover:border-[#38bdf8] hover:text-[#38bdf8] hover:bg-[#38bdf8]/5"
                   }`}
                 >
                   {wishlisted ? "❤️ Remove from Wishlist" : "🤍 Save to Wishlist"}
@@ -387,12 +387,12 @@ export default function TourDetailPage() {
             </div>
 
             {/* Need help card */}
-            <div className="mt-4 p-5 bg-gradient-to-br from-[#0ea5e9]/10 to-[#3b82f6]/10 dark:from-[#0ea5e9]/5 dark:to-[#3b82f6]/5 border border-[#0ea5e9]/20 rounded-2xl">
+            <div className="mt-4 p-5 bg-gradient-to-br from-[#38bdf8]/10 to-[#60a5fa]/10 dark:from-[#38bdf8]/5 dark:to-[#60a5fa]/5 border border-[#38bdf8]/20 rounded-2xl">
               <p className="text-sm font-semibold text-slate-700 dark:text-white mb-1">🎯 Need help choosing?</p>
               <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                 Our travel experts are available 24/7 to help you plan the perfect trip.
               </p>
-              <button className="mt-3 text-xs font-semibold text-[#0ea5e9] hover:underline cursor-pointer bg-transparent border-none p-0">
+              <button className="mt-3 text-xs font-semibold text-[#38bdf8] hover:underline cursor-pointer bg-transparent border-none p-0">
                 Chat with an expert →
               </button>
             </div>

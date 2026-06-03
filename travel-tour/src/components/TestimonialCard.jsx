@@ -11,7 +11,7 @@ export default function TestimonialCard({ testimonial, index = 0 }) {
       className="bg-white dark:bg-[#0c1a2e] rounded-2xl p-5 md:p-7 shadow-[0_4px_16px_rgba(14,165,233,0.07)] hover:shadow-[0_14px_32px_rgba(14,165,233,0.14)] transition-shadow duration-300 flex flex-col h-full border border-slate-100 dark:border-white/10"
     >
       {/* Opening quote */}
-      <span className="text-5xl text-[#0ea5e9]/15 font-serif leading-none mb-2 block select-none">
+      <span className="text-5xl text-[#38bdf8]/15 font-serif leading-none mb-2 block select-none">
         &ldquo;
       </span>
 
@@ -41,7 +41,7 @@ export default function TestimonialCard({ testimonial, index = 0 }) {
         <img
           src={testimonial.avatar}
           alt={testimonial.name}
-          className="w-11 h-11 rounded-full object-cover ring-2 ring-[#0ea5e9]/25"
+          className="w-11 h-11 rounded-full object-cover ring-2 ring-[#38bdf8]/25"
           loading="lazy"
         />
         <div>

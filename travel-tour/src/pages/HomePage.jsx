@@ -52,7 +52,7 @@ const STATS = [
 function SectionHeader({ badge, title, sub }) {
   return (
     <FadeSection className="text-center mb-12">
-      <span className="inline-block px-5 py-1.5 bg-[#0ea5e9]/10 text-[#0ea5e9] rounded-full text-xs font-bold tracking-wider mb-4 uppercase">
+      <span className="inline-block px-5 py-1.5 bg-[#38bdf8]/10 text-[#38bdf8] rounded-full text-xs font-bold tracking-wider mb-4 uppercase">
         {badge}
       </span>
       <h2 className="text-3xl md:text-4xl font-extrabold text-slate-800 dark:text-white mb-3">{title}</h2>
@@ -110,7 +110,7 @@ export default function HomePage() {
                 <motion.div whileHover={{ scale: 1.04, y: -3 }} whileTap={{ scale: 0.97 }} className="inline-block">
                   <Link
                     to="/destinations"
-                    className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white px-10 py-4 rounded-full font-bold no-underline shadow-lg shadow-[#0ea5e9]/30 hover:shadow-xl hover:shadow-[#0ea5e9]/40 transition-shadow"
+                    className="bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-10 py-4 rounded-full font-bold no-underline shadow-lg shadow-[#38bdf8]/30 hover:shadow-xl hover:shadow-[#38bdf8]/40 transition-shadow"
                   >
                     View All Destinations →
                   </Link>
@@ -166,11 +166,11 @@ export default function HomePage() {
                       transition={{ duration: 0.5 }}
                     />
                     {idx === 0 && (
-                      <span className="absolute top-3 left-3 bg-[#0ea5e9] text-white text-xs font-bold px-3 py-1 rounded-full shadow z-10">
+                      <span className="absolute top-3 left-3 bg-[#38bdf8] text-white text-xs font-bold px-3 py-1 rounded-full shadow z-10">
                         🔥 Best Seller
                       </span>
                     )}
-                    <div className="absolute top-3 right-3 bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white px-4 py-2 rounded-full font-extrabold text-base shadow-lg z-10">
+                    <div className="absolute top-3 right-3 bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-4 py-2 rounded-full font-extrabold text-base shadow-lg z-10">
                       ${dest.price.toLocaleString()}
                     </div>
                   </div>
@@ -187,7 +187,7 @@ export default function HomePage() {
                     <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} className="inline-block">
                       <Link
                         to={`/tour/${dest.id}`}
-                        className="inline-flex items-center gap-1 bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white px-6 py-2.5 rounded-full text-sm font-semibold no-underline hover:shadow-lg hover:shadow-[#0ea5e9]/35 transition-shadow"
+                        className="inline-flex items-center gap-1 bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-6 py-2.5 rounded-full text-sm font-semibold no-underline hover:shadow-lg hover:shadow-[#38bdf8]/35 transition-shadow"
                       >
                         View Package →
                       </Link>
@@ -203,7 +203,7 @@ export default function HomePage() {
       {/* ── Stats Banner ── */}
       <section
         className="py-16 px-6 text-white"
-        style={{ background: "linear-gradient(135deg, #0c1a2e 0%, #0ea5e9 55%, #3b82f6 100%)" }}
+        style={{ background: "linear-gradient(135deg, #0c1a2e 0%, #38bdf8 55%, #60a5fa 100%)" }}
       >
         <div className="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {STATS.map((s, i) => (
@@ -244,7 +244,7 @@ export default function HomePage() {
                 className="bg-slate-50 dark:bg-[#0c1a2e] rounded-2xl p-7 text-center hover:shadow-[0_10px_28px_rgba(14,165,233,0.12)] dark:hover:shadow-[0_10px_28px_rgba(14,165,233,0.2)] transition-shadow"
               >
                 <motion.div
-                  className="w-16 h-16 bg-gradient-to-br from-[#0ea5e9]/10 to-[#3b82f6]/10 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-5"
+                  className="w-16 h-16 bg-gradient-to-br from-[#38bdf8]/10 to-[#60a5fa]/10 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-5"
                   whileHover={{ scale: 1.15, rotate: 5 }}
                   transition={{ type: "spring", stiffness: 400 }}
                 >
@@ -289,7 +289,7 @@ export default function HomePage() {
           backgroundPosition: "center",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0c1a2e]/90 to-[#3b82f6]/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0c1a2e]/90 to-[#60a5fa]/80" />
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -307,7 +307,7 @@ export default function HomePage() {
             <motion.div whileHover={{ scale: 1.05, y: -3 }} whileTap={{ scale: 0.97 }}>
               <Link
                 to="/destinations"
-                className="bg-white text-[#0ea5e9] px-9 py-4 rounded-full font-bold no-underline hover:shadow-xl transition-shadow block"
+                className="bg-white text-[#38bdf8] px-9 py-4 rounded-full font-bold no-underline hover:shadow-xl transition-shadow block"
               >
                 Start Exploring
               </Link>
@@ -315,7 +315,7 @@ export default function HomePage() {
             <motion.div whileHover={{ scale: 1.05, y: -3 }} whileTap={{ scale: 0.97 }}>
               <Link
                 to="/tours"
-                className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white px-9 py-4 rounded-full font-bold no-underline hover:shadow-lg hover:shadow-[#0ea5e9]/40 transition-all block"
+                className="bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-9 py-4 rounded-full font-bold no-underline hover:shadow-lg hover:shadow-[#38bdf8]/40 transition-all block"
               >
                 View Packages
               </Link>

@@ -44,7 +44,7 @@ export default function WishlistPage() {
   return (
     <div className="pt-[70px] min-h-screen bg-slate-50 dark:bg-[#050e1a]">
       {/* ── Hero ── */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-[#0c1a2e] via-[#0ea5e9]/85 to-[#3b82f6]">
+      <div className="relative overflow-hidden bg-gradient-to-br from-[#0c1a2e] via-[#38bdf8]/85 to-[#60a5fa]">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
         <div className="absolute top-10 -left-20 w-72 h-72 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-10 right-10 w-96 h-96 bg-purple-400/15 rounded-full blur-3xl" />
@@ -125,7 +125,7 @@ export default function WishlistPage() {
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                   <Link
                     to="/destinations"
-                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white px-8 py-3.5 rounded-full font-semibold no-underline shadow-lg shadow-[#0ea5e9]/25 hover:shadow-xl transition-shadow"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-8 py-3.5 rounded-full font-semibold no-underline shadow-lg shadow-[#38bdf8]/25 hover:shadow-xl transition-shadow"
                   >
                     Explore Destinations
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
@@ -141,7 +141,7 @@ export default function WishlistPage() {
                       <Link
                         key={place}
                         to={`/destinations?search=${place}`}
-                        className="px-4 py-2 bg-white dark:bg-[#0c1a2e] rounded-full text-sm text-slate-600 dark:text-slate-300 hover:text-[#0ea5e9] dark:hover:text-[#0ea5e9] shadow-sm border border-slate-200 dark:border-white/5 hover:border-[#0ea5e9]/30 transition-all no-underline"
+                        className="px-4 py-2 bg-white dark:bg-[#0c1a2e] rounded-full text-sm text-slate-600 dark:text-slate-300 hover:text-[#38bdf8] dark:hover:text-[#38bdf8] shadow-sm border border-slate-200 dark:border-white/5 hover:border-[#38bdf8]/30 transition-all no-underline"
                       >
                         {place}
                       </Link>
@@ -161,7 +161,7 @@ export default function WishlistPage() {
                   </span>
                   <div className="hidden sm:flex gap-2">
                     {stats.categories.slice(0, 3).map((cat) => (
-                      <span key={cat} className="px-2.5 py-1 bg-[#0ea5e9]/10 text-[#0ea5e9] text-[11px] font-semibold rounded-full capitalize">
+                      <span key={cat} className="px-2.5 py-1 bg-[#38bdf8]/10 text-[#38bdf8] text-[11px] font-semibold rounded-full capitalize">
                         {cat}
                       </span>
                     ))}
@@ -179,7 +179,7 @@ export default function WishlistPage() {
                   )}
                   <Link
                     to="/destinations"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white text-xs font-semibold hover:shadow-lg transition-shadow"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white text-xs font-semibold hover:shadow-lg transition-shadow"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
                       <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
@@ -299,7 +299,7 @@ export default function WishlistPage() {
                       <div className="p-4">
                         <div className="flex items-start justify-between gap-2 mb-1">
                           <h3 className="font-bold text-slate-800 dark:text-white text-sm leading-snug">{dest.name}</h3>
-                          <span className="shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0ea5e9]/10 text-[#0ea5e9] capitalize">
+                          <span className="shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#38bdf8]/10 text-[#38bdf8] capitalize">
                             {dest.type || "Tour"}
                           </span>
                         </div>
@@ -322,7 +322,7 @@ export default function WishlistPage() {
                         <div className="flex gap-2">
                           <Link
                             to={`/tour/${dest.id}`}
-                            className="flex-1 text-center py-2 rounded-xl bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white text-xs font-semibold no-underline hover:shadow-md transition-shadow"
+                            className="flex-1 text-center py-2 rounded-xl bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white text-xs font-semibold no-underline hover:shadow-md transition-shadow"
                           >
                             View Details
                           </Link>

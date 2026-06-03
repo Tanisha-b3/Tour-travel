@@ -95,12 +95,12 @@ export default function BookingPage() {
   if (error || !tour) return (
     <div className="pt-[70px] min-h-screen bg-[#f8f6f1] dark:bg-[#05101d] flex items-center justify-center">
       <div className="text-center px-6">
-        <div className="w-24 h-24 bg-gradient-to-br from-[#0ea5e9]/20 to-[#3b82f6]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="w-24 h-24 bg-gradient-to-br from-[#38bdf8]/20 to-[#60a5fa]/20 rounded-full flex items-center justify-center mx-auto mb-6">
           <span className="text-5xl">😕</span>
         </div>
         <h2 className="text-2xl font-bold text-slate-800 dark:text-white mb-2">Tour Not Found</h2>
         <p className="text-slate-500 dark:text-slate-400 mb-8 text-sm">{error || "Tour not found."}</p>
-        <Link to="/destinations" className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white px-8 py-3.5 rounded-full font-semibold no-underline inline-block hover:-translate-y-0.5 transition-all">
+        <Link to="/destinations" className="bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-8 py-3.5 rounded-full font-semibold no-underline inline-block hover:-translate-y-0.5 transition-all">
           Browse Tours
         </Link>
       </div>
@@ -146,7 +146,7 @@ export default function BookingPage() {
         >
           Thank you, <strong className="text-slate-800 dark:text-white">{form.name}</strong>!<br />
           Your trip to <strong className="text-slate-800 dark:text-white">{tour.name}</strong> is all set.
-          A confirmation has been sent to <strong className="text-[#0ea5e9]">{form.email}</strong>.
+          A confirmation has been sent to <strong className="text-[#38bdf8]">{form.email}</strong>.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -174,10 +174,10 @@ export default function BookingPage() {
           transition={{ delay: 0.65, ease }}
           className="flex gap-3 justify-center flex-wrap"
         >
-          <Link to="/" className="bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white px-8 py-3.5 rounded-full font-semibold no-underline hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#0ea5e9]/35 transition-all">
+          <Link to="/" className="bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-8 py-3.5 rounded-full font-semibold no-underline hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#38bdf8]/35 transition-all">
             Back to Home
           </Link>
-          <Link to="/destinations" className="border-2 border-[#0ea5e9] text-[#0ea5e9] px-8 py-3.5 rounded-full font-semibold no-underline hover:bg-[#0ea5e9] hover:text-white transition-all">
+          <Link to="/destinations" className="border-2 border-[#38bdf8] text-[#38bdf8] px-8 py-3.5 rounded-full font-semibold no-underline hover:bg-[#38bdf8] hover:text-white transition-all">
             Explore More
           </Link>
         </motion.div>
@@ -187,7 +187,7 @@ export default function BookingPage() {
 
   const inputCls = (f) =>
     `py-3 px-4 border-2 rounded-xl text-sm outline-none transition-all duration-200 w-full ${
-      errors[f] ? "border-red-400 bg-red-50 dark:bg-red-950" : "border-slate-200 dark:border-slate-600 focus:border-[#0ea5e9] focus:shadow-[0_0_0_3px_rgba(14,165,233,0.1)] bg-white dark:bg-[#0c1a2e] dark:text-slate-200"
+      errors[f] ? "border-red-400 bg-red-50 dark:bg-red-950" : "border-slate-200 dark:border-slate-600 focus:border-[#38bdf8] focus:shadow-[0_0_0_3px_rgba(14,165,233,0.1)] bg-white dark:bg-[#0c1a2e] dark:text-slate-200"
     }`;
 
   return (
@@ -195,7 +195,7 @@ export default function BookingPage() {
       {/* ── Hero ── */}
       <div className="relative h-[240px] flex items-center justify-center overflow-hidden"
         style={{ backgroundImage: "url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1600&q=80')", backgroundSize: "cover", backgroundPosition: "center" }}>
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0c1a2e]/80 via-[#0c1a2e]/50 to-[#0ea5e9]/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0c1a2e]/80 via-[#0c1a2e]/50 to-[#38bdf8]/30" />
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 50% at 50% 60%, transparent 30%, #0c1a2e 100%)" }} />
         <div className="relative z-10 text-center text-white px-6">
           <motion.h1
@@ -226,9 +226,9 @@ export default function BookingPage() {
           transition={{ duration: 0.4, ease }}
           className="flex items-center gap-2 text-sm mb-8 text-slate-400"
         >
-          <Link to="/" className="text-[#0ea5e9] hover:underline">Home</Link> <span>/</span>
-          <Link to="/destinations" className="text-[#0ea5e9] hover:underline">Destinations</Link> <span>/</span>
-          <Link to={`/tour/${id}`} className="text-[#0ea5e9] hover:underline">{tour.name}</Link> <span>/</span>
+          <Link to="/" className="text-[#38bdf8] hover:underline">Home</Link> <span>/</span>
+          <Link to="/destinations" className="text-[#38bdf8] hover:underline">Destinations</Link> <span>/</span>
+          <Link to={`/tour/${id}`} className="text-[#38bdf8] hover:underline">{tour.name}</Link> <span>/</span>
           <span className="text-slate-600 dark:text-slate-400">Book</span>
         </motion.nav>
 
@@ -260,16 +260,16 @@ export default function BookingPage() {
                     placeholder="+1 234 567 8900" autoComplete="tel" className={inputCls("phone")} />
                 </Field>
                 <Field label="Number of Guests *" error={errors.guests} icon="👥">
-                  <div className={`flex items-center border-2 rounded-xl overflow-hidden transition-colors ${errors.guests ? "border-red-400" : "border-slate-200 dark:border-slate-600 focus-within:border-[#0ea5e9] focus-within:shadow-[0_0_0_3px_rgba(14,165,233,0.1)]"}`}>
+                  <div className={`flex items-center border-2 rounded-xl overflow-hidden transition-colors ${errors.guests ? "border-red-400" : "border-slate-200 dark:border-slate-600 focus-within:border-[#38bdf8] focus-within:shadow-[0_0_0_3px_rgba(14,165,233,0.1)]"}`}>
                     <button type="button" aria-label="Decrease"
                       onClick={() => setForm((p) => ({ ...p, guests: Math.max(1, Number(p.guests) - 1) }))}
-                      className="w-11 h-[46px] bg-slate-50 dark:bg-white/5 text-xl font-bold text-[#0ea5e9] hover:bg-[#0ea5e9]/10 transition-colors cursor-pointer border-none flex items-center justify-center shrink-0">−</button>
+                      className="w-11 h-[46px] bg-slate-50 dark:bg-white/5 text-xl font-bold text-[#38bdf8] hover:bg-[#38bdf8]/10 transition-colors cursor-pointer border-none flex items-center justify-center shrink-0">−</button>
                     <input type="number" name="guests" value={form.guests} onChange={handleChange}
                       min={1} max={20} aria-label="Guests"
                       className="flex-1 py-3 text-center text-sm font-semibold outline-none border-none bg-white dark:bg-[#0c1a2e] dark:text-slate-200" />
                     <button type="button" aria-label="Increase"
                       onClick={() => setForm((p) => ({ ...p, guests: Math.min(20, Number(p.guests) + 1) }))}
-                      className="w-11 h-[46px] bg-slate-50 dark:bg-white/5 text-xl font-bold text-[#0ea5e9] hover:bg-[#0ea5e9]/10 transition-colors cursor-pointer border-none flex items-center justify-center shrink-0">+</button>
+                      className="w-11 h-[46px] bg-slate-50 dark:bg-white/5 text-xl font-bold text-[#38bdf8] hover:bg-[#38bdf8]/10 transition-colors cursor-pointer border-none flex items-center justify-center shrink-0">+</button>
                   </div>
                 </Field>
               </div>
@@ -288,7 +288,7 @@ export default function BookingPage() {
               <Field label="Special Requests (Optional)" icon="✏️">
                 <textarea name="specialRequests" value={form.specialRequests} onChange={handleChange}
                   placeholder="Dietary requirements, accessibility needs, special occasions..."
-                  rows={4} className="py-3 px-4 border-2 border-slate-200 dark:border-slate-600 rounded-xl text-sm outline-none focus:border-[#0ea5e9] focus:shadow-[0_0_0_3px_rgba(14,165,233,0.1)] transition-all duration-200 resize-none bg-white dark:bg-[#0c1a2e] dark:text-slate-200 w-full" />
+                  rows={4} className="py-3 px-4 border-2 border-slate-200 dark:border-slate-600 rounded-xl text-sm outline-none focus:border-[#38bdf8] focus:shadow-[0_0_0_3px_rgba(14,165,233,0.1)] transition-all duration-200 resize-none bg-white dark:bg-[#0c1a2e] dark:text-slate-200 w-full" />
               </Field>
 
               <div className="flex flex-wrap gap-4 text-xs text-slate-400 pt-2">
@@ -315,7 +315,7 @@ export default function BookingPage() {
                 disabled={submitting}
                 whileHover={submitting ? {} : { y: -2 }}
                 whileTap={submitting ? {} : { scale: 0.98 }}
-                className="w-full py-4 bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] text-white rounded-2xl font-bold text-base cursor-pointer hover:shadow-xl hover:shadow-[#0ea5e9]/40 transition-all disabled:opacity-60 disabled:cursor-not-allowed relative overflow-hidden group"
+                className="w-full py-4 bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white rounded-2xl font-bold text-base cursor-pointer hover:shadow-xl hover:shadow-[#38bdf8]/40 transition-all disabled:opacity-60 disabled:cursor-not-allowed relative overflow-hidden group"
               >
                 <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 ease-in-out pointer-events-none" />
                 {submitting ? (
@@ -338,7 +338,7 @@ export default function BookingPage() {
             className="lg:sticky lg:top-[90px] self-start"
           >
             <div className="bg-white dark:bg-[#0c1a2e] rounded-3xl overflow-hidden shadow-[0_8px_40px_rgba(14,165,233,0.08)] border border-slate-100 dark:border-white/5">
-              <div className="h-2 bg-gradient-to-r from-[#0ea5e9] via-[#38bdf8] to-[#3b82f6]" />
+              <div className="h-2 bg-gradient-to-r from-[#38bdf8] via-[#38bdf8] to-[#60a5fa]" />
               <div className="p-7">
                 <h3 className="text-lg font-extrabold text-slate-800 dark:text-white mb-5 pb-4 border-b border-slate-100 dark:border-white/10">Booking Summary</h3>
                 <div className="flex gap-4 mb-6">
@@ -372,7 +372,7 @@ export default function BookingPage() {
                     key={total}
                     initial={{ scale: 1.15 }}
                     animate={{ scale: 1 }}
-                    className="text-2xl font-extrabold bg-gradient-to-r from-[#0ea5e9] to-[#3b82f6] bg-clip-text text-transparent"
+                    className="text-2xl font-extrabold bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] bg-clip-text text-transparent"
                   >
                     ${total.toLocaleString()}
                   </motion.span>
