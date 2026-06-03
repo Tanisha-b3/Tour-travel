@@ -119,7 +119,7 @@ export default function Navbar() {
         <div className="sm:max-w-[1100px] max-w-[600px] mx-auto px-3 sm:px-6 flex justify-between items-center">
 
           {/* ── Logo ── */}
-          <Link to="/" className="flex items-center gap-2 no-underline group shrink-0" aria-label="Airventure home">
+          <Link to="/" className={`flex items-center gap-2 no-underline group shrink-0 ${isHome ? "mr-12" : ""}`} aria-label="Airventure home">
             <motion.div
               whileHover={{ rotate: 18, scale: 1.18 }}
               transition={{ type: "spring", stiffness: 420, damping: 14 }}
@@ -306,7 +306,7 @@ export default function Navbar() {
 
             {/* Hamburger — 44×44 touch target, uniform bar widths */}
             <button
-              className={`w-11 h-11 flex items-center justify-center rounded-xl cursor-pointer border-none bg-transparent mr-14`}
+              className={`w-11 h-11 flex items-center justify-center rounded-xl cursor-pointer border-none bg-transparent ${isHome ? "mr-14" : ""}`}
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle navigation"
               aria-expanded={isOpen}
@@ -361,7 +361,7 @@ export default function Navbar() {
             style={{ height: "100dvh" }}
             className={`fixed top-0 right-0 z-[60] w-[300px] max-w-[90vw] md:hidden flex flex-col overflow-hidden ${
               darkMode ? "bg-[#060f1d]" : "bg-[#fafafa]"
-            } shadow-2xl mr-10` }
+            } shadow-2xl ${isHome ? "mr-10" : ""}` }
           >
             {/* Ambient blobs */}
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
