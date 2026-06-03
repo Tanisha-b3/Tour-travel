@@ -96,7 +96,7 @@ export default function HeroBanner() {
       {/* ── Main content ── */}
       <motion.div
         style={{ opacity }}
-        className="relative z-10 text-center max-w-[900px] px-6 flex flex-col items-center"
+        className="relative z-10 text-center max-w-[1200px] px-6 flex flex-col items-center"
       >
         {/* Eyebrow pill */}
         <motion.div
