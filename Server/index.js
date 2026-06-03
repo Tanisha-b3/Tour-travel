@@ -16,9 +16,21 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/travel-tour";
 
-app.use(express.json());
+const allowedOrigins = [
+  process.env.Frontend_URL,
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://tour-travel-eight-delta.vercel.app",
+].filter(Boolean);
 
-app.use(cors({ origin: process.env.Frontend_URL || "http://localhost:5173" }));
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigins.some((o) => origin.startsWith(o))) return cb(null, true);
+    cb(null, true);
+  },
+}));
+
+app.use(express.json());
 
 async function seedIfEmpty() {
   const destCount = await Destination.countDocuments();
@@ -43,9 +55,6 @@ mongoose.connect(MONGODB_URI)
     await seedIfEmpty();
   })
   .catch((err) => console.error("MongoDB connection error:", err));
-
-app.use(cors({ origin: process.env.Frontend_URL || "http://localhost:5173" }));
-app.use(express.json());
 
 app.use("/api/destinations", destinationRoutes);
 app.use("/api/testimonials", testimonialRoutes);
