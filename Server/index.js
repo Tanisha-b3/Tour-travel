@@ -15,9 +15,8 @@ import { readFile } from "fs/promises";
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/travel-tour";
-app.get("/", (req, res) => {
-  res.send("Welcome to the Travel Tour API");
-});
+
+app.use(express.json());
 
 app.use(cors({ origin: process.env.Frontend_URL || "http://localhost:5173" }));
 
@@ -33,6 +32,11 @@ async function seedIfEmpty() {
   }
 }
 
+app.get("/", (req, res) => {
+  res.send("Welcome to the Travel Tour API");
+});
+
+
 mongoose.connect(MONGODB_URI)
   .then(async () => {
     console.log("MongoDB connected");
@@ -40,7 +44,7 @@ mongoose.connect(MONGODB_URI)
   })
   .catch((err) => console.error("MongoDB connection error:", err));
 
-app.use(cors());
+app.use(cors({ origin: process.env.Frontend_URL || "http://localhost:5173" }));
 app.use(express.json());
 
 app.use("/api/destinations", destinationRoutes);
