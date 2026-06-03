@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useScrollTop } from "../hooks/useScrollTop";
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 /* ─── hook for reduced motion support ─── */
 function useReducedMotion() {
@@ -100,6 +101,9 @@ export default function ScrollToTop() {
   const safeBottomInset = useSafeArea();
   const { scrollToTop: smoothScrollToTop, supportsNativeSmooth } = useSmoothScroll();
 
+  const location = useLocation();
+  const isHome = location.pathname === "/";
+
   // Custom scroll handler that uses smooth scroll when supported
   const handleScrollToTop = () => {
     if (supportsNativeSmooth && !prefersReducedMotion) {
@@ -146,7 +150,7 @@ export default function ScrollToTop() {
             active:scale-95
             disabled:opacity-50 disabled:cursor-not-allowed
             hover:shadow-2xl hover:shadow-[#0ea5e9]/50
-            mr-12 sm:mr-0
+            ${isHome ? "mr-12 sm:mr-0" : ""}
           `}
             style={{
               bottom: '20px',
