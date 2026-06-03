@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "name": "Sarah Johnson",
+    "avatar": "https://i.pravatar.cc/100?img=1",
+    "location": "New York, USA",
+    "text": "Absolutely incredible experience! The team took care of everything and the Bali tour exceeded all my expectations. The temples, the food, the people - everything was perfect!",
+    "rating": 5
+  },
+  {
+    "id": 2,
+    "name": "Michael Chen",
+    "avatar": "https://i.pravatar.cc/100?img=3",
+    "location": "Sydney, Australia",
+    "text": "Booked the Swiss Alps package and it was worth every penny. The views were breathtaking and the guides were knowledgeable. Already planning my next trip!",
+    "rating": 5
+  },
+  {
+    "id": 3,
+    "name": "Emma Williams",
+    "avatar": "https://i.pravatar.cc/100?img=5",
+    "location": "London, UK",
+    "text": "Our family trip to Tokyo was seamless thanks to the amazing planning. The kids loved every moment. Highly recommend this agency for family vacations!",
+    "rating": 5
+  },
+  {
+    "id": 4,
+    "name": "Carlos Rivera",
+    "avatar": "https://i.pravatar.cc/100?img=8",
+    "location": "Madrid, Spain",
+    "text": "The Santorini sunset cruise was the most romantic experience of our lives. Everything was perfectly organized from start to finish. We'll be back!",
+    "rating": 5
+  }
+]

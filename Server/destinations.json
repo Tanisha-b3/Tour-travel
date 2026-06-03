@@ -1,0 +1,209 @@
+[
+  {
+    "id": 1,
+    "name": "Bali, Indonesia",
+    "image": "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&q=80",
+      "https://images.unsplash.com/photo-1555400038-63f5ba517a47?w=800&q=80",
+      "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?w=800&q=80"
+    ],
+    "description": "Experience the magic of Bali with its stunning beaches, ancient temples, and vibrant culture. From the lush rice terraces of Ubud to the vibrant nightlife of Seminyak, Bali offers an unforgettable tropical paradise experience.",
+    "price": 1299,
+    "duration": "7 Days / 6 Nights",
+    "rating": 4.8,
+    "category": "beach",
+    "type": "beach",
+    "location": "Indonesia",
+    "facilities": ["Hotel Accommodation", "Daily Breakfast", "Airport Transfers", "Tour Guide", "Travel Insurance", "Sightseeing Tours"],
+    "highlights": ["Temple Tours", "Rice Terrace Trek", "Sunset at Uluwatu", "Snorkeling at Blue Lagoon"],
+    "reviews": [
+      { "name": "Sarah Johnson", "text": "Absolutely breathtaking experience! The temples and rice terraces were incredible.", "rating": 5 },
+      { "name": "Mike Chen", "text": "Best vacation ever! Highly recommend the snorkeling trip.", "rating": 5 }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Paris, France",
+    "image": "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=800&q=80",
+      "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=800&q=80",
+      "https://images.unsplash.com/photo-1550340499-a6c60fc8287c?w=800&q=80"
+    ],
+    "description": "Discover the City of Light, where romance meets history. Explore world-famous landmarks, indulge in exquisite cuisine, and immerse yourself in art and fashion in one of the world's most beautiful cities.",
+    "price": 1899,
+    "duration": "5 Days / 4 Nights",
+    "rating": 4.7,
+    "category": "cultural",
+    "type": "cultural",
+    "location": "France",
+    "facilities": ["4-Star Hotel", "Daily Breakfast", "Airport Transfers", "English-Speaking Guide", "Museum Passes", "Seine River Cruise"],
+    "highlights": ["Eiffel Tower Visit", "Louvre Museum", "Notre Dame Cathedral", "Montmartre Walk"],
+    "reviews": [
+      { "name": "Emma Wilson", "text": "Paris exceeded all expectations. The Seine cruise at sunset was magical.", "rating": 5 },
+      { "name": "James Brown", "text": "Wonderful cultural experience. The guide was fantastic!", "rating": 4 }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Maldives",
+    "image": "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=800&q=80",
+      "https://images.unsplash.com/photo-1573843981267-be1999ff37cd?w=800&q=80",
+      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&q=80"
+    ],
+    "description": "Escape to the pristine white sands and crystal-clear waters of the Maldives. A true paradise for snorkelers, divers, and anyone seeking ultimate relaxation in overwater bungalows.",
+    "price": 2499,
+    "duration": "5 Days / 4 Nights",
+    "rating": 4.9,
+    "category": "beach",
+    "type": "beach",
+    "location": "Maldives",
+    "facilities": ["Overwater Villa", "All Meals Included", "Speedboat Transfers", "Snorkeling Gear", "Spa Access", "Water Sports"],
+    "highlights": ["Snorkeling with Manta Rays", "Sunset Dolphin Cruise", "Private Beach Dinner", "Underwater Restaurant"],
+    "reviews": [
+      { "name": "David Kim", "text": "Pure paradise! The overwater villa was incredible.", "rating": 5 },
+      { "name": "Lisa Patel", "text": "Most beautiful place I've ever been. The snorkeling was world-class.", "rating": 5 }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Tokyo, Japan",
+    "image": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=800&q=80",
+      "https://images.unsplash.com/photo-1551641506-ee5bf4cb45f1?w=800&q=80",
+      "https://images.unsplash.com/photo-1536098561742-ca998e48cbcc?w=800&q=80"
+    ],
+    "description": "Immerse yourself in the fascinating blend of ancient traditions and cutting-edge technology in Tokyo. From serene temples to neon-lit streets, experience Japan's incredible capital city.",
+    "price": 2199,
+    "duration": "8 Days / 7 Nights",
+    "rating": 4.8,
+    "category": "cultural",
+    "type": "cultural",
+    "location": "Japan",
+    "facilities": ["Business Hotel", "Daily Breakfast", "Airport Transfers", "JR Rail Pass", "English Guide", "WiFi Router"],
+    "highlights": ["Shibuya Crossing", "Senso-ji Temple", "Tsukiji Fish Market", "Akihabara Tour"],
+    "reviews": [
+      { "name": "Tom Harris", "text": "Tokyo is like nowhere else on Earth. Amazing food and culture!", "rating": 5 },
+      { "name": "Yuki Tanaka", "text": "Great guided tour. Saw both modern and traditional sides of Tokyo.", "rating": 5 }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Swiss Alps",
+    "image": "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=800&q=80",
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+      "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=800&q=80"
+    ],
+    "description": "Journey through the breathtaking Swiss Alps with snow-capped peaks, pristine lakes, and charming villages. Perfect for adventure seekers and nature lovers alike.",
+    "price": 2999,
+    "duration": "7 Days / 6 Nights",
+    "rating": 4.9,
+    "category": "adventure",
+    "type": "adventure",
+    "location": "Switzerland",
+    "facilities": ["Mountain Resort", "All Meals", "Ski Equipment", "Train Passes", "Spa Access", "Professional Guide"],
+    "highlights": ["Jungfraujoch Excursion", "Skiing in Zermatt", "Lake Geneva Cruise", "Mountain Hiking"],
+    "reviews": [
+      { "name": "Anna Schmidt", "text": "The most stunning landscapes I've ever seen. Skiing was world-class!", "rating": 5 },
+      { "name": "Chris Miller", "text": "Perfect mix of adventure and relaxation. Highly recommended!", "rating": 5 }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Dubai, UAE",
+    "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80",
+      "https://images.unsplash.com/photo-1582672060674-bc2bd808a8b5?w=800&q=80",
+      "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80"
+    ],
+    "description": "Experience the extraordinary in Dubai, where futuristic architecture meets Arabian hospitality. Shop at world-class malls, dine in luxury, and explore desert adventures.",
+    "price": 1599,
+    "duration": "6 Days / 5 Nights",
+    "rating": 4.6,
+    "category": "luxury",
+    "type": "luxury",
+    "location": "UAE",
+    "facilities": ["5-Star Hotel", "Daily Breakfast", "Airport Transfers", "Desert Safari", "Burj Khalifa Access", "Shopping Vouchers"],
+    "highlights": ["Burj Khalifa Observation Deck", "Desert Safari", "Dubai Mall", "Palm Jumeirah Tour"],
+    "reviews": [
+      { "name": "Omar Rashid", "text": "Dubai is unreal! The architecture and shopping are next level.", "rating": 5 },
+      { "name": "Sophie Martin", "text": "Amazing city tour. The desert safari was a highlight!", "rating": 4 }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Santorini, Greece",
+    "image": "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=800&q=80",
+      "https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=800&q=80",
+      "https://images.unsplash.com/photo-1504512485720-7d83a16ee930?w=800&q=80"
+    ],
+    "description": "Discover the iconic blue-domed churches and stunning sunsets of Santorini. This volcanic island offers unique beaches, exquisite wine, and breathtaking views of the Aegean Sea.",
+    "price": 1799,
+    "duration": "6 Days / 5 Nights",
+    "rating": 4.7,
+    "category": "beach",
+    "type": "beach",
+    "location": "Greece",
+    "facilities": ["Cliffside Hotel", "Daily Breakfast", "Airport Transfers", "Wine Tour", "Boat Excursion", "Greek Cooking Class"],
+    "highlights": ["Oia Sunset View", "Volcano Boat Tour", "Wine Tasting", "Red Beach Visit"],
+    "reviews": [
+      { "name": "Maria Garcia", "text": "Santorini sunsets are truly magical. The wine tour was fantastic!", "rating": 5 },
+      { "name": "John Smith", "text": "Beautiful island with amazing food and friendly people.", "rating": 5 }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "New York City, USA",
+    "image": "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=800&q=80",
+      "https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&q=80",
+      "https://images.unsplash.com/photo-1499092346589-b9b6be3e94b2?w=800&q=80"
+    ],
+    "description": "Experience the energy of the Big Apple! From Broadway shows to world-class museums, iconic landmarks to diverse cuisine, New York City offers endless possibilities for every traveler.",
+    "price": 1699,
+    "duration": "5 Days / 4 Nights",
+    "rating": 4.5,
+    "category": "cultural",
+    "type": "cultural",
+    "location": "USA",
+    "facilities": ["3-Star Hotel", "Daily Breakfast", "Airport Transfers", "City Pass", "Hop-on Hop-off Bus", "Guide"],
+    "highlights": ["Statue of Liberty", "Times Square", "Central Park", "Empire State Building"],
+    "reviews": [
+      { "name": "Alex Turner", "text": "NYC never sleeps and neither did we! Amazing city tour.", "rating": 4 },
+      { "name": "Rachel Green", "text": "Broadway shows and the food scene were incredible!", "rating": 5 }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Queenstown, New Zealand",
+    "image": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80",
+    "images": [
+      "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80",
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+      "https://images.unsplash.com/photo-1470071459604-1b5ec3b1e123?w=800&q=80"
+    ],
+    "description": "The adventure capital of the world! Queenstown offers bungee jumping, skydiving, jet boating, and stunning landscapes that will take your breath away.",
+    "price": 2799,
+    "duration": "8 Days / 7 Nights",
+    "rating": 4.8,
+    "category": "adventure",
+    "type": "adventure",
+    "location": "New Zealand",
+    "facilities": ["Lakeside Lodge", "Daily Breakfast", "Airport Transfers", "Activity Passes", "Equipment Rental", "Adventure Guide"],
+    "highlights": ["Bungee Jumping", "Milford Sound Cruise", "Skiing", "Jet Boat Ride"],
+    "reviews": [
+      { "name": "Jack Thompson", "text": "Adventure heaven! Bungee jumping was life-changing.", "rating": 5 },
+      { "name": "Emily Davis", "text": "The most beautiful place for adventure sports!", "rating": 5 }
+    ]
+  }
+]
