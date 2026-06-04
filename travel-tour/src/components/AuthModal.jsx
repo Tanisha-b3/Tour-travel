@@ -16,7 +16,9 @@ function validateField(name, value, extra) {
       return "";
     case "email":
       if (!value.trim()) return "Email is required";
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Enter a valid email address";
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) {
+  return "Enter a valid email address";
+}
       return "";
     case "password":
       if (!value) return "Password is required";

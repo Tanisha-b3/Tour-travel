@@ -76,7 +76,9 @@ export default function BookingPage() {
 
       case "email":
         if (!value.trim()) e.email = "Email is required";
-        else if (!/\S+@\S+\.\S+/.test(value)) e.email = "Enter a valid email address";
+       else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) {
+  e.email = "Enter a valid email address";
+}
         else e.email = "";
         break;
 
