@@ -150,7 +150,7 @@ export default function ScrollToTop() {
             active:scale-95
             disabled:opacity-50 disabled:cursor-not-allowed
             hover:shadow-2xl hover:shadow-[#38bdf8]/50
-            ${isHome ? "mr-12 sm:mr-0" : ""}
+           
           `}
             style={{
               bottom: '20px',

@@ -46,6 +46,40 @@ export function fetchTestimonials() {
   return fetchJSON("/testimonials").then((r) => r.data);
 }
 
+/** Register a new user. */
+export async function registerUser(payload) {
+  const res = await fetch(`${API_BASE}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || "Registration failed");
+  return json.data;
+}
+
+/** Login an existing user. */
+export async function loginUser(payload) {
+  const res = await fetch(`${API_BASE}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || "Login failed");
+  return json.data;
+}
+
+/** Get current user profile (requires token). */
+export async function getMe(token) {
+  const res = await fetch(`${API_BASE}/auth/me`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error || "Failed to fetch user");
+  return json.data;
+}
+
 /** Submit a booking. */
 export async function createBooking(payload) {
   const res = await fetch(`${API_BASE}/bookings`, {

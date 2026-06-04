@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useApp } from "../context/AppContext";
 import { useToast } from "../context/ToastContext";
+import { useAuth } from "../context/AuthContext";
 
 const TYPE_COLORS = {
   beach:     "bg-sky-100 text-sky-700",
@@ -18,6 +19,7 @@ const cardVariants = {
 
 export default function DestinationCard({ destination, index = 0 }) {
   const { isWishlisted, toggleWishlist } = useApp();
+  const { user, openAuthModal } = useAuth();
   const addToast = useToast();
   const [imgLoaded, setImgLoaded] = useState(false);
   const wishlisted  = isWishlisted(destination.id);
@@ -25,11 +27,23 @@ export default function DestinationCard({ destination, index = 0 }) {
 
   const handleWishlist = (e) => {
     e.preventDefault();
+    if (!user) {
+      openAuthModal("login");
+      addToast("info", "Please login to save destinations");
+      return;
+    }
     toggleWishlist(destination);
     addToast(
       wishlisted ? "error" : "success",
       wishlisted ? `Removed ${destination.name} from wishlist` : `Added ${destination.name} to wishlist`
     );
+  };
+
+  const handleAuthRequired = (e, action) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openAuthModal("login");
+    addToast("info", `Please login to ${action}`);
   };
 
   return (
@@ -112,14 +126,25 @@ export default function DestinationCard({ destination, index = 0 }) {
             </span>
             <span className="text-xs text-slate-400 dark:text-slate-500">/person</span>
           </div>
-          <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}>
-            <Link
-              to={`/tour/${destination.id}`}
+          {user ? (
+            <motion.div whileHover={{ scale: 1.05, y: -2 }} whileTap={{ scale: 0.97 }}>
+              <Link
+                to={`/tour/${destination.id}`}
+                className="bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-4 py-2 rounded-full text-xs font-semibold no-underline shadow-sm hover:shadow-lg hover:shadow-[#38bdf8]/35 transition-shadow"
+              >
+                View Details →
+              </Link>
+            </motion.div>
+          ) : (
+            <motion.button
+              onClick={(e) => handleAuthRequired(e, "view tour details")}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.97 }}
               className="bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-4 py-2 rounded-full text-xs font-semibold no-underline shadow-sm hover:shadow-lg hover:shadow-[#38bdf8]/35 transition-shadow"
             >
               View Details →
-            </Link>
-          </motion.div>
+            </motion.button>
+          )}
         </div>
       </div>
     </motion.article>

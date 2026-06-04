@@ -9,6 +9,7 @@ import Testimonial from "./models/Testimonial.js";
 import destinationRoutes from "./routes/destinationRoutes.js";
 import testimonialRoutes from "./routes/testimonialRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 import { readFile } from "fs/promises";
 
@@ -56,6 +57,7 @@ mongoose.connect(MONGODB_URI)
   })
   .catch((err) => console.error("MongoDB connection error:", err));
 
+app.use("/api/auth", authRoutes);
 app.use("/api/destinations", destinationRoutes);
 app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/bookings", bookingRoutes);

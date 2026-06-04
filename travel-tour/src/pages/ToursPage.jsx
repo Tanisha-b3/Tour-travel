@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { fetchDestinations } from "../api";
+import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -26,6 +28,16 @@ const CATEGORIES = [
 function TourCard({ tour }) {
   const catMeta = CATEGORIES.find((c) => c.value === tour.type) || CATEGORIES[0];
   const [imgLoaded, setImgLoaded] = useState(false);
+  const { user, openAuthModal } = useAuth();
+  const addToast = useToast();
+
+  const handleBookClick = (e) => {
+    if (!user) {
+      e.preventDefault();
+      openAuthModal("login");
+      addToast("info", "Please login to book tours");
+    }
+  };
 
   return (
     <motion.article
@@ -151,16 +163,29 @@ function TourCard({ tour }) {
             >
               Details
             </Link>
-            <Link
-              to={`/book/${tour.id}`}
-              className="flex-1 text-center py-2.5 rounded-xl text-white text-sm font-semibold no-underline transition-all hover:-translate-y-0.5"
-              style={{
-                background: "linear-gradient(135deg, #38bdf8 0%, #60a5fa 55%, #6366f1 100%)",
-                boxShadow: "0 4px 16px rgba(14,165,233,0.28)",
-              }}
-            >
-              Book Now
-            </Link>
+            {user ? (
+              <Link
+                to={`/book/${tour.id}`}
+                className="flex-1 text-center py-2.5 rounded-xl text-white text-sm font-semibold no-underline transition-all hover:-translate-y-0.5"
+                style={{
+                  background: "linear-gradient(135deg, #38bdf8 0%, #60a5fa 55%, #6366f1 100%)",
+                  boxShadow: "0 4px 16px rgba(14,165,233,0.28)",
+                }}
+              >
+                Book Now
+              </Link>
+            ) : (
+              <button
+                onClick={handleBookClick}
+                className="flex-1 text-center py-2.5 rounded-xl text-white text-sm font-semibold no-underline transition-all hover:-translate-y-0.5 cursor-pointer"
+                style={{
+                  background: "linear-gradient(135deg, #38bdf8 0%, #60a5fa 55%, #6366f1 100%)",
+                  boxShadow: "0 4px 16px rgba(14,165,233,0.28)",
+                }}
+              >
+                Book Now
+              </button>
+            )}
           </div>
         </div>
       </div>

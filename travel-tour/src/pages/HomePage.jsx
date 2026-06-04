@@ -10,6 +10,8 @@ import SearchSection from "../components/SearchSection";
 import CountUp from "../components/CountUp";
 import { CardSkeleton, TestimonialSkeleton } from "../components/Skeleton";
 import { fetchFeatured, fetchPopular, fetchTestimonials } from "../api";
+import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 
 /* ── animation helpers ── */
 const fadeUp = {
@@ -66,6 +68,16 @@ export default function HomePage() {
   const [popularTours,setPopularTours]= useState([]);
   const [testimonials,setTestimonials]= useState([]);
   const [loading,     setLoading]     = useState(true);
+  const { user, openAuthModal } = useAuth();
+  const addToast = useToast();
+
+  const handleViewPackage = (e, id) => {
+    if (!user) {
+      e.preventDefault();
+      openAuthModal("login");
+      addToast("info", "Please login to view tour packages");
+    }
+  };
 
   useEffect(() => {
     Promise.all([fetchFeatured(), fetchPopular(), fetchTestimonials()])
@@ -185,12 +197,21 @@ export default function HomePage() {
                       {dest.description.slice(0, 110)}…
                     </p>
                     <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }} className="inline-block">
-                      <Link
-                        to={`/tour/${dest.id}`}
-                        className="inline-flex items-center gap-1 bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-6 py-2.5 rounded-full text-sm font-semibold no-underline hover:shadow-lg hover:shadow-[#38bdf8]/35 transition-shadow"
-                      >
-                        View Package →
-                      </Link>
+                      {user ? (
+                        <Link
+                          to={`/tour/${dest.id}`}
+                          className="inline-flex items-center gap-1 bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-6 py-2.5 rounded-full text-sm font-semibold no-underline hover:shadow-lg hover:shadow-[#38bdf8]/35 transition-shadow"
+                        >
+                          View Package →
+                        </Link>
+                      ) : (
+                        <button
+                          onClick={(e) => handleViewPackage(e, dest.id)}
+                          className="inline-flex items-center gap-1 bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-6 py-2.5 rounded-full text-sm font-semibold no-underline hover:shadow-lg hover:shadow-[#38bdf8]/35 transition-shadow cursor-pointer"
+                        >
+                          View Package →
+                        </button>
+                      )}
                     </motion.div>
                   </div>
                 </motion.article>

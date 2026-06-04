@@ -36,7 +36,19 @@ export default function BookingPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [errors, setErrors] = useState({});
-  const [form, setForm] = useState({ name: "", email: "", phone: "", checkIn: "", checkOut: "", guests: 1, specialRequests: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    confirmEmail: "",
+    phone: "",
+    address: "",
+    nationality: "",
+    checkIn: "",
+    checkOut: "",
+    guests: 1,
+    tripType: "couple",
+    specialRequests: ""
+  });
   const addToast = useToast();
 
   useEffect(() => {
@@ -48,33 +60,106 @@ export default function BookingPage() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((p) => ({ ...p, [name]: value }));
-    if (errors[name]) setErrors((p) => ({ ...p, [name]: "" }));
+    validate(name, value);
   };
 
-  const validate = () => {
-    const e = {};
-    if (!form.name.trim()) e.name = "Full name is required";
-    if (!form.email.trim()) e.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(form.email)) e.email = "Enter a valid email";
-    if (!form.phone.trim()) e.phone = "Phone number is required";
-    else if (!/^\+?[\d\s\-()]{7,}$/.test(form.phone)) e.phone = "Enter a valid phone number";
-    if (!form.checkIn) e.checkIn = "Check-in date is required";
-    if (!form.checkOut) e.checkOut = "Check-out date is required";
-    else if (form.checkIn && form.checkOut <= form.checkIn) e.checkOut = "Check-out must be after check-in";
-    if (Number(form.guests) < 1) e.guests = "At least 1 guest required";
-    return e;
+  const validate = (name, value) => {
+    const e = { ...errors };
+
+    switch (name) {
+      case "name":
+        if (!value.trim()) e.name = "Full name is required";
+        else if (value.trim().length < 2) e.name = "Name must be at least 2 characters";
+        else if (!/^[a-zA-Z\s'-]+$/.test(value)) e.name = "Name can only contain letters, spaces, hyphens and apostrophes";
+        else e.name = "";
+        break;
+
+      case "email":
+        if (!value.trim()) e.email = "Email is required";
+        else if (!/\S+@\S+\.\S+/.test(value)) e.email = "Enter a valid email address";
+        else e.email = "";
+        break;
+
+      case "confirmEmail":
+        if (!value.trim()) e.confirmEmail = "Please confirm your email";
+        else if (value !== form.email) e.confirmEmail = "Emails do not match";
+        else e.confirmEmail = "";
+        break;
+
+      case "phone":
+        if (!value.trim()) e.phone = "Phone number is required";
+        else if (!/^\+?[\d\s\-()]{7,}$/.test(value)) e.phone = "Enter a valid phone number (min 7 digits)";
+        else e.phone = "";
+        break;
+
+      case "address":
+        if (!value.trim()) e.address = "Address is required";
+        else if (value.trim().length < 10) e.address = "Please enter a complete address (min 10 characters)";
+        else e.address = "";
+        break;
+
+      case "nationality":
+        if (!value) e.nationality = "Please select your nationality";
+        else e.nationality = "";
+        break;
+
+      case "checkIn":
+        if (!value) e.checkIn = "Check-in date is required";
+        else if (new Date(value) < new Date(TODAY)) e.checkIn = "Check-in date cannot be in the past";
+        else e.checkIn = "";
+        break;
+
+      case "checkOut":
+        if (!value) e.checkOut = "Check-out date is required";
+        else if (form.checkIn && new Date(value) <= new Date(form.checkIn)) e.checkOut = "Check-out must be after check-in";
+        else if (form.checkIn) {
+          const nights = Math.round((new Date(value) - new Date(form.checkIn)) / 86400000);
+          if (nights > 30) e.checkOut = "Booking cannot exceed 30 nights";
+          else e.checkOut = "";
+        } else e.checkOut = "";
+        break;
+
+      case "guests":
+        if (Number(value) < 1) e.guests = "At least 1 guest required";
+        else if (Number(value) > 20) e.guests = "Maximum 20 guests allowed";
+        else e.guests = "";
+        break;
+
+      default:
+        break;
+    }
+
+    setErrors(e);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errs = validate();
-    if (Object.keys(errs).length) { setErrors(errs); return; }
+    const hasErrors = Object.values(errors).some(Boolean) || Object.values(form).some((v, i) => {
+      const fields = ["name", "email", "confirmEmail", "phone", "address", "nationality", "checkIn", "checkOut", "guests"];
+      const key = fields[i];
+      if (!key) return false;
+      if (key === "name" && !form.name.trim()) return true;
+      if (key === "email" && !form.email.trim()) return true;
+      if (key === "confirmEmail" && !form.confirmEmail.trim()) return true;
+      if (key === "phone" && !form.phone.trim()) return true;
+      if (key === "address" && !form.address.trim()) return true;
+      if (key === "nationality" && !form.nationality) return true;
+      if (key === "checkIn" && !form.checkIn) return true;
+      if (key === "checkOut" && !form.checkOut) return true;
+      if (key === "guests" && Number(form.guests) < 1) return true;
+      return false;
+    });
+    if (hasErrors) {
+      addToast("error", "Please fill in all required fields correctly.");
+      return;
+    }
     setSubmitting(true); setSubmitError(null);
     try {
       await createBooking({
         tourId: Number(id), tourName: tour.name, name: form.name, email: form.email,
-        phone: form.phone, checkIn: form.checkIn, checkOut: form.checkOut,
-        guests: Number(form.guests), specialRequests: form.specialRequests, total,
+        phone: form.phone, address: form.address, nationality: form.nationality,
+        checkIn: form.checkIn, checkOut: form.checkOut, guests: Number(form.guests),
+        tripType: form.tripType, specialRequests: form.specialRequests, total,
       });
       setSubmitted(true);
       addToast("success", "Booking confirmed! Check your email for details.");
@@ -255,22 +340,69 @@ export default function BookingPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <Field label="Confirm Email *" error={errors.confirmEmail} icon="📧">
+                  <input type="email" name="confirmEmail" value={form.confirmEmail} onChange={handleChange}
+                    placeholder="john@example.com" autoComplete="email" className={inputCls("confirmEmail")} />
+                </Field>
                 <Field label="Phone Number *" error={errors.phone} icon="📞">
                   <input type="tel" name="phone" value={form.phone} onChange={handleChange}
                     placeholder="+1 234 567 8900" autoComplete="tel" className={inputCls("phone")} />
                 </Field>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <Field label="Address *" error={errors.address} icon="🏠">
+                  <input type="text" name="address" value={form.address} onChange={handleChange}
+                    placeholder="123 Main Street, City, Country" autoComplete="street-address" className={inputCls("address")} />
+                </Field>
+                <Field label="Nationality *" error={errors.nationality} icon="🌍">
+                  <select name="nationality" value={form.nationality} onChange={handleChange}
+                    className={`${inputCls("nationality")} cursor-pointer`}>
+                    <option value="">Select nationality</option>
+                    <option value="US">United States</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="CA">Canada</option>
+                    <option value="AU">Australia</option>
+                    <option value="DE">Germany</option>
+                    <option value="FR">France</option>
+                    <option value="IT">Italy</option>
+                    <option value="ES">Spain</option>
+                    <option value="JP">Japan</option>
+                    <option value="CN">China</option>
+                    <option value="IN">India</option>
+                    <option value="BR">Brazil</option>
+                    <option value="MX">Mexico</option>
+                    <option value="ZA">South Africa</option>
+                    <option value="OTHER">Other</option>
+                  </select>
+                </Field>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <Field label="Number of Guests *" error={errors.guests} icon="👥">
                   <div className={`flex items-center border-2 rounded-xl overflow-hidden transition-colors ${errors.guests ? "border-red-400" : "border-slate-200 dark:border-slate-600 focus-within:border-[#38bdf8] focus-within:shadow-[0_0_0_3px_rgba(14,165,233,0.1)]"}`}>
                     <button type="button" aria-label="Decrease"
-                      onClick={() => setForm((p) => ({ ...p, guests: Math.max(1, Number(p.guests) - 1) }))}
+                      onClick={() => { setForm((p) => ({ ...p, guests: Math.max(1, Number(p.guests) - 1) })); validate("guests", String(Math.max(1, Number(form.guests) - 1))); }}
                       className="w-11 h-[46px] bg-slate-50 dark:bg-white/5 text-xl font-bold text-[#38bdf8] hover:bg-[#38bdf8]/10 transition-colors cursor-pointer border-none flex items-center justify-center shrink-0">−</button>
                     <input type="number" name="guests" value={form.guests} onChange={handleChange}
                       min={1} max={20} aria-label="Guests"
                       className="flex-1 py-3 text-center text-sm font-semibold outline-none border-none bg-white dark:bg-[#0c1a2e] dark:text-slate-200" />
                     <button type="button" aria-label="Increase"
-                      onClick={() => setForm((p) => ({ ...p, guests: Math.min(20, Number(p.guests) + 1) }))}
+                      onClick={() => { setForm((p) => ({ ...p, guests: Math.min(20, Number(p.guests) + 1) })); validate("guests", String(Math.min(20, Number(form.guests) + 1))); }}
                       className="w-11 h-[46px] bg-slate-50 dark:bg-white/5 text-xl font-bold text-[#38bdf8] hover:bg-[#38bdf8]/10 transition-colors cursor-pointer border-none flex items-center justify-center shrink-0">+</button>
                   </div>
+                </Field>
+                <Field label="Trip Type" icon="✈️">
+                  <select name="tripType" value={form.tripType} onChange={handleChange}
+                    className={`${inputCls("tripType")} cursor-pointer`}>
+                    <option value="couple">Couple's Trip</option>
+                    <option value="family">Family Vacation</option>
+                    <option value="friends">Friends Group</option>
+                    <option value="solo">Solo Adventure</option>
+                    <option value="business">Business Trip</option>
+                    <option value="honeymoon">Honeymoon</option>
+                    <option value="other">Other</option>
+                  </select>
                 </Field>
               </div>
 

@@ -7,15 +7,15 @@ const bookingService = {
   },
 
   async create(body) {
-    const { tourId, tourName, name, email, phone, checkIn, checkOut, guests, specialRequests, total } = body;
+    const { tourId, tourName, name, email, confirmEmail, phone, address, nationality, checkIn, checkOut, guests, tripType, specialRequests, total } = body;
 
-    if (!tourId || !name || !email || !phone || !checkIn || !checkOut || !guests || !total) {
+    if (!tourId || !name || !email || !confirmEmail || !phone || !address || !nationality || !checkIn || !checkOut || !guests || !total) {
       throw Object.assign(new Error("Missing required fields"), { status: 400 });
     }
 
     const data = await bookingRepository.create({
-      tourId, tourName, name, email, phone, checkIn, checkOut,
-      guests: Number(guests), specialRequests, total, status: "confirmed",
+      tourId, tourName, name, email, confirmEmail, phone, address, nationality,
+      checkIn, checkOut, guests: Number(guests), tripType, specialRequests, total, status: "confirmed",
     });
 
     return { data };
