@@ -10,6 +10,15 @@ import TourDetailPage from "./pages/TourDetailPage";
 import BookingPage from "./pages/BookingPage";
 import ToursPage from "./pages/ToursPage";
 import WishlistPage from "./pages/WishlistPage";
+import MyBookings from "./pages/MyBookings";
+import AdminLayout from "./components/AdminLayout";
+import AdminDashboard from "./pages/AdminDashboard";
+import AdminDestinations from "./pages/AdminDestinations";
+import AdminDestinationForm from "./pages/AdminDestinationForm";
+import AdminTestimonials from "./pages/AdminTestimonials";
+import AdminBookings from "./pages/AdminBookings";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 /* Reset scroll on every route change */
 function RouteScrollReset() {
   const { pathname } = useLocation();
@@ -26,8 +35,31 @@ const pageVariants = {
   exit:    { opacity: 0, y: -8, transition: { duration: 0.2,  ease: "easeIn" } },
 };
 
+function NotFound() {
+  return (
+    <div className="pt-[70px] min-h-screen flex items-center justify-center px-6 bg-white dark:bg-[#1E2E4F]">
+      <div className="text-center">
+        <span className="text-7xl block mb-5">🗺️</span>
+        <h1 className="text-4xl font-extrabold text-slate-800 dark:text-white mb-2">
+          404 — Page Not Found
+        </h1>
+        <p className="text-slate-500 dark:text-slate-400 mb-8">
+          The page you're looking for doesn't exist.
+        </p>
+        <a
+          href="/"
+          className="bg-gradient-to-r from-[#31487A] to-[#31487A] text-white px-9 py-4 rounded-full font-bold no-underline hover:shadow-lg hover:shadow-[#31487A]/40 transition-shadow inline-block"
+        >
+          Back to Home
+        </a>
+      </div>
+    </div>
+  );
+}
+
 function AnimatedRoutes() {
   const location = useLocation();
+  const isAdmin = location.pathname.startsWith("/admin");
 
   return (
     <AnimatePresence mode="wait" initial={false}>
@@ -43,32 +75,29 @@ function AnimatedRoutes() {
           <Route path="/destinations" element={<DestinationsPage />} />
           <Route path="/tours"        element={<ToursPage />} />
           <Route path="/tour/:id"     element={<TourDetailPage />} />
-          <Route path="/book/:id"     element={<BookingPage />} />
-          <Route path="/booking/:id"  element={<BookingPage />} />
+          <Route path="/book/:id"     element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
+          <Route path="/booking/:id"  element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
           <Route path="/wishlist"     element={<WishlistPage />} />
-          {/* 404 */}
+          <Route path="/my-bookings"  element={<ProtectedRoute><MyBookings /></ProtectedRoute>} />
+
+          {/* Admin section (protected) */}
           <Route
-            path="*"
+            path="/admin"
             element={
-                <div className="pt-[70px] min-h-screen flex items-center justify-center px-6 dark:bg-[#050e1a]">
-                <div className="text-center">
-                  <span className="text-7xl block mb-5">🗺️</span>
-                  <h1 className="text-4xl font-extrabold text-slate-800 dark:text-white mb-2">
-                    404 — Page Not Found
-                  </h1>
-                  <p className="text-slate-500 dark:text-slate-400 mb-8">
-                    The page you're looking for doesn't exist.
-                  </p>
-                  <a
-                    href="/"
-                    className="bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-9 py-4 rounded-full font-bold no-underline hover:shadow-lg hover:shadow-[#38bdf8]/40 transition-shadow inline-block"
-                  >
-                    Back to Home
-                  </a>
-                </div>
-              </div>
+              <ProtectedRoute requireAdmin>
+                <AdminLayout />
+              </ProtectedRoute>
             }
-          />
+          >
+            <Route index                     element={<AdminDashboard />} />
+            <Route path="destinations"       element={<AdminDestinations />} />
+            <Route path="destinations/new"   element={<AdminDestinationForm />} />
+            <Route path="destinations/:id"   element={<AdminDestinationForm />} />
+            <Route path="testimonials"       element={<AdminTestimonials />} />
+            <Route path="bookings"           element={<AdminBookings />} />
+          </Route>
+
+          <Route path="*" element={isAdmin ? <ProtectedRoute requireAdmin><NotFound /></ProtectedRoute> : <NotFound />} />
         </Routes>
       </motion.div>
     </AnimatePresence>
@@ -76,16 +105,29 @@ function AnimatedRoutes() {
 }
 
 function AppShell() {
-  return (
-    <div className="min-h-screen bg-white dark:bg-[#050e1a] transition-colors duration-300">
-        <Navbar />
-        <main>
-          <RouteScrollReset />
-          <AnimatedRoutes />
-        </main>
-        <Footer />
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith("/admin");
+
+  if (isAdmin) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-[#1E2E4F] transition-colors duration-300">
+        <RouteScrollReset />
+        <AnimatedRoutes />
         <ScrollToTop />
       </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white dark:bg-[#1E2E4F] transition-colors duration-300">
+      <Navbar />
+      <main>
+        <RouteScrollReset />
+        <AnimatedRoutes />
+      </main>
+      <Footer />
+      <ScrollToTop />
+    </div>
   );
 }
 

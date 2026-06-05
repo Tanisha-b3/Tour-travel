@@ -69,6 +69,39 @@ const destinationService = {
 
     return { data };
   },
+
+  async update(id, body) {
+    if (!Number.isFinite(parseInt(id))) {
+      throw Object.assign(new Error("Invalid id"), { status: 400 });
+    }
+    const existing = await destinationRepository.findById(parseInt(id));
+    if (!existing) {
+      throw Object.assign(new Error("Destination not found"), { status: 404 });
+    }
+
+    const allowed = ["name", "image", "images", "description", "price", "duration", "rating", "category", "type", "location", "facilities", "highlights", "reviews"];
+    const patch = {};
+    for (const key of allowed) {
+      if (body[key] !== undefined) patch[key] = body[key];
+    }
+    if (Object.keys(patch).length === 0) {
+      throw Object.assign(new Error("No updatable fields supplied"), { status: 400 });
+    }
+
+    const data = await destinationRepository.updateById(parseInt(id), patch);
+    return { data };
+  },
+
+  async remove(id) {
+    if (!Number.isFinite(parseInt(id))) {
+      throw Object.assign(new Error("Invalid id"), { status: 400 });
+    }
+    const data = await destinationRepository.deleteById(parseInt(id));
+    if (!data) {
+      throw Object.assign(new Error("Destination not found"), { status: 404 });
+    }
+    return { data };
+  },
 };
 
 export default destinationService;

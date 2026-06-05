@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import "dotenv/config";
 
 import Destination from "./models/Destination.js";
@@ -9,8 +11,14 @@ import Testimonial from "./models/Testimonial.js";
 import destinationRoutes from "./routes/destinationRoutes.js";
 import testimonialRoutes from "./routes/testimonialRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import wishlistRoutes from "./routes/wishlistRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
 
 import { readFile } from "fs/promises";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -31,6 +39,8 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+app.use("/uploads", express.static(join(__dirname, "uploads")));
 
 async function seedIfEmpty() {
   const destCount = await Destination.countDocuments();
@@ -56,9 +66,12 @@ mongoose.connect(MONGODB_URI)
   })
   .catch((err) => console.error("MongoDB connection error:", err));
 
+app.use("/api/auth", authRoutes);
 app.use("/api/destinations", destinationRoutes);
 app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/wishlist", wishlistRoutes);
+app.use("/api/upload", uploadRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

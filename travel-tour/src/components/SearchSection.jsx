@@ -23,13 +23,13 @@ export default function SearchSection() {
 
   return (
     <section className="py-20 px-6 relative overflow-hidden" style={{
-      background: "linear-gradient(135deg, #0c1a2e 0%, #38bdf8 50%, #60a5fa 100%)"
+      background: "linear-gradient(135deg, #1E2E4F 0%, #31487A 50%, #31487A 100%)"
     }}>
       {/* Decorative circles */}
-      <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-[#38bdf8]/20 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full bg-[#60a5fa]/20 blur-3xl pointer-events-none" />
+      <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full bg-[#31487A]/20 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full bg-[#31487A]/20 blur-3xl pointer-events-none" />
       {/* Orange accent dot */}
-      <div className="absolute top-10 right-1/4 w-4 h-4 rounded-full bg-[#38bdf8] opacity-60 pointer-events-none" />
+      <div className="absolute top-10 right-1/4 w-4 h-4 rounded-full bg-[#31487A] opacity-60 pointer-events-none" />
 
       <div className="max-w-[720px] mx-auto text-center text-white relative z-10">
         <span className="inline-block px-4 py-1.5 bg-white/20 rounded-full text-xs font-bold tracking-widest mb-5 uppercase">
@@ -59,7 +59,7 @@ export default function SearchSection() {
           </div>
           <button
             type="submit"
-            className="bg-[#38bdf8] text-white px-8 py-4 rounded-full font-bold cursor-pointer hover:bg-[#3b82f6] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#38bdf8]/40 transition-all text-sm whitespace-nowrap"
+            className="bg-[#31487A] text-white px-8 py-4 rounded-full font-bold cursor-pointer hover:bg-[#31487A] hover:-translate-y-0.5 hover:shadow-xl hover:shadow-[#31487A]/40 transition-all text-sm whitespace-nowrap"
           >
             Search Now
           </button>
