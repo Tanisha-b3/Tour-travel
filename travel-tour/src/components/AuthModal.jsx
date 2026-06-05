@@ -78,8 +78,8 @@ function Field({ label, id, type = "text", value, onChange, onBlur, placeholder,
                 ? "bg-emerald-500/8 border-emerald-500/40 text-white placeholder:text-slate-500"
                 : "bg-emerald-50/60 border-emerald-400 text-[#0a0f1e] placeholder:text-slate-400"
               : darkMode
-              ? "bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-[#38bdf8]/50 focus:bg-white/8"
-              : "bg-slate-50 border-slate-200 text-[#0a0f1e] placeholder:text-slate-400 focus:border-[#38bdf8]/50 focus:bg-white"
+              ? "bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-[#31487A]/50 focus:bg-white/8"
+              : "bg-slate-50 border-slate-200 text-[#0a0f1e] placeholder:text-slate-400 focus:border-[#31487A]/50 focus:bg-white"
           }`}
         />
         {/* State icon */}
@@ -130,6 +130,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
   const addToast = useToast();
   const { darkMode } = useTheme();
   const firstFieldRef = useRef(null);
+  const modalRef = useRef(null);
 
   /* sync tab when prop changes */
   useEffect(() => { setTab(initialTab); }, [initialTab, isOpen]);
@@ -257,21 +258,22 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
 
           {/* Modal */}
           <motion.div
+            ref={modalRef}
             initial={{ opacity: 0, scale: 0.95, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 24 }}
             transition={{ duration: 0.28, ease }}
             onClick={(e) => e.stopPropagation()}
-            className={`relative w-full sm:max-w-[440px] rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden ${
-              darkMode ? "bg-[#0b1626]" : "bg-white"
+            className={`relative w-full sm:max-w-[440px] h-[95vh] sm:h-[680px] flex flex-col rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden ${
+              darkMode ? "bg-[#203354]" : "bg-white"
             }`}
           >
             {/* Top accent line */}
-            <div className="h-1 bg-gradient-to-r from-[#38bdf8] via-[#60a5fa] to-[#818cf8]" />
+            <div className="h-1 bg-gradient-to-r from-[#31487A] via-[#31487A] to-[#818cf8]" />
 
             {/* Ambient glows */}
             <div className="pointer-events-none absolute -top-24 -right-24 w-48 h-48 rounded-full opacity-20"
-              style={{ background: "radial-gradient(circle, #38bdf8, transparent 70%)" }} />
+              style={{ background: "radial-gradient(circle, #31487A, transparent 70%)" }} />
             <div className="pointer-events-none absolute -bottom-20 -left-20 w-40 h-40 rounded-full opacity-15"
               style={{ background: "radial-gradient(circle, #818cf8, transparent 70%)" }} />
 
@@ -295,11 +297,11 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
               </svg>
             </motion.button>
 
-            <div className="px-7 pt-6 pb-8">
+            <div className="px-7 pt-6 pb-8 overflow-y-auto flex-1 min-h-0 overscroll-contain custom-scrollbar">
               {/* Header */}
               <div className="text-center mb-6">
                 <div className={`w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg ${
-                  darkMode ? "bg-gradient-to-br from-[#38bdf8]/20 to-[#60a5fa]/10 border border-white/8" : "bg-gradient-to-br from-[#38bdf8]/10 to-[#60a5fa]/10 border border-[#38bdf8]/20"
+                  darkMode ? "bg-gradient-to-br from-[#31487A]/20 to-[#31487A]/10 border border-white/8" : "bg-gradient-to-br from-[#31487A]/10 to-[#31487A]/10 border border-[#31487A]/20"
                 }`}>
                   <span className="text-2xl">✈️</span>
                 </div>
@@ -323,7 +325,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                     onClick={() => switchTab(t)}
                     className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer border-none ${
                       tab === t
-                        ? "bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white shadow-md shadow-[#38bdf8]/25"
+                        ? "bg-gradient-to-r from-[#31487A] to-[#31487A] text-white shadow-md shadow-[#31487A]/25"
                         : darkMode ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-[#0a0f1e]"
                     }`}
                   >
@@ -485,7 +487,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                   <div className="text-right -mt-1">
                     <button
                       type="button"
-                      className="text-xs text-[#38bdf8] hover:underline bg-transparent border-none cursor-pointer"
+                      className="text-xs text-[#31487A] hover:underline bg-transparent border-none cursor-pointer"
                     >
                       Forgot password?
                     </button>
@@ -500,8 +502,8 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                   whileTap={!submitting ? { scale: 0.98 } : {}}
                   className="w-full py-3.5 rounded-xl text-white font-semibold text-sm cursor-pointer border-none mt-1 disabled:opacity-60 disabled:cursor-not-allowed relative overflow-hidden group"
                   style={{
-                    background: "linear-gradient(135deg, #38bdf8 0%, #60a5fa 100%)",
-                    boxShadow: "0 6px 24px rgba(14,165,233,0.3)",
+                    background: "linear-gradient(135deg, #31487A 0%, #31487A 100%)",
+                    boxShadow: "0 6px 24px rgba(49,72,122,0.3)",
                   }}
                 >
                   {/* Shine sweep */}
@@ -570,13 +572,13 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
               <p className={`text-center text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
                 {tab === "login" ? (
                   <>Don&apos;t have an account?{" "}
-                    <button type="button" onClick={() => switchTab("signup")} className="text-[#38bdf8] font-semibold bg-transparent border-none cursor-pointer hover:underline">
+                    <button type="button" onClick={() => switchTab("signup")} className="text-[#31487A] font-semibold bg-transparent border-none cursor-pointer hover:underline">
                       Sign up free
                     </button>
                   </>
                 ) : (
                   <>Already have an account?{" "}
-                    <button type="button" onClick={() => switchTab("login")} className="text-[#38bdf8] font-semibold bg-transparent border-none cursor-pointer hover:underline">
+                    <button type="button" onClick={() => switchTab("login")} className="text-[#31487A] font-semibold bg-transparent border-none cursor-pointer hover:underline">
                       Log in
                     </button>
                   </>

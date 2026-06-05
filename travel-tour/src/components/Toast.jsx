@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 const CONFIG = {
   success: { icon: "✓", gradient: "from-emerald-500 to-teal-500", bar: "bg-emerald-500", ring: "ring-emerald-500/20" },
   error:   { icon: "✕", gradient: "from-red-500 to-rose-500",    bar: "bg-red-500",    ring: "ring-red-500/20" },
-  info:    { icon: "ℹ", gradient: "from-[#38bdf8] to-[#60a5fa]", bar: "bg-[#38bdf8]", ring: "ring-[#38bdf8]/20" },
+  info:    { icon: "ℹ", gradient: "from-[#31487A] to-[#31487A]", bar: "bg-[#31487A]", ring: "ring-[#31487A]/20" },
 };
 
 function ToastItem({ toast, onRemove }) {
@@ -25,7 +25,7 @@ function ToastItem({ toast, onRemove }) {
 
   return (
     <div
-      className={`flex items-start gap-3 pl-0 pr-4 py-3 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0c1a2e] pointer-events-auto transition-all duration-400 overflow-hidden ${
+      className={`flex items-start gap-3 pl-0 pr-4 py-3 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1E2E4F] pointer-events-auto transition-all duration-400 overflow-hidden ${
         exiting ? "opacity-0 translate-x-full scale-95" : "opacity-100 translate-x-0 scale-100"
       }`}
     >

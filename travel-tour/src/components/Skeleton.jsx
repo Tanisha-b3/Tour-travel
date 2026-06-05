@@ -34,7 +34,7 @@ export function CardSkeleton() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="bg-white dark:bg-[#0c1a2e] rounded-2xl overflow-hidden shadow-sm"
+      className="bg-white dark:bg-[#1E2E4F] rounded-2xl overflow-hidden shadow-sm"
     >
       <Skeleton className="h-[220px] rounded-none" />
       <div className="p-5 space-y-3">
@@ -56,7 +56,7 @@ export function TestimonialSkeleton() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="bg-white dark:bg-[#0c1a2e] rounded-2xl p-7 border border-slate-100 dark:border-white/10 space-y-3"
+      className="bg-white dark:bg-[#1E2E4F] rounded-2xl p-7 border border-slate-100 dark:border-white/10 space-y-3"
     >
       <Skeleton className="h-3 w-20" />
       <Skeleton className="h-4 w-full" />

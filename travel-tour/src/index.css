@@ -2,12 +2,12 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* ── Brand palette ── */
-  --color-primary:      #38bdf8;   /* sky-500  */
-  --color-primary-dark: #0ea5e9;   /* sky-600  */
-  --color-secondary:    #6366f1;   /* indigo-500 */
-  --color-accent:       #f97316;   /* orange-500 */
-  --color-dark:         #0c1a2e;   /* deep navy */
+  /* ── Brand palette (Oxford Blue) ── */
+  --color-primary:      #31487A;   /* YinMn Blue */
+  --color-primary-dark: #1E2E4F;   /* Space Cadet */
+  --color-secondary:    #8FB3E2;   /* Jordy Blue */
+  --color-accent:       #E6E6FA;   /* Lavender */
+  --color-dark:         #1F2D42;   /* Soft navy (was #192338) */
 
   --color-text:         #1e293b;   /* slate-800 */
   --color-muted:        #64748b;   /* slate-500 */
@@ -15,13 +15,13 @@
   --font-family-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
   /* ── Animations ── */
-  --animate-shimmer:       shimmer 1.5s infinite;
-  --animate-zoom-in:       zoomIn 20s ease-in-out infinite alternate;
-  --animate-fade-in-up:    fadeInUp 0.6s ease forwards;
-  --animate-fade-in:       fadeIn 0.5s ease forwards;
-  --animate-bounce-in:     bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-  --animate-slide-in-right:slideInRight 0.5s ease forwards;
-  --animate-pulse-soft:    pulseSoft 2s ease-in-out infinite;
+  --animate-shimmer:        shimmer 1.5s infinite;
+  --animate-zoom-in:        zoomIn 20s ease-in-out infinite alternate;
+  --animate-fade-in-up:     fadeInUp 0.6s ease forwards;
+  --animate-fade-in:        fadeIn 0.5s ease forwards;
+  --animate-bounce-in:      bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  --animate-slide-in-right: slideInRight 0.5s ease forwards;
+  --animate-pulse-soft:     pulseSoft 2s ease-in-out infinite;
 
   @keyframes shimmer {
     0%   { background-position: 200% 0; }
@@ -52,8 +52,8 @@
     50%       { opacity: 0.6; }
   }
   @keyframes glow-pulse {
-    0%, 100% { box-shadow: 0 0 8px rgba(14,165,233,0.3); }
-    50%      { box-shadow: 0 0 20px rgba(14,165,233,0.5), 0 0 40px rgba(59,130,246,0.2); }
+    0%, 100% { box-shadow: 0 0 8px rgba(49,72,122,0.3); }
+    50%       { box-shadow: 0 0 20px rgba(49,72,122,0.5), 0 0 40px rgba(49,72,122,0.2); }
   }
   --animate-marquee: marquee 40s linear infinite;
   @keyframes marquee {
@@ -87,8 +87,24 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.dark body  { background: #050e1a; color: #e2e8f0; }
-.dark       { --color-text: #e2e8f0; --skeleton-bg: linear-gradient(90deg, #0c1a2e 25%, #1a2a40 50%, #0c1a2e 75%); }
+/* ── Soft navy dark mode ── */
+/* Base page background: #1A2236 (lifted from #192338 — noticeably softer) */
+/* Surface cards/panels: #1F2D42 */
+/* Elevated elements:    #253348 */
+/* Muted text:           #8BA5C8 (was slate-ish, now warm blue-grey) */
+/* Body text:            #D8E4F0 (not pure white — easier on eyes) */
+
+.dark body {
+  background: #1A2236;
+  color: #D8E4F0;
+}
+
+.dark {
+  --color-text:    #D8E4F0;
+  --color-muted:   #8BA5C8;
+  --color-dark:    #1F2D42;
+  --skeleton-bg:   linear-gradient(90deg, #1F2D42 25%, #3D5878 50%, #1F2D42 75%);
+}
 
 .dark .skeleton-shimmer { background: var(--skeleton-bg) !important; }
 
@@ -97,9 +113,9 @@ img { max-width: 100%; display: block; }
 /* Scrollbar */
 ::-webkit-scrollbar       { width: 5px; }
 ::-webkit-scrollbar-track { background: #f1f5f9; }
-.dark ::-webkit-scrollbar-track { background: #0c1a2e; }
-::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #0ea5e9; }
+.dark ::-webkit-scrollbar-track { background: #1F2D42; }
+::-webkit-scrollbar-thumb { background: #31487A; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #8FB3E2; }
 
 /* Focus ring */
-:focus-visible { outline: 3px solid #38bdf8; outline-offset: 2px; }
+:focus-visible { outline: 3px solid #31487A; outline-offset: 2px; }

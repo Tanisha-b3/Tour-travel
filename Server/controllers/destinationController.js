@@ -57,6 +57,27 @@ const destinationController = {
       res.status(500).json({ error: "Failed to create destination" });
     }
   },
+
+  async update(req, res) {
+    try {
+      const result = await destinationService.update(req.params.id, req.body);
+      res.json(result);
+    } catch (err) {
+      if (err.status === 400) return res.status(400).json({ error: err.message });
+      if (err.status === 404) return res.status(404).json({ error: err.message });
+      res.status(500).json({ error: "Failed to update destination" });
+    }
+  },
+
+  async remove(req, res) {
+    try {
+      const result = await destinationService.remove(req.params.id);
+      res.json(result);
+    } catch (err) {
+      if (err.status === 404) return res.status(404).json({ error: err.message });
+      res.status(500).json({ error: "Failed to delete destination" });
+    }
+  },
 };
 
 export default destinationController;

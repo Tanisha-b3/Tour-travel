@@ -27,8 +27,8 @@ export default function Dropdown({ label, value, options, onChange }) {
         onClick={() => setOpen((v) => !v)}
         className={`w-full flex items-center justify-between gap-2 py-2.5 px-3.5 rounded-xl text-sm outline-none transition-all duration-200 cursor-pointer border-2 ${
           open
-            ? "border-[#38bdf8] bg-white dark:bg-white/10 text-slate-700 dark:text-slate-200"
-            : "border-transparent bg-[#f2f0eb] dark:bg-white/6 text-slate-700 dark:text-slate-300 hover:border-[#38bdf8]/40"
+            ? "border-[#31487A] bg-white dark:bg-white/10 text-slate-700 dark:text-slate-200"
+            : "border-transparent bg-[#f2f0eb] dark:bg-white/6 text-slate-700 dark:text-slate-300 hover:border-[#31487A]/40"
         }`}
       >
         <span className="truncate flex items-center gap-1.5">
@@ -51,7 +51,7 @@ export default function Dropdown({ label, value, options, onChange }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.96 }}
             transition={{ duration: 0.18, ease }}
-            className="absolute z-[9999] left-0 right-0 mt-1.5 rounded-xl bg-white dark:bg-[#0c1a2e] shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden"
+            className="absolute z-[9999] left-0 right-0 mt-1.5 rounded-xl bg-white dark:bg-[#1E2E4F] shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden"
           >
             {options.map((opt, i) => {
               const isSelected = opt.value === value;
@@ -62,7 +62,7 @@ export default function Dropdown({ label, value, options, onChange }) {
                   onClick={() => { onChange(opt.value); setOpen(false); }}
                   className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm text-left transition-colors cursor-pointer border-none ${
                     isSelected
-                      ? "bg-[#38bdf8]/10 text-[#38bdf8] font-semibold"
+                      ? "bg-[#31487A]/10 text-[#31487A] font-semibold"
                       : "text-slate-600 dark:text-slate-300 hover:bg-[#f2f0eb] dark:hover:bg-white/5"
                   } ${i > 0 ? "border-t border-slate-100 dark:border-white/5" : ""}`}
                 >
@@ -73,7 +73,7 @@ export default function Dropdown({ label, value, options, onChange }) {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                      className="w-4 h-4 ml-auto shrink-0 text-[#38bdf8]"
+                      className="w-4 h-4 ml-auto shrink-0 text-[#31487A]"
                     >
                       <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
                     </motion.svg>

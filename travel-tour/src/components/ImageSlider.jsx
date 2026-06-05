@@ -79,7 +79,7 @@ export default function ImageSlider({ images, autoPlay = true, interval = 5000 }
               aria-label="Previous image"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="absolute top-1/2 -translate-y-1/2 left-4 z-20 w-11 h-11 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center text-2xl cursor-pointer hover:bg-[#38bdf8]/80 transition-colors opacity-0 group-hover:opacity-100"
+              className="absolute top-1/2 -translate-y-1/2 left-4 z-20 w-11 h-11 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center text-2xl cursor-pointer hover:bg-[#31487A]/80 transition-colors opacity-0 group-hover:opacity-100"
             >
               ‹
             </motion.button>
@@ -88,7 +88,7 @@ export default function ImageSlider({ images, autoPlay = true, interval = 5000 }
               aria-label="Next image"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="absolute top-1/2 -translate-y-1/2 right-4 z-20 w-11 h-11 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center text-2xl cursor-pointer hover:bg-[#38bdf8]/80 transition-colors opacity-0 group-hover:opacity-100"
+              className="absolute top-1/2 -translate-y-1/2 right-4 z-20 w-11 h-11 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center text-2xl cursor-pointer hover:bg-[#31487A]/80 transition-colors opacity-0 group-hover:opacity-100"
             >
               ›
             </motion.button>
@@ -100,7 +100,7 @@ export default function ImageSlider({ images, autoPlay = true, interval = 5000 }
                   key={i}
                   onClick={() => goTo(i, i > current ? 1 : -1)}
                   aria-label={`Go to image ${i + 1}`}
-                  animate={{ width: i === current ? 24 : 8, backgroundColor: i === current ? "#38bdf8" : "rgba(255,255,255,0.5)" }}
+                  animate={{ width: i === current ? 24 : 8, backgroundColor: i === current ? "#31487A" : "rgba(255,255,255,0.5)" }}
                   transition={{ duration: 0.3 }}
                   className="h-2 rounded-full cursor-pointer"
                 />
@@ -130,7 +130,7 @@ export default function ImageSlider({ images, autoPlay = true, interval = 5000 }
               aria-label={`View image ${i + 1}`}
               whileHover={{ scale: 1.08 }}
               whileTap={{ scale: 0.95 }}
-              animate={{ opacity: i === current ? 1 : 0.45, borderColor: i === current ? "#38bdf8" : "transparent" }}
+              animate={{ opacity: i === current ? 1 : 0.45, borderColor: i === current ? "#31487A" : "transparent" }}
               transition={{ duration: 0.25 }}
               className="rounded-xl overflow-hidden border-2 cursor-pointer"
             >

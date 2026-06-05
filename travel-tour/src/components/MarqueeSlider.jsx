@@ -7,7 +7,7 @@ export default function MarqueeSlider() {
   const doubled = [...NAMES, ...NAMES];
 
   return (
-    <div className="py-3 overflow-hidden bg-gradient-to-r from-[#0c1a2e] via-[#38bdf8] to-[#60a5fa]">
+    <div className="py-3 overflow-hidden bg-gradient-to-r from-[#1E2E4F] via-[#31487A] to-[#31487A]">
       <div className="flex gap-8 md:gap-16 animate-marquee hover:[animation-play-state:paused]">
         {doubled.map((name, i) => (
           <span

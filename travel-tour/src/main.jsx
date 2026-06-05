@@ -10,13 +10,13 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider>
-      <AppProvider>
-        <ToastProvider>
-          <AuthProvider>
+      <AuthProvider>
+        <AppProvider>
+          <ToastProvider>
             <App />
-          </AuthProvider>
-        </ToastProvider>
-      </AppProvider>
+          </ToastProvider>
+        </AppProvider>
+      </AuthProvider>
     </ThemeProvider>
   </StrictMode>
 );

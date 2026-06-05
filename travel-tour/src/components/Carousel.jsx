@@ -63,11 +63,11 @@ export default function Carousel({ items, title, badge }) {
   };
 
   return (
-    <section className="py-16 md:py-24 px-4 md:px-6 bg-slate-50 dark:bg-[#091422]">
+    <section className="py-16 md:py-24 px-4 md:px-6 bg-slate-50 dark:bg-[#1E2E4F]">
       <div className="max-w-[1200px] mx-auto">
         {badge && (
           <div className="text-center mb-10">
-            <span className="inline-block px-5 py-1.5 bg-[#38bdf8]/10 text-[#38bdf8] rounded-full text-xs font-bold tracking-wider mb-4 uppercase">
+            <span className="inline-block px-5 py-1.5 bg-[#31487A]/10 text-[#31487A] rounded-full text-xs font-bold tracking-wider mb-4 uppercase">
               {badge}
             </span>
             {title && <h2 className="text-3xl md:text-4xl font-extrabold text-slate-800 dark:text-white">{title}</h2>}
@@ -76,7 +76,7 @@ export default function Carousel({ items, title, badge }) {
 
         <div className="relative">
           {/* Main card */}
-          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#0c1a2e] border border-slate-100 dark:border-white/5 shadow-xl shadow-slate-200/50 dark:shadow-[#0c1a2e]">
+          <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#1E2E4F] border border-slate-100 dark:border-white/5 shadow-xl shadow-slate-200/50 dark:shadow-[#31487A]">
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px]">
               {/* Image side */}
               <div className="relative h-[320px] md:h-[420px] lg:h-[480px] overflow-hidden">
@@ -137,7 +137,7 @@ export default function Carousel({ items, title, badge }) {
               </div>
 
               {/* Content side */}
-              <div className="p-6 md:p-8 lg:p-10 flex flex-col justify-center bg-gradient-to-br from-white to-slate-50 dark:from-[#0c1a2e] dark:to-[#0a1425]">
+              <div className="p-6 md:p-8 lg:p-10 flex flex-col justify-center bg-gradient-to-br from-white to-slate-50 dark:from-[#1E2E4F] dark:to-[#0a1425]">
                 <AnimatePresence initial={false} mode="wait">
                   <motion.div
                     key={current}
@@ -147,7 +147,7 @@ export default function Carousel({ items, title, badge }) {
                     transition={{ duration: 0.3 }}
                   >
                     <div className="flex items-center gap-2 mb-4">
-                      <span className="text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full bg-[#38bdf8]/10 text-[#38bdf8] capitalize">
+                      <span className="text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full bg-[#31487A]/10 text-[#31487A] capitalize">
                         {item.type}
                       </span>
                       <span className="text-sm text-amber-500 font-medium">★ {item.rating}</span>
@@ -176,7 +176,7 @@ export default function Carousel({ items, title, badge }) {
                     <div className="flex items-center gap-6 mb-8 pb-6 border-b border-slate-200 dark:border-white/10">
                       <div>
                         <span className="text-xs text-slate-400 uppercase tracking-wide block mb-0.5">From</span>
-                        <span className="text-3xl font-extrabold bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] bg-clip-text text-transparent">${item.price.toLocaleString()}</span>
+                        <span className="text-3xl font-extrabold bg-gradient-to-r from-[#31487A] to-[#31487A] bg-clip-text text-transparent">${item.price.toLocaleString()}</span>
                       </div>
                       <div className="h-10 w-px bg-slate-200 dark:bg-white/10" />
                       <div>
@@ -188,21 +188,21 @@ export default function Carousel({ items, title, badge }) {
                     <div className="flex gap-3">
                       <Link
                         to={`/tour/${item.id}`}
-                        className="flex-1 bg-gradient-to-r from-[#38bdf8] to-[#60a5fa] text-white px-6 py-3.5 rounded-xl text-sm font-semibold no-underline hover:shadow-xl hover:shadow-[#38bdf8]/30 transition-all text-center"
+                        className="flex-1 bg-gradient-to-r from-[#31487A] to-[#31487A] text-white px-6 py-3.5 rounded-xl text-sm font-semibold no-underline hover:shadow-xl hover:shadow-[#31487A]/30 transition-all text-center"
                       >
                         View Details
                       </Link>
                       {user ? (
                         <Link
                           to={`/book/${item.id}`}
-                          className="flex-1 border-2 border-[#38bdf8] text-[#38bdf8] px-6 py-3.5 rounded-xl text-sm font-semibold no-underline hover:bg-[#38bdf8] hover:text-white transition-all text-center"
+                          className="flex-1 border-2 border-[#31487A] text-[#31487A] px-6 py-3.5 rounded-xl text-sm font-semibold no-underline hover:bg-[#31487A] hover:text-white transition-all text-center"
                         >
                           Book Now
                         </Link>
                       ) : (
                         <button
                           onClick={(e) => handleBookClick(e, item.id)}
-                          className="flex-1 border-2 border-[#38bdf8] text-[#38bdf8] px-6 py-3.5 rounded-xl text-sm font-semibold no-underline hover:bg-[#38bdf8] hover:text-white transition-all text-center cursor-pointer"
+                          className="flex-1 border-2 border-[#31487A] text-[#31487A] px-6 py-3.5 rounded-xl text-sm font-semibold no-underline hover:bg-[#31487A] hover:text-white transition-all text-center cursor-pointer"
                         >
                           Book Now
                         </button>
@@ -222,12 +222,12 @@ export default function Carousel({ items, title, badge }) {
                   key={it.id}
                   onClick={() => goTo(i)}
                   className={`relative shrink-0 rounded-xl overflow-hidden cursor-pointer transition-all border-2 ${
-                    i === current ? "border-[#38bdf8] shadow-lg shadow-[#38bdf8]/20" : "border-transparent opacity-70 hover:opacity-100"
+                    i === current ? "border-[#31487A] shadow-lg shadow-[#31487A]/20" : "border-transparent opacity-70 hover:opacity-100"
                   }`}
                 >
                   <img src={it.image} alt="" className="w-24 h-16 md:w-28 md:h-20 object-cover block" loading="lazy" />
                   {i === current && (
-                    <div className="absolute inset-0 bg-[#38bdf8]/10" />
+                    <div className="absolute inset-0 bg-[#31487A]/10" />
                   )}
                 </button>
               ))}
