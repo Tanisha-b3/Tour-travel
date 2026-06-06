@@ -1,33 +1,52 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 import "dotenv/config";
-import { readFile } from "fs/promises";
 
-import Destination from "./models/Destination.js";
-import Testimonial from "./models/Testimonial.js";
+import User from "./models/User.js";
 
-const destinations = JSON.parse(await readFile(new URL("./destinations.json", import.meta.url)));
-const testimonials = JSON.parse(await readFile(new URL("./testimonials.json", import.meta.url)));
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/travel-tour";
 
-async function seed() {
-  const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/travel-tour";
-  await mongoose.connect(uri);
-  console.log("Connected to MongoDB");
+const ADMIN_NAME     = process.env.SEED_ADMIN_NAME     || "Admin";
+const ADMIN_EMAIL    = (process.env.SEED_ADMIN_EMAIL    || "admin@airventure.com").toLowerCase();
+const ADMIN_PASSWORD = process.env.SEED_ADMIN_PASSWORD || "Admin@12345";
 
-  await Destination.deleteMany({});
-  await Testimonial.deleteMany({});
+async function seedAdmin() {
+  const existing = await User.findOne({ email: ADMIN_EMAIL }).select("+password");
+  const hashed = await bcrypt.hash(ADMIN_PASSWORD, 10);
 
-  await Destination.insertMany(destinations);
-  await Testimonial.insertMany(testimonials);
+  if (existing) {
+    existing.name = ADMIN_NAME;
+    existing.password = hashed;
+    existing.role = "admin";
+    await existing.save();
+    console.log(`Updated existing admin: ${ADMIN_EMAIL}`);
+  } else {
+    await User.create({
+      name: ADMIN_NAME,
+      email: ADMIN_EMAIL,
+      password: hashed,
+      role: "admin",
+    });
+    console.log(`Created admin: ${ADMIN_EMAIL}`);
+  }
 
-  const destCount = await Destination.countDocuments();
-  const testCount = await Testimonial.countDocuments();
-  console.log(`Seeded: ${destCount} destinations, ${testCount} testimonials`);
-
-  await mongoose.disconnect();
-  console.log("Done");
+  console.log(`Login: ${ADMIN_EMAIL} / ${ADMIN_PASSWORD}`);
 }
 
-seed().catch((err) => {
-  console.error("Seed failed:", err);
-  process.exit(1);
-});
+mongoose
+  .connect(MONGODB_URI)
+  .then(async () => {
+    console.log("MongoDB connected");
+    try {
+      await seedAdmin();
+    } catch (err) {
+      console.error("Seed failed:", err.message);
+      process.exitCode = 1;
+    } finally {
+      await mongoose.disconnect();
+    }
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err.message);
+    process.exit(1);
+  });

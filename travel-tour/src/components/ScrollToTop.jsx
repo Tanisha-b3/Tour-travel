@@ -138,19 +138,19 @@ export default function ScrollToTop() {
             fixed z-50
             w-11 h-11 sm:w-12 sm:h-12
             rounded-full
-            bg-gradient-to-br from-[#38bdf8] to-[#60a5fa]
+            bg-gradient-to-br from-[#31487A] to-[#31487A]
             text-white
-            shadow-xl shadow-[#38bdf8]/40
+            shadow-xl shadow-[#31487A]/40
             flex items-center justify-center
             text-lg sm:text-xl font-bold
             cursor-pointer
             transition-all duration-200
-            focus:outline-none focus:ring-4 focus:ring-[#38bdf8] focus:ring-offset-2 focus:ring-offset-white
+            focus:outline-none focus:ring-4 focus:ring-[#31487A] focus:ring-offset-2 focus:ring-offset-white
             dark:focus:ring-offset-gray-900
             active:scale-95
             disabled:opacity-50 disabled:cursor-not-allowed
-            hover:shadow-2xl hover:shadow-[#38bdf8]/50
-            ${isHome ? "mr-12 sm:mr-0" : ""}
+            hover:shadow-2xl hover:shadow-[#31487A]/50
+           
           `}
             style={{
               bottom: '20px',

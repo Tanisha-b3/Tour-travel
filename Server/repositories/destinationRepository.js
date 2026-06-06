@@ -28,6 +28,14 @@ const destinationRepository = {
   create(data) {
     return Destination.create(data);
   },
+
+  updateById(id, data) {
+    return Destination.findOneAndUpdate({ id }, data, { new: true, runValidators: true }).lean();
+  },
+
+  deleteById(id) {
+    return Destination.findOneAndDelete({ id }).lean();
+  },
 };
 
 export default destinationRepository;
