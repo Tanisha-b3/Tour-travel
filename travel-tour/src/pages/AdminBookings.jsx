@@ -28,7 +28,7 @@ export default function AdminBookings() {
 
   const load = () => {
     setLoading(true);
-    fetchAllBookings(token)
+    fetchAllBookings(token, { limit: 100 })
       .then((r) => setBookings(r.data || []))
       .catch((e) => addToast("error", e.message))
       .finally(() => setLoading(false));
@@ -178,7 +178,7 @@ export default function AdminBookings() {
                           </td>
                           <td className={`px-4 py-3 ${darkMode ? "text-slate-300" : "text-slate-700"}`}>{b.guests}</td>
                           <td className={`px-4 py-3 text-right font-bold ${darkMode ? "text-white" : "text-[#0a0f1e]"}`}>
-                            ${b.total?.toLocaleString()}
+                            ₹{b.total?.toLocaleString()}
                           </td>
                           <td className="px-4 py-3">
                             <select
@@ -221,7 +221,7 @@ export default function AdminBookings() {
                         <p className={`text-sm font-bold truncate ${darkMode ? "text-white" : "text-[#0a0f1e]"}`}>{b.name}</p>
                         <p className="text-xs text-slate-500 truncate">{b.tourName}</p>
                       </div>
-                      <p className="text-sm font-extrabold text-[#0a0f1e] dark:text-white shrink-0">${b.total?.toLocaleString()}</p>
+                      <p className="text-sm font-extrabold text-[#0a0f1e] dark:text-white shrink-0">₹{b.total?.toLocaleString()}</p>
                     </div>
                     <div className="grid grid-cols-2 gap-2 text-xs text-slate-500 dark:text-slate-400 mb-3">
                       <span>📅 {b.checkIn} → {b.checkOut}</span>

@@ -1,35 +1,80 @@
 import testimonialRepository from "../repositories/testimonialRepository.js";
 import bookingRepository from "../repositories/bookingRepository.js";
 import User from "../models/User.js";
+import cache, { buildKey } from "./cacheService.js";
+import { shapePage } from "../utils/pagination.js";
+
+const TTL = {
+  list:      60 * 1000,
+  byDest:    2 * 60 * 1000,
+  mine:      30 * 1000,
+};
+
+const SCOPE_LIST   = "testimonials:list";
+const SCOPE_BYDEST = "testimonials:byDest";
+const SCOPE_MINE   = "testimonials:mine";
+
+function invalidateTestimonials() {
+  cache.invalidateMatching((k) => k.startsWith(`${SCOPE_LIST}:`) || k.startsWith(`${SCOPE_BYDEST}:`));
+}
+
+function clampPage(page, limit, maxLimit = 50) {
+  const safePage  = Math.max(1, Number(page)  || 1);
+  const safeLimit = Math.min(maxLimit, Math.max(1, Number(limit) || 12));
+  return { safePage, safeLimit, skip: (safePage - 1) * safeLimit };
+}
 
 const testimonialService = {
-  async list() {
-    const data = await testimonialRepository.findAll();
-    return { count: data.length, data };
+  async list({ page = 1, limit = 12 } = {}) {
+    const { safePage, safeLimit, skip } = clampPage(page, limit, 50);
+    const key = buildKey(SCOPE_LIST, { page: safePage, limit: safeLimit });
+    return cache.wrap(key, async () => {
+      const [data, total] = await Promise.all([
+        testimonialRepository.findAll({ skip, limit: safeLimit }),
+        testimonialRepository.count(),
+      ]);
+      return shapePage(data, total, safePage, safeLimit);
+    }, TTL.list);
   },
 
-  async listMine(userId) {
-    const data = await testimonialRepository.findByUser(userId);
-    return { count: data.length, data };
+  async listByDestination(destinationId, { page = 1, limit = 12 } = {}) {
+    const id = Number(destinationId);
+    if (!Number.isFinite(id)) {
+      throw Object.assign(new Error("Invalid destination id"), { status: 400 });
+    }
+    const { safePage, safeLimit, skip } = clampPage(page, limit, 50);
+    const key = buildKey(SCOPE_BYDEST, { id, page: safePage, limit: safeLimit });
+    return cache.wrap(key, async () => {
+      const [data, total] = await Promise.all([
+        testimonialRepository.findByDestination(id, { skip, limit: safeLimit }),
+        testimonialRepository.countByDestination(id),
+      ]);
+      return shapePage(data, total, safePage, safeLimit);
+    }, TTL.byDest);
+  },
+
+  async listMine(userId, { page = 1, limit = 20 } = {}) {
+    const { safePage, safeLimit, skip } = clampPage(page, limit, 100);
+    const key = buildKey(SCOPE_MINE, { userId: String(userId), page: safePage, limit: safeLimit });
+    return cache.wrap(key, async () => {
+      const [data, total] = await Promise.all([
+        testimonialRepository.findByUser(userId, { skip, limit: safeLimit }),
+        testimonialRepository.countByUser(userId),
+      ]);
+      return shapePage(data, total, safePage, safeLimit);
+    }, TTL.mine);
   },
 
   async create(body) {
     const { name, avatar, location, text, rating } = body;
 
-    if (!name || !avatar || !location || !text) {
-      throw Object.assign(new Error("Missing required fields"), { status: 400 });
-    }
-
     const data = await testimonialRepository.create({ name, avatar, location, text, rating: rating ?? 5 });
+    invalidateTestimonials();
     return { data };
   },
 
   async createByUser(userId, body) {
     const { bookingId, text, rating, location } = body;
-
-    if (!bookingId || !text) {
-      throw Object.assign(new Error("bookingId and text are required"), { status: 400 });
-    }
 
     const r = Math.max(1, Math.min(5, Number(rating) || 5));
 
@@ -64,6 +109,8 @@ const testimonialService = {
       booking: bookingId,
       destinationId: booking.tourId,
     });
+    invalidateTestimonials();
+    cache.del(buildKey(SCOPE_MINE, String(userId)));
     return { data };
   },
 
@@ -78,11 +125,9 @@ const testimonialService = {
     for (const key of allowed) {
       if (body[key] !== undefined) patch[key] = body[key];
     }
-    if (Object.keys(patch).length === 0) {
-      throw Object.assign(new Error("No updatable fields supplied"), { status: 400 });
-    }
 
     const data = await testimonialRepository.updateById(id, patch);
+    invalidateTestimonials();
     return { data };
   },
 
@@ -91,6 +136,7 @@ const testimonialService = {
     if (!data) {
       throw Object.assign(new Error("Testimonial not found"), { status: 404 });
     }
+    invalidateTestimonials();
     return { data };
   },
 };

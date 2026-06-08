@@ -8,8 +8,9 @@ import DestCarousel from "../components/Carousel";
 import TestimonialCard from "../components/TestimonialCard";
 import SearchSection from "../components/SearchSection";
 import CountUp from "../components/CountUp";
+import TrustStrip from "../components/TrustStrip";
 import { CardSkeleton, TestimonialSkeleton } from "../components/Skeleton";
-import { fetchFeatured, fetchPopular, fetchTestimonials } from "../api";
+import { fetchFeatured, fetchPopular, fetchTestimonials, fetchReviewsByDestination } from "../api";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 
@@ -67,6 +68,7 @@ export default function HomePage() {
   const [featured,    setFeatured]    = useState([]);
   const [popularTours,setPopularTours]= useState([]);
   const [testimonials,setTestimonials]= useState([]);
+  const [reviewsByDest, setReviewsByDest] = useState({});
   const [loading,     setLoading]     = useState(true);
   const { user, openAuthModal } = useAuth();
   const addToast = useToast();
@@ -81,7 +83,25 @@ export default function HomePage() {
 
   useEffect(() => {
     Promise.all([fetchFeatured(), fetchPopular(), fetchTestimonials()])
-      .then(([f, p, t]) => { setFeatured(f); setPopularTours(p); setTestimonials(t); })
+      .then(async ([f, p, t]) => {
+        setFeatured(f); setPopularTours(p); setTestimonials(t);
+        const ids = Array.from(new Set([...(f || []).map((d) => d.id), ...(p || []).map((d) => d.id)]));
+        if (ids.length) {
+          const all = await Promise.all(
+            ids.map(async (id) => {
+              try {
+                const list = await fetchReviewsByDestination(id);
+                return { id, list: Array.isArray(list) ? list : [] };
+              } catch {
+                return { id, list: [] };
+              }
+            })
+          );
+          const next = {};
+          all.forEach(({ id, list }) => { next[id] = list; });
+          setReviewsByDest(next);
+        }
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
@@ -114,9 +134,23 @@ export default function HomePage() {
               viewport={{ once: true, margin: "-60px" }}
             >
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-                {featured.map((d, i) => (
-                  <DestinationCard key={d.id} destination={d} index={i} />
-                ))}
+                {featured.map((d, i) => {
+                  const reviews = reviewsByDest[d.id] || [];
+                  const latest = reviews[0] || null;
+                  const avg = reviews.length
+                    ? reviews.reduce((s, r) => s + (Number(r.rating) || 0), 0) / reviews.length
+                    : null;
+                  return (
+                    <DestinationCard
+                      key={d.id}
+                      destination={d}
+                      index={i}
+                      latestReview={latest}
+                      reviewCount={reviews.length || (Array.isArray(d.reviews) ? d.reviews.length : 0)}
+                      avgRating={avg}
+                    />
+                  );
+                })}
               </div>
               <FadeSection className="text-center mt-12">
                 <motion.div whileHover={{ scale: 1.04, y: -3 }} whileTap={{ scale: 0.97 }} className="inline-block">
@@ -144,6 +178,9 @@ export default function HomePage() {
 
       {/* ── Search ── */}
       <SearchSection />
+
+      {/* ── Trust Strip ── */}
+      <TrustStrip />
 
       {/* ── Popular Tour Packages ── */}
       <section className="py-20 px-6 bg-slate-50 dark:bg-[#1E2E4F]">
@@ -183,7 +220,7 @@ export default function HomePage() {
                       </span>
                     )}
                     <div className="absolute top-3 right-3 bg-gradient-to-r from-[#31487A] to-[#31487A] text-white px-4 py-2 rounded-full font-extrabold text-base shadow-lg z-10">
-                      ${dest.price.toLocaleString()}
+                      ₹{dest.price.toLocaleString()}
                     </div>
                   </div>
                   <div className="p-6">
@@ -223,9 +260,18 @@ export default function HomePage() {
 
       {/* ── Stats Banner ── */}
       <section
-        className="py-16 px-6 text-white"
+        className="py-16 px-6 text-white relative overflow-hidden"
         style={{ background: "linear-gradient(135deg, #1E2E4F 0%, #31487A 55%, #31487A 100%)" }}
       >
+        <div className="absolute inset-0 dot-bg opacity-30 pointer-events-none" />
+        <div
+          className="absolute -top-32 -right-32 w-80 h-80 rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(75,109,168,0.35), transparent 70%)" }}
+        />
+        <div
+          className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(30,50,89,0.5), transparent 70%)" }}
+        />
         <div className="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {STATS.map((s, i) => (
             <motion.div
@@ -246,8 +292,13 @@ export default function HomePage() {
       </section>
 
       {/* ── Why Choose Us ── */}
-      <section className="py-20 px-6 bg-white dark:bg-[#1E2E4F]">
-        <div className="max-w-[1200px] mx-auto">
+      <section className="relative py-20 px-6 bg-white dark:bg-[#1E2E4F] overflow-hidden">
+        <div className="absolute inset-0 dot-bg opacity-40 pointer-events-none" />
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
+          style={{ background: "radial-gradient(circle, rgba(75,109,168,0.10), transparent 70%)" }}
+        />
+        <div className="relative max-w-[1200px] mx-auto">
           <SectionHeader
             badge="Why Us"
             title="Why Choose Airventure?"
@@ -262,17 +313,21 @@ export default function HomePage() {
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
                 whileHover={{ y: -6, transition: { type: "spring", stiffness: 300, damping: 20 } }}
-                className="bg-slate-50 dark:bg-[#1E2E4F] rounded-2xl p-7 text-center hover:shadow-[0_10px_28px_rgba(49,72,122,0.12)] dark:hover:shadow-[0_10px_28px_rgba(49,72,122,0.2)] transition-shadow"
+                className="relative bg-slate-50 dark:bg-[#1E2E4F] rounded-2xl p-7 text-center hover:shadow-[0_10px_28px_rgba(49,72,122,0.12)] dark:hover:shadow-[0_10px_28px_rgba(49,72,122,0.2)] transition-shadow border border-slate-100 dark:border-white/5 group"
               >
                 <motion.div
-                  className="w-16 h-16 bg-gradient-to-br from-[#31487A]/10 to-[#31487A]/10 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-5"
+                  className="relative w-16 h-16 bg-gradient-to-br from-[#1E3259] via-[#31487A] to-[#4B6DA8] rounded-2xl flex items-center justify-center text-3xl mx-auto mb-5 shadow-[0_6px_16px_rgba(49,72,122,0.3)]"
                   whileHover={{ scale: 1.15, rotate: 5 }}
                   transition={{ type: "spring", stiffness: 400 }}
                 >
-                  {item.icon}
+                  <span className="relative z-10">{item.icon}</span>
+                  <span className="absolute inset-0 rounded-2xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </motion.div>
                 <h3 className="text-base font-bold text-slate-800 dark:text-white mb-2">{item.title}</h3>
                 <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{item.desc}</p>
+                <span className="absolute top-3 right-3 text-[10px] font-bold text-[#31487A] dark:text-[#7A99CC] opacity-30 group-hover:opacity-100 transition-opacity">
+                  0{i + 1}
+                </span>
               </motion.div>
             ))}
           </div>

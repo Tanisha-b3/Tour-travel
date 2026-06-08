@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import SearchIcon from "./SearchIcon";
 
 const STATS = [
   { num: "50+",  label: "Countries", icon: "🌍" },
@@ -20,15 +21,23 @@ const ease = [0.22, 1, 0.36, 1];
 
 export default function HeroBanner() {
   const ref = useRef(null);
+  const navigate = useNavigate();
+  const [heroQuery, setHeroQuery] = useState("");
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const bgY      = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
   const opacity  = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+
+  const handleHeroSearch = (e) => {
+    e.preventDefault();
+    const q = heroQuery.trim();
+    navigate(q ? `/destinations?search=${encodeURIComponent(q)}` : "/destinations");
+  };
 
   return (
     <section
       ref={ref}
       className="py-20 relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
-      style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}
+      style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
     >
       {/* ── Parallax background ── */}
       <motion.div style={{ y: bgY }} className="absolute inset-0 scale-105">
@@ -188,12 +197,52 @@ export default function HeroBanner() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.7, ease }}
-          className="text-white/85 text-lg md:text-xl leading-relaxed max-w-[540px] mb-12 mt-4 drop-shadow-md"
+          className="text-white/85 text-lg md:text-xl leading-relaxed max-w-[540px] mb-10 mt-4 drop-shadow-md"
           style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400 }}
         >
           Handcrafted journeys to 50+ countries — curated for those who chase
           horizon lines, not tourist traps.
         </motion.p>
+
+        {/* Hero Search */}
+        <motion.form
+          onSubmit={handleHeroSearch}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.32, duration: 0.7, ease }}
+          className="w-full max-w-[640px] mb-10 flex items-center gap-2 rounded-full p-2 pl-5"
+          style={{
+            background: "rgba(15, 43, 77, 0.55)",
+            backdropFilter: "blur(18px)",
+            border: "1px solid rgba(139, 184, 232, 0.35)",
+            boxShadow: "0 18px 48px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)",
+          }}
+        >
+          <span className="shrink-0 text-white/80">
+            <SearchIcon className="w-5 h-5" strokeWidth={2.2} />
+          </span>
+          <input
+            type="text"
+            value={heroQuery}
+            onChange={(e) => setHeroQuery(e.target.value)}
+            placeholder="Search destinations, countries, or landmarks…"
+            aria-label="Search destinations"
+            className="flex-1 bg-transparent outline-none text-sm md:text-base text-white placeholder:text-white/55 py-2 min-w-0"
+            style={{ fontFamily: "'Inter', sans-serif" }}
+          />
+          <motion.button
+            type="submit"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+            className="shrink-0 px-5 md:px-7 py-2.5 rounded-full text-sm font-bold text-white border-none cursor-pointer transition-shadow"
+            style={{
+              background: "linear-gradient(135deg, #1E4A6E 0%, #2C5F82 30%, #3B6E91 100%)",
+              boxShadow: "0 8px 22px rgba(0,20,40,0.4), inset 0 1px 0 rgba(255,255,255,0.2)",
+            }}
+          >
+            Search
+          </motion.button>
+        </motion.form>
 
         {/* CTAs with refined blue gradient buttons */}
         <motion.div

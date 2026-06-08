@@ -54,7 +54,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
             </div>
             <div>
               <p className={`text-[15px] font-extrabold leading-none ${darkMode ? "text-white" : "text-[#0a0f1e]"}`}
-                style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}>
+                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                 Admin Panel
               </p>
               <p className="text-[10px] uppercase tracking-wider text-slate-400 mt-0.5">Airventure</p>

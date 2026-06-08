@@ -1,16 +1,43 @@
 import Testimonial from "../models/Testimonial.js";
 
 const testimonialRepository = {
-  findAll() {
-    return Testimonial.find().sort({ createdAt: -1 }).lean();
+  findAll({ skip = 0, limit = 0 } = {}) {
+    const q = Testimonial.find().sort({ createdAt: -1 }).lean();
+    if (skip)  q.skip(skip);
+    if (limit) q.limit(limit);
+    return q;
+  },
+
+  count() {
+    return Testimonial.countDocuments();
+  },
+
+  findByDestination(destinationId, { skip = 0, limit = 50 } = {}) {
+    const q = Testimonial.find({ destinationId: Number(destinationId) })
+      .sort({ createdAt: -1 })
+      .lean();
+    if (skip)  q.skip(skip);
+    if (limit) q.limit(limit);
+    return q;
+  },
+
+  countByDestination(destinationId) {
+    return Testimonial.countDocuments({ destinationId: Number(destinationId) });
   },
 
   findById(id) {
     return Testimonial.findById(id).lean();
   },
 
-  findByUser(userId) {
-    return Testimonial.find({ user: userId }).sort({ createdAt: -1 }).lean();
+  findByUser(userId, { skip = 0, limit = 0 } = {}) {
+    const q = Testimonial.find({ user: userId }).sort({ createdAt: -1 }).lean();
+    if (skip)  q.skip(skip);
+    if (limit) q.limit(limit);
+    return q;
+  },
+
+  countByUser(userId) {
+    return Testimonial.countDocuments({ user: userId });
   },
 
   findByBooking(bookingId) {

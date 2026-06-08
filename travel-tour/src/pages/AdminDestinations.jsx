@@ -30,7 +30,7 @@ export default function AdminDestinations() {
 
   const load = () => {
     setLoading(true);
-    fetchDestinations({})
+    fetchDestinations({ limit: 100 })
       .then((r) => setItems(r.data || []))
       .catch((e) => addToast("error", e.message))
       .finally(() => setLoading(false));
@@ -150,7 +150,7 @@ export default function AdminDestinations() {
                     {d.type}
                   </span>
                   <span className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-[#0a0f1e] text-xs font-extrabold px-2.5 py-1 rounded-full">
-                    ${d.price.toLocaleString()}
+                    ₹{d.price.toLocaleString()}
                   </span>
                 </div>
                 <div className="p-4">

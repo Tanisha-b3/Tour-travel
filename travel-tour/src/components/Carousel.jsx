@@ -176,7 +176,7 @@ export default function Carousel({ items, title, badge }) {
                     <div className="flex items-center gap-6 mb-8 pb-6 border-b border-slate-200 dark:border-white/10">
                       <div>
                         <span className="text-xs text-slate-400 uppercase tracking-wide block mb-0.5">From</span>
-                        <span className="text-3xl font-extrabold bg-gradient-to-r from-[#31487A] to-[#31487A] bg-clip-text text-transparent">${item.price.toLocaleString()}</span>
+                        <span className="text-3xl font-extrabold bg-gradient-to-r from-[#31487A] to-[#31487A] bg-clip-text text-transparent">₹{item.price.toLocaleString()}</span>
                       </div>
                       <div className="h-10 w-px bg-slate-200 dark:bg-white/10" />
                       <div>

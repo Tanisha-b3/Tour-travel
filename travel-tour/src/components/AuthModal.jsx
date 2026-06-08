@@ -17,8 +17,8 @@ function validateField(name, value, extra) {
     case "email":
       if (!value.trim()) return "Email is required";
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(value)) {
-  return "Enter a valid email address";
-}
+        return "Enter a valid email address";
+      }
       return "";
     case "password":
       if (!value) return "Password is required";
@@ -52,7 +52,7 @@ function getPasswordStrength(pw) {
 /* ── Reusable input ── */
 function Field({ label, id, type = "text", value, onChange, onBlur, placeholder, error, touched, darkMode, suffix = null }) {
   const hasError = touched && error;
-  const isValid  = touched && !error && value;
+  const isValid = touched && !error && value;
 
   return (
     <div>
@@ -68,18 +68,18 @@ function Field({ label, id, type = "text", value, onChange, onBlur, placeholder,
           onBlur={onBlur}
           placeholder={placeholder}
           autoComplete={id}
-          className={`w-full px-4 py-3 pr-10 rounded-xl text-sm outline-none transition-all duration-200 border ${
+          className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border ${
             hasError
               ? darkMode
-                ? "bg-red-500/8 border-red-500/50 text-white placeholder:text-slate-500"
-                : "bg-red-50 border-red-400 text-[#0a0f1e] placeholder:text-slate-400"
+                ? "bg-red-500/10 border-red-500/50 text-white placeholder:text-slate-500 pr-10"
+                : "bg-red-50 border-red-400 text-[#0a0f1e] placeholder:text-slate-400 pr-10"
               : isValid
               ? darkMode
-                ? "bg-emerald-500/8 border-emerald-500/40 text-white placeholder:text-slate-500"
-                : "bg-emerald-50/60 border-emerald-400 text-[#0a0f1e] placeholder:text-slate-400"
+                ? "bg-emerald-500/10 border-emerald-500/40 text-white placeholder:text-slate-500 pr-10"
+                : "bg-emerald-50/60 border-emerald-400 text-[#0a0f1e] placeholder:text-slate-400 pr-10"
               : darkMode
-              ? "bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-[#31487A]/50 focus:bg-white/8"
-              : "bg-slate-50 border-slate-200 text-[#0a0f1e] placeholder:text-slate-400 focus:border-[#31487A]/50 focus:bg-white"
+              ? "bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-[#31487A]/50 focus:bg-white/10 pr-10"
+              : "bg-slate-50 border-slate-200 text-[#0a0f1e] placeholder:text-slate-400 focus:border-[#31487A]/50 focus:bg-white pr-10"
           }`}
         />
         {/* State icon */}
@@ -133,7 +133,11 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
   const modalRef = useRef(null);
 
   /* sync tab when prop changes */
-  useEffect(() => { setTab(initialTab); }, [initialTab, isOpen]);
+  useEffect(() => { 
+    if (isOpen) {
+      setTab(initialTab);
+    }
+  }, [initialTab, isOpen]);
 
   /* reset on open */
   useEffect(() => {
@@ -157,8 +161,14 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
 
   /* lock body scroll */
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   const switchTab = (t) => {
@@ -226,7 +236,9 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
       type="button"
       tabIndex={-1}
       onClick={toggle}
-      className={`absolute right-3 top-1/2 -translate-y-1/2 transition-colors ${darkMode ? "text-slate-500 hover:text-slate-300" : "text-slate-400 hover:text-slate-600"}`}
+      className={`absolute right-3 top-1/2 -translate-y-1/2 transition-colors cursor-pointer ${
+        darkMode ? "text-slate-500 hover:text-slate-300" : "text-slate-400 hover:text-slate-600"
+      }`}
     >
       {show ? (
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -240,6 +252,9 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
       )}
     </button>
   );
+
+  // Dynamic height based on tab
+  const modalHeight = tab === "login" ? "h-[80vh] sm:max-h-[600px]" : "h-[95vh] sm:h-[680px]";
 
   return (
     <AnimatePresence>
@@ -264,7 +279,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
             exit={{ opacity: 0, scale: 0.95, y: 24 }}
             transition={{ duration: 0.28, ease }}
             onClick={(e) => e.stopPropagation()}
-            className={`relative w-full sm:max-w-[440px] h-[95vh] sm:h-[680px] flex flex-col rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden ${
+            className={`relative w-full sm:max-w-[440px] ${modalHeight} flex flex-col rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden ${
               darkMode ? "bg-[#203354]" : "bg-white"
             }`}
           >
@@ -287,8 +302,8 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
               onClick={onClose}
               whileHover={{ rotate: 90, scale: 1.1 }}
               whileTap={{ scale: 0.88 }}
-              className={`absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
-                darkMode ? "text-slate-500 hover:bg-white/8 hover:text-white" : "text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+              className={`absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
+                darkMode ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-100 hover:text-slate-700"
               }`}
               aria-label="Close"
             >
@@ -297,17 +312,17 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
               </svg>
             </motion.button>
 
-            <div className="px-7 pt-6 pb-8 overflow-y-auto flex-1 min-h-0 overscroll-contain custom-scrollbar">
+            <div className="px-7 pt-6 pb-8 overflow-y-auto flex-1 min-h-0 overscroll-contain [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20">
               {/* Header */}
               <div className="text-center mb-6">
                 <div className={`w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg ${
-                  darkMode ? "bg-gradient-to-br from-[#31487A]/20 to-[#31487A]/10 border border-white/8" : "bg-gradient-to-br from-[#31487A]/10 to-[#31487A]/10 border border-[#31487A]/20"
+                  darkMode ? "bg-gradient-to-br from-[#31487A]/20 to-[#31487A]/10 border border-white/10" : "bg-gradient-to-br from-[#31487A]/10 to-[#31487A]/10 border border-[#31487A]/20"
                 }`}>
                   <span className="text-2xl">✈️</span>
                 </div>
                 <h2
                   className={`text-2xl font-bold ${darkMode ? "text-white" : "text-[#0a0f1e]"}`}
-                  style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
                 >
                   {tab === "login" ? "Welcome Back" : "Create Account"}
                 </h2>
@@ -400,21 +415,19 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
 
                 {/* Password */}
                 <div>
-                  <div className="relative">
-                    <Field
-                      label="Password"
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      value={fields.password}
-                      onChange={handleChange("password")}
-                      onBlur={handleBlur("password")}
-                      placeholder="At least 6 characters"
-                      error={errors.password}
-                      touched={touched.password}
-                      darkMode={darkMode}
-                      suffix={eyeSuffix(showPassword, () => setShowPassword((v) => !v))}
-                    />
-                  </div>
+                  <Field
+                    label="Password"
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={fields.password}
+                    onChange={handleChange("password")}
+                    onBlur={handleBlur("password")}
+                    placeholder="At least 6 characters"
+                    error={errors.password}
+                    touched={touched.password}
+                    darkMode={darkMode}
+                    suffix={eyeSuffix(showPassword, () => setShowPassword((v) => !v))}
+                  />
                   {/* Password strength bar — signup only */}
                   <AnimatePresence>
                     {tab === "signup" && fields.password && (
@@ -463,36 +476,22 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                       transition={{ duration: 0.2 }}
                       className="overflow-hidden"
                     >
-                      <div className="relative">
-                        <Field
-                          label="Confirm Password"
-                          id="confirmPassword"
-                          type={showConfirm ? "text" : "password"}
-                          value={fields.confirmPassword}
-                          onChange={handleChange("confirmPassword")}
-                          onBlur={handleBlur("confirmPassword")}
-                          placeholder="Re-enter your password"
-                          error={errors.confirmPassword}
-                          touched={touched.confirmPassword}
-                          darkMode={darkMode}
-                          suffix={eyeSuffix(showConfirm, () => setShowConfirm((v) => !v))}
-                        />
-                      </div>
+                      <Field
+                        label="Confirm Password"
+                        id="confirmPassword"
+                        type={showConfirm ? "text" : "password"}
+                        value={fields.confirmPassword}
+                        onChange={handleChange("confirmPassword")}
+                        onBlur={handleBlur("confirmPassword")}
+                        placeholder="Re-enter your password"
+                        error={errors.confirmPassword}
+                        touched={touched.confirmPassword}
+                        darkMode={darkMode}
+                        suffix={eyeSuffix(showConfirm, () => setShowConfirm((v) => !v))}
+                      />
                     </motion.div>
                   )}
                 </AnimatePresence>
-
-                {/* Forgot password */}
-                {tab === "login" && (
-                  <div className="text-right -mt-1">
-                    <button
-                      type="button"
-                      className="text-xs text-[#31487A] hover:underline bg-transparent border-none cursor-pointer"
-                    >
-                      Forgot password?
-                    </button>
-                  </div>
-                )}
 
                 {/* Submit */}
                 <motion.button
@@ -523,55 +522,10 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                 </motion.button>
               </form>
 
-              {/* Divider */}
-              <div className="flex items-center gap-3 my-5">
-                <div className={`flex-1 h-px ${darkMode ? "bg-white/8" : "bg-slate-200"}`} />
-                <span className={`text-xs ${darkMode ? "text-slate-600" : "text-slate-400"}`}>or continue with</span>
-                <div className={`flex-1 h-px ${darkMode ? "bg-white/8" : "bg-slate-200"}`} />
-              </div>
-
-              {/* Social buttons */}
-              <div className="grid grid-cols-2 gap-3 mb-5">
-                {[
-                  {
-                    name: "Google",
-                    icon: (
-                      <svg className="w-4 h-4" viewBox="0 0 24 24">
-                        <path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115Z"/>
-                        <path fill="#34A853" d="M16.04 18.013c-1.09.703-2.474 1.078-4.04 1.078a7.077 7.077 0 0 1-6.723-4.823l-4.04 3.067A11.965 11.965 0 0 0 12 24c2.933 0 5.735-1.043 7.834-3l-3.793-2.987Z"/>
-                        <path fill="#4A90E2" d="M19.834 21c2.195-2.048 3.62-5.096 3.62-9 0-.71-.109-1.473-.272-2.182H12v4.637h6.436c-.317 1.559-1.17 2.766-2.395 3.558L19.834 21Z"/>
-                        <path fill="#FBBC05" d="M5.277 14.268A7.12 7.12 0 0 1 4.909 12c0-.782.125-1.533.357-2.235L1.24 6.65A11.934 11.934 0 0 0 0 12c0 1.92.445 3.73 1.237 5.335l4.04-3.067Z"/>
-                      </svg>
-                    ),
-                  },
-                  {
-                    name: "GitHub",
-                    icon: (
-                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
-                      </svg>
-                    ),
-                  },
-                ].map((provider) => (
-                  <button
-                    key={provider.name}
-                    type="button"
-                    className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-medium transition-all border cursor-pointer ${
-                      darkMode
-                        ? "bg-white/4 border-white/8 text-slate-300 hover:bg-white/8 hover:border-white/15 hover:text-white"
-                        : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-800 shadow-sm"
-                    }`}
-                  >
-                    {provider.icon}
-                    {provider.name}
-                  </button>
-                ))}
-              </div>
-
               {/* Switch tab */}
-              <p className={`text-center text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
+              <p className={`text-center mt-4 text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
                 {tab === "login" ? (
-                  <>Don&apos;t have an account?{" "}
+                  <>Don't have an account?{" "}
                     <button type="button" onClick={() => switchTab("signup")} className="text-[#31487A] font-semibold bg-transparent border-none cursor-pointer hover:underline">
                       Sign up free
                     </button>

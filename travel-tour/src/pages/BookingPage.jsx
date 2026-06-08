@@ -10,6 +10,76 @@ import Skeleton from "../components/Skeleton";
 const TODAY = new Date().toISOString().split("T")[0];
 const ease = [0.22, 1, 0.36, 1];
 
+const DRAFT_KEY = (tourId) => `airventure:booking:draft:${tourId}`;
+const RESTORED_FLAG = (tourId) => `airventure:booking:restored:${tourId}`;
+
+const SENSITIVE_FIELDS = ["cardNumber", "cardExpiry", "cardCvc"];
+
+const EMPTY_FORM = {
+  name: "", email: "", confirmEmail: "", phone: "",
+  address: "", nationality: "", checkIn: "", checkOut: "",
+  guests: 1, tripType: "couple", specialRequests: "",
+  cardName: "", cardNumber: "", cardExpiry: "", cardCvc: "",
+};
+
+function loadDraft(tourId) {
+  try {
+    const raw = sessionStorage.getItem(DRAFT_KEY(tourId));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+    return { ...EMPTY_FORM, ...parsed };
+  } catch {
+    return null;
+  }
+}
+
+function saveDraft(tourId, form) {
+  try {
+    const safe = { ...form };
+    SENSITIVE_FIELDS.forEach((k) => { delete safe[k]; });
+    safe.guests = Number(safe.guests) || 1;
+    sessionStorage.setItem(DRAFT_KEY(tourId), JSON.stringify(safe));
+  } catch {
+    /* storage unavailable — silently ignore */
+  }
+}
+
+function clearDraft(tourId) {
+  try {
+    sessionStorage.removeItem(DRAFT_KEY(tourId));
+    sessionStorage.removeItem(RESTORED_FLAG(tourId));
+  } catch {
+    /* noop */
+  }
+}
+
+function AutoSaveBadge({ form }) {
+  const hasDraft = Object.entries(form).some(([k, v]) => {
+    if (SENSITIVE_FIELDS.includes(k)) return false;
+    if (k === "guests") return Number(v) !== 1;
+    if (k === "tripType") return v !== "couple";
+    return Boolean(v);
+  });
+  if (!hasDraft) return null;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mb-5 flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 w-fit"
+    >
+      <motion.span
+        animate={{ scale: [1, 1.35, 1], opacity: [1, 0.6, 1] }}
+        transition={{ duration: 1.6, repeat: Infinity }}
+        className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"
+      />
+      <span className="text-[11px] font-semibold tracking-wide">
+        Auto-saved to this session — your data survives a refresh
+      </span>
+    </motion.div>
+  );
+}
+
 const COUNTRIES = [
   "Afghanistan","Albania","Algeria","Argentina","Australia","Austria","Bangladesh","Belgium",
   "Bhutan","Bolivia","Brazil","Cambodia","Cameroon","Canada","Chile","China","Colombia",
@@ -68,6 +138,22 @@ function validateField(name, value, form) {
       if (Number(value) < 1) return "At least 1 guest required";
       if (Number(value) > 20) return "Maximum 20 guests allowed";
       return "";
+    case "cardName":
+      if (!value.trim()) return "Cardholder name is required";
+      if (value.trim().length < 2) return "Enter a valid name";
+      return "";
+    case "cardNumber":
+      if (!value.trim()) return "Card number is required";
+      if (value.replace(/\D+/g, "").length < 13) return "Enter a valid card number";
+      return "";
+    case "cardExpiry":
+      if (!value.trim()) return "Expiry is required";
+      if (!/^\d{2}\s*\/\s*\d{2}$/.test(value.trim())) return "Format must be MM/YY";
+      return "";
+    case "cardCvc":
+      if (!value.trim()) return "Security code is required";
+      if (!/^\d{3,4}$/.test(value.trim())) return "Enter a valid CVC";
+      return "";
     default:
       return "";
   }
@@ -122,30 +208,67 @@ export default function BookingPage() {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const formRef = useRef(null);
-  const [form, setForm] = useState({
-    name: "", email: "", confirmEmail: "", phone: "",
-    address: "", nationality: "", checkIn: "", checkOut: "",
-    guests: 1, tripType: "couple", specialRequests: "",
-  });
+  const restoredRef = useRef(false);
+  const [form, setForm] = useState(() => loadDraft(id) || { ...EMPTY_FORM });
   const addToast = useToast();
   const { token, user } = useAuth();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
     setLoading(true);
+    setSubmitted(false);
+    setErrors({});
+    setTouched({});
     fetchDestinationById(id).then(setTour).catch((e) => setError(e.message)).finally(() => setLoading(false));
+
+    const draft = loadDraft(id);
+    if (draft) setForm({ ...draft });
+    else setForm({ ...EMPTY_FORM });
+    restoredRef.current = false;
   }, [id]);
 
   useEffect(() => {
-    if (user) {
-      setForm((p) => ({
-        ...p,
-        name: p.name || user.name || "",
-        email: p.email || user.email || "",
-        confirmEmail: p.confirmEmail || user.email || "",
-      }));
-    }
-  }, [user]);
+    if (loading || error || !tour || submitted) return;
+    const hasContent = Object.entries(form).some(([key, v]) => {
+      if (SENSITIVE_FIELDS.includes(key)) return false;
+      if (key === "guests") return Number(v) !== 1;
+      if (key === "tripType") return v !== "couple";
+      return Boolean(v);
+    });
+    if (hasContent) saveDraft(id, form);
+  }, [form, id, loading, error, tour, submitted]);
+
+  useEffect(() => {
+    if (!user || !tour || loading || submitted) return;
+    setForm((p) => {
+      const next = { ...p };
+      if (!next.name)         next.name         = user.name  || next.name;
+      if (!next.email)        next.email        = user.email || next.email;
+      if (!next.confirmEmail) next.confirmEmail = next.email || next.confirmEmail;
+      if (!next.phone)        next.phone        = user.phone || next.phone;
+      return next;
+    });
+  }, [user, tour, loading, submitted]);
+
+  useEffect(() => {
+    if (restoredRef.current) return;
+    const draft = loadDraft(id);
+    if (!draft) return;
+    const hasContent = Object.entries(draft).some(([k, v]) => {
+      if (SENSITIVE_FIELDS.includes(k)) return false;
+      if (k === "guests") return Number(v) !== 1;
+      if (k === "tripType") return v !== "couple";
+      return Boolean(v);
+    });
+    if (!hasContent) return;
+    restoredRef.current = true;
+    try {
+      if (!sessionStorage.getItem(RESTORED_FLAG(id))) {
+        sessionStorage.setItem(RESTORED_FLAG(id), "1");
+        addToast("info", "We restored your previous draft for this booking.");
+      }
+    } catch { /* noop */ }
+  }, [id, addToast]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -160,8 +283,16 @@ export default function BookingPage() {
     setErrors((prev) => ({ ...prev, [name]: validateField(name, form[name], form) }));
   };
 
+  const handleResetDraft = () => {
+    setForm({ ...EMPTY_FORM });
+    setErrors({});
+    setTouched({});
+    clearDraft(id);
+    addToast("success", "Form cleared. Draft removed from this session.");
+  };
+
   const scrollToFirstError = (errs) => {
-    const fields = ["name","email","confirmEmail","phone","address","nationality","checkIn","checkOut","guests"];
+    const fields = ["name","email","confirmEmail","phone","address","nationality","checkIn","checkOut","guests","cardName","cardNumber","cardExpiry","cardCvc"];
     for (const f of fields) {
       if (errs[f]) {
         const el = formRef.current?.querySelector(`[name="${f}"]`);
@@ -175,7 +306,7 @@ export default function BookingPage() {
     e.preventDefault();
     const allTouched = {};
     const nextErrors = {};
-    ["name","email","confirmEmail","phone","address","nationality","checkIn","checkOut","guests"].forEach((f) => {
+    ["name","email","confirmEmail","phone","address","nationality","checkIn","checkOut","guests","cardName","cardNumber","cardExpiry","cardCvc"].forEach((f) => {
       allTouched[f] = true;
       nextErrors[f] = validateField(f, form[f], form);
     });
@@ -196,9 +327,17 @@ export default function BookingPage() {
         phone: form.phone, address: form.address, nationality: form.nationality,
         checkIn: form.checkIn, checkOut: form.checkOut,
         guests: Number(form.guests), tripType: form.tripType,
-        specialRequests: form.specialRequests, total,
+        specialRequests: form.specialRequests,
+        total, currency: "INR",
+        payment: {
+          name: form.cardName,
+          number: form.cardNumber.replace(/\s+/g, ""),
+          expiry: form.cardExpiry,
+          cvc: form.cardCvc,
+        },
       }, token);
       setSubmitted(true);
+      clearDraft(id);
       addToast("success", "Booking confirmed!");
     } catch (err) {
       setSubmitError(err.message);
@@ -279,7 +418,7 @@ export default function BookingPage() {
             { l: "Check-out", v: form.checkOut, icon: "📅" },
             { l: "Guests", v: `${form.guests} guest${form.guests > 1 ? "s" : ""}`, icon: "👥" },
             { l: "Duration", v: `${nights} night${nights > 1 ? "s" : ""}`, icon: "⏰" },
-            { l: "Total Paid", v: `$${total.toLocaleString()}`, icon: "💰" },
+            { l: "Total Paid", v: `\u20B9${total.toLocaleString()}`, icon: "💰" },
           ].map((item) => (
             <div key={item.l} className="flex justify-between py-2.5 sm:py-3 text-sm">
               <span className="text-slate-500 dark:text-slate-400 flex items-center gap-2">
@@ -358,8 +497,23 @@ export default function BookingPage() {
             <div className="bg-white dark:bg-[#1E2E4F] rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-100 dark:border-white/5">
               <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100 dark:border-white/10">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#0EA5E9] to-[#3B82F6] flex items-center justify-center text-white font-bold">1</div>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-slate-800 dark:text-white">Traveller Details</h2>
+                <h2 className="text-xl sm:text-2xl font-extrabold text-slate-800 dark:text-white flex-1">Traveller Details</h2>
+                <motion.button
+                  type="button"
+                  onClick={handleResetDraft}
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  title="Clear this form and discard the saved draft for this session"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-white/5 hover:bg-rose-50 dark:hover:bg-rose-950/30 hover:text-rose-500 dark:hover:text-rose-400 px-3 py-1.5 rounded-full transition-colors cursor-pointer border-none"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3">
+                    <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                  </svg>
+                  Clear draft
+                </motion.button>
               </div>
+
+              <AutoSaveBadge form={form} />
               
               <form ref={formRef} onSubmit={handleSubmit} noValidate className="space-y-5">
                 {/* Name + Email */}
@@ -451,6 +605,75 @@ export default function BookingPage() {
                     rows={3} className={`${inputCls(false, darkMode)} resize-none`} />
                 </Field>
 
+                <div className="mt-6 mb-4 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#0EA5E9] to-[#3B82F6] flex items-center justify-center text-white font-bold">2</div>
+                  <h3 className="text-lg sm:text-xl font-extrabold text-slate-800 dark:text-white">Payment Details</h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <Field label="Cardholder Name" required error={touched.cardName && errors.cardName} icon="👤">
+                    <input
+                      type="text"
+                      name="cardName"
+                      value={form.cardName}
+                      onChange={handleChange}
+                      onBlur={() => handleBlur("cardName")}
+                      placeholder="As printed on card"
+                      autoComplete="cc-name"
+                      className={inputCls(touched.cardName && errors.cardName, darkMode)}
+                    />
+                  </Field>
+                  <Field label="Card Number" required error={touched.cardNumber && errors.cardNumber} icon="💳">
+                    <input
+                      type="text"
+                      name="cardNumber"
+                      value={form.cardNumber}
+                      onChange={handleChange}
+                      onBlur={() => handleBlur("cardNumber")}
+                      placeholder="4242 4242 4242 4242"
+                      inputMode="numeric"
+                      autoComplete="cc-number"
+                      maxLength={23}
+                      className={inputCls(touched.cardNumber && errors.cardNumber, darkMode)}
+                    />
+                  </Field>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                  <Field label="Expiry" required error={touched.cardExpiry && errors.cardExpiry} icon="📆">
+                    <input
+                      type="text"
+                      name="cardExpiry"
+                      value={form.cardExpiry}
+                      onChange={handleChange}
+                      onBlur={() => handleBlur("cardExpiry")}
+                      placeholder="MM/YY"
+                      inputMode="numeric"
+                      autoComplete="cc-exp"
+                      maxLength={7}
+                      className={inputCls(touched.cardExpiry && errors.cardExpiry, darkMode)}
+                    />
+                  </Field>
+                  <Field label="CVC" required error={touched.cardCvc && errors.cardCvc} icon="🔒">
+                    <input
+                      type="text"
+                      name="cardCvc"
+                      value={form.cardCvc}
+                      onChange={handleChange}
+                      onBlur={() => handleBlur("cardCvc")}
+                      placeholder="123"
+                      inputMode="numeric"
+                      autoComplete="cc-csc"
+                      maxLength={4}
+                      className={inputCls(touched.cardCvc && errors.cardCvc, darkMode)}
+                    />
+                  </Field>
+                </div>
+
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-2">
+                  🔐 Test mode — try card <code className="px-1 py-0.5 bg-slate-100 dark:bg-white/10 rounded">4242 4242 4242 4242</code> with any future expiry & CVC.
+                </p>
+
                 {/* Trust badges */}
                 <div className="flex flex-wrap gap-4 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 pt-2 pb-3">
                   <span className="flex items-center gap-1.5">🔒 <span className="font-medium">SSL Secured</span></span>
@@ -483,7 +706,7 @@ export default function BookingPage() {
                       Processing Your Booking...
                     </span>
                   ) : (
-                    `Confirm Booking — $${total.toLocaleString()}`
+                    `Confirm Booking — \u20B9${total.toLocaleString()}`
                   )}
                 </motion.button>
               </form>
@@ -523,19 +746,19 @@ export default function BookingPage() {
                 <div className="space-y-3 mb-6">
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500 dark:text-slate-400">Price per person</span>
-                    <span className="font-semibold text-slate-800 dark:text-white">${tour.price.toLocaleString()}</span>
+                    <span className="font-semibold text-slate-800 dark:text-white">₹{tour.price.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500 dark:text-slate-400">× {nights} night{nights > 1 ? "s" : ""}</span>
-                    <span className="font-semibold text-slate-800 dark:text-white">${(tour.price * nights).toLocaleString()}</span>
+                    <span className="font-semibold text-slate-800 dark:text-white">₹{(tour.price * nights).toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500 dark:text-slate-400">× {form.guests} guest{form.guests > 1 ? "s" : ""}</span>
-                    <span className="font-semibold text-slate-800 dark:text-white">${subtotal.toLocaleString()}</span>
+                    <span className="font-semibold text-slate-800 dark:text-white">₹{subtotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-sm pt-2 border-t border-slate-100 dark:border-white/10">
                     <span className="text-slate-500 dark:text-slate-400">Taxes & Fees (10%)</span>
-                    <span className="font-semibold text-slate-800 dark:text-white">${taxes.toLocaleString()}</span>
+                    <span className="font-semibold text-slate-800 dark:text-white">₹{taxes.toLocaleString()}</span>
                   </div>
                   {form.checkIn && (
                     <div className="flex justify-between text-sm">
@@ -559,7 +782,7 @@ export default function BookingPage() {
                     animate={{ scale: 1 }}
                     className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-[#0EA5E9] to-[#3B82F6] bg-clip-text text-transparent"
                   >
-                    ${total.toLocaleString()}
+                    ₹{total.toLocaleString()}
                   </motion.span>
                 </div>
 

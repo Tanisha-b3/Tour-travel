@@ -82,7 +82,7 @@ export default function BookingField({
                 text-[10px] font-semibold uppercase tracking-widest transition-colors duration-200
                 ${isFocused ? "text-blue-500" : hasError ? "text-red-500" : isValid ? "text-emerald-500" : "text-gray-400"}
               `}
-              style={{ fontFamily: "'DM Sans', sans-serif" }}
+              style={{ fontFamily: "'Inter', sans-serif" }}
             >
               {label}
             </p>
@@ -107,7 +107,7 @@ export default function BookingField({
               ${hasError ? "text-red-600 dark:text-red-400" : ""}
               ${isValid ? "text-emerald-600 dark:text-emerald-400" : "text-gray-700 dark:text-gray-200"}
             `}
-            style={{ fontFamily: "'DM Sans', sans-serif" }}
+            style={{ fontFamily: "'Inter', sans-serif" }}
           />
 
           {/* Character count for text fields */}

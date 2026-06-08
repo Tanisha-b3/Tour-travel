@@ -7,13 +7,13 @@ const AppContext = createContext(null);
 export function AppProvider({ children }) {
   const { user, token } = useAuth();
   const [wishlist, setWishlist] = useState(() => {
-    const saved = localStorage.getItem("wishlist");
+    const saved = sessionStorage.getItem("wishlist");
     return saved ? JSON.parse(saved) : [];
   });
   const syncedRef = useRef(false);
 
   useEffect(() => {
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    sessionStorage.setItem("wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export function AppProvider({ children }) {
     let cancelled = false;
     (async () => {
       try {
-        const localIds = JSON.parse(localStorage.getItem("wishlist") || "[]")
+        const localIds = JSON.parse(sessionStorage.getItem("wishlist") || "[]")
           .map((d) => d?.id)
           .filter(Number.isFinite);
 

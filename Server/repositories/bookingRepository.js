@@ -4,12 +4,22 @@ import Testimonial from "../models/Testimonial.js";
 import User from "../models/User.js";
 
 const bookingRepository = {
-  findAll() {
-    return Booking.find().sort({ createdAt: -1 }).lean();
+  findAll(filter = {}, { skip = 0, limit = 0 } = {}) {
+    const q = Booking.find(filter).sort({ createdAt: -1 }).lean();
+    if (skip)  q.skip(skip);
+    if (limit) q.limit(limit);
+    return q;
   },
 
-  findByUser(userId) {
-    return Booking.find({ user: userId }).sort({ createdAt: -1 }).lean();
+  count(filter = {}) {
+    return Booking.countDocuments(filter);
+  },
+
+  findByUser(userId, { skip = 0, limit = 0 } = {}) {
+    const q = Booking.find({ user: userId }).sort({ createdAt: -1 }).lean();
+    if (skip)  q.skip(skip);
+    if (limit) q.limit(limit);
+    return q;
   },
 
   findById(id) {
@@ -22,6 +32,14 @@ const bookingRepository = {
 
   updateStatus(id, status) {
     return Booking.findByIdAndUpdate(id, { status }, { new: true }).lean();
+  },
+
+  findByIdAndUser(id, userId) {
+    return Booking.findOne({ _id: id, user: userId }).lean();
+  },
+
+  setPayment(id, patch) {
+    return Booking.findByIdAndUpdate(id, patch, { new: true }).lean();
   },
 
   countByStatus() {
