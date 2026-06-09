@@ -59,13 +59,6 @@ app.get("/", (req, res) => {
 });
 
 
-mongoose.connect(MONGODB_URI)
-  .then(async () => {
-    console.log("MongoDB connected");
-    await seedIfEmpty();
-  })
-  .catch((err) => console.error("MongoDB connection error:", err));
-
 app.use("/api/auth", authRoutes);
 app.use("/api/destinations", destinationRoutes);
 app.use("/api/testimonials", testimonialRoutes);
@@ -73,6 +66,12 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/upload", uploadRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+mongoose.connect(MONGODB_URI)
+  .then(async () => {
+    console.log("MongoDB connected");
+    await seedIfEmpty();
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => console.error("MongoDB connection error:", err));
