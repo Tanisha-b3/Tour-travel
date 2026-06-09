@@ -6,6 +6,7 @@ import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import "dotenv/config";
 
+import connectDB from "./db.js";
 import Destination from "./models/Destination.js";
 import Testimonial from "./models/Testimonial.js";
 
@@ -31,7 +32,6 @@ const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/travel-tour";
 const IS_PROD = process.env.NODE_ENV === "production";
 
 const allowedOrigins = [
@@ -66,6 +66,17 @@ app.use(express.urlencoded({ extended: false, limit: "1mb" }));
 app.use("/uploads", express.static(join(__dirname, "uploads"), { maxAge: "1d" }));
 
 app.use(generalLimiter);
+
+// Ensure MongoDB connection before handling any API request (serverless-safe)
+app.use("/api", async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("[db] connection failed:", err.message);
+    res.status(503).json({ error: "Database unavailable" });
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Travel Tour API");
@@ -105,16 +116,15 @@ async function seedIfEmpty() {
   }
 }
 
-mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 10000 })
-  .then(async () => {
-    console.log("MongoDB connected");
-    await seedIfEmpty();
-    try {
-      await mongoose.connection.db.collection("users").dropIndex("refreshTokens.jti_1");
-      console.log("Dropped stale index refreshTokens.jti_1");
-    } catch (_) {}
-  })
-  .catch((err) => console.error("MongoDB connection error:", err));
+// Connect and seed on startup (for local dev / standalone)
+const isVercel = !!process.env.VERCEL;
+if (!isVercel) {
+  connectDB()
+    .then(async () => {
+      await seedIfEmpty();
+    })
+    .catch((err) => console.error("MongoDB connection error:", err));
+}
 
 app.use("/api/auth", authRoutes);
 app.use("/api/destinations", destinationRoutes);
@@ -127,24 +137,26 @@ app.use("/api/ai", aiRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT} (${IS_PROD ? "production" : "development"})`);
-  console.log(`AI (Groq) ${isAIEnabled() ? `enabled — model: ${process.env.GROQ_MODEL || "llama-3.3-70b-versatile"}` : "disabled (set GROQ_API_KEY to enable)"}`);
-  setInterval(() => {
-    purgeExpiredRefreshTokens().catch((err) =>
-      console.error("[token cleanup]", err.message)
-    );
-  }, 6 * 60 * 60 * 1000);
-});
-
-function shutdown(signal) {
-  console.log(`[${signal}] shutting down…`);
-  server.close(() => {
-    mongoose.connection.close(false).finally(() => process.exit(0));
+if (!isVercel) {
+  const server = app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT} (${IS_PROD ? "production" : "development"})`);
+    console.log(`AI (Groq) ${isAIEnabled() ? `enabled — model: ${process.env.GROQ_MODEL || "llama-3.3-70b-versatile"}` : "disabled (set GROQ_API_KEY to enable)"}`);
+    setInterval(() => {
+      purgeExpiredRefreshTokens().catch((err) =>
+        console.error("[token cleanup]", err.message)
+      );
+    }, 6 * 60 * 60 * 1000);
   });
-  setTimeout(() => process.exit(1), 10_000).unref();
+
+  function shutdown(signal) {
+    console.log(`[${signal}] shutting down…`);
+    server.close(() => {
+      mongoose.connection.close(false).finally(() => process.exit(0));
+    });
+    setTimeout(() => process.exit(1), 10_000).unref();
+  }
+  process.on("SIGINT",  () => shutdown("SIGINT"));
+  process.on("SIGTERM", () => shutdown("SIGTERM"));
 }
-process.on("SIGINT",  () => shutdown("SIGINT"));
-process.on("SIGTERM", () => shutdown("SIGTERM"));
 
 export default app;

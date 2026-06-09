@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const wishlistItemSchema = new mongoose.Schema({
-  destinationId: { type: Number, required: true, index: true },
+  destinationId: { type: Number, required: true },
   addedAt: { type: Date, default: Date.now },
 }, { _id: false });
 
