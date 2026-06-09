@@ -1,81 +1,75 @@
 import destinationService from "../services/destinationService.js";
 
 const destinationController = {
-  async list(req, res) {
+  async list(req, res, next) {
     try {
       const result = await destinationService.list(req.query);
       res.json(result);
     } catch (err) {
-      res.status(500).json({ error: "Failed to fetch destinations" });
+      next(err);
     }
   },
 
-  async getTypes(req, res) {
+  async getTypes(req, res, next) {
     try {
       const result = await destinationService.getTypes();
       res.json(result);
     } catch (err) {
-      res.status(500).json({ error: "Failed to fetch types" });
+      next(err);
     }
   },
 
-  async getFeatured(req, res) {
+  async getFeatured(req, res, next) {
     try {
       const result = await destinationService.getFeatured();
       res.json(result);
     } catch (err) {
-      res.status(500).json({ error: "Failed to fetch featured" });
+      next(err);
     }
   },
 
-  async getPopular(req, res) {
+  async getPopular(req, res, next) {
     try {
       const result = await destinationService.getPopular();
       res.json(result);
     } catch (err) {
-      res.status(500).json({ error: "Failed to fetch popular" });
+      next(err);
     }
   },
 
-  async getById(req, res) {
+  async getById(req, res, next) {
     try {
-      const id = parseInt(req.params.id);
-      const result = await destinationService.getById(id);
+      const result = await destinationService.getById(req.params.id);
       res.json(result);
     } catch (err) {
-      if (err.status === 404) return res.status(404).json({ error: err.message });
-      res.status(500).json({ error: "Failed to fetch destination" });
+      next(err);
     }
   },
 
-  async create(req, res) {
+  async create(req, res, next) {
     try {
       const result = await destinationService.create(req.body);
       res.status(201).json(result);
     } catch (err) {
-      if (err.status === 400) return res.status(400).json({ error: err.message });
-      res.status(500).json({ error: "Failed to create destination" });
+      next(err);
     }
   },
 
-  async update(req, res) {
+  async update(req, res, next) {
     try {
       const result = await destinationService.update(req.params.id, req.body);
       res.json(result);
     } catch (err) {
-      if (err.status === 400) return res.status(400).json({ error: err.message });
-      if (err.status === 404) return res.status(404).json({ error: err.message });
-      res.status(500).json({ error: "Failed to update destination" });
+      next(err);
     }
   },
 
-  async remove(req, res) {
+  async remove(req, res, next) {
     try {
       const result = await destinationService.remove(req.params.id);
       res.json(result);
     } catch (err) {
-      if (err.status === 404) return res.status(404).json({ error: err.message });
-      res.status(500).json({ error: "Failed to delete destination" });
+      next(err);
     }
   },
 };

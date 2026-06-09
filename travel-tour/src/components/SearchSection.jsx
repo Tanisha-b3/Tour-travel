@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SearchIcon from "./SearchIcon";
 
 const POPULAR_TAGS = [
   { label: "🏖️ Bali",      query: "Bali" },
@@ -47,7 +48,9 @@ export default function SearchSection() {
           className="flex flex-col sm:flex-row gap-3 max-w-[540px] mx-auto mb-8"
         >
           <div className="flex-1 relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-lg pointer-events-none">🔍</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+              <SearchIcon className="w-4 h-4" strokeWidth={2.2} />
+            </span>
             <input
               type="text"
               placeholder="Search destinations, countries..."

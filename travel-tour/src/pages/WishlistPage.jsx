@@ -98,7 +98,7 @@ export default function WishlistPage() {
                 { label: stats.total, sub: "Saved", icon: "❤️", color: "rose" },
                 { label: stats.avgRating, sub: "Avg Rating", icon: "⭐", color: "amber" },
                 { label: stats.categories.length, sub: "Categories", icon: "🎯", color: "emerald" },
-                { label: `$${stats.totalPrice.toLocaleString()}`, sub: "Total Value", icon: "💰", color: "blue" },
+                { label: `\u20B9${stats.totalPrice.toLocaleString()}`, sub: "Total Value", icon: "💰", color: "blue" },
               ].map((s, i) => (
                 <motion.div
                   key={s.sub}
@@ -322,7 +322,7 @@ export default function WishlistPage() {
                           animate={{ x: 0, opacity: 1 }}
                           className="absolute bottom-3 left-3 bg-white/95 dark:bg-[#1E293B]/95 backdrop-blur-sm text-slate-800 dark:text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg"
                         >
-                          ${dest.price?.toLocaleString()}
+                          ₹{dest.price?.toLocaleString()}
                         </motion.div>
 
                         {/* Remove button */}

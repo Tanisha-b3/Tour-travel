@@ -135,7 +135,7 @@ export default function ReviewModal({ booking, onClose, onSuccess }) {
               </div>
               <h2
                 className={`text-[24px] font-bold leading-tight ${darkMode ? "text-white" : "text-[#0a0f1e]"}`}
-                style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
               >
                 Share Your Experience
               </h2>

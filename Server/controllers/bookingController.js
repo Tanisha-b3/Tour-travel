@@ -2,52 +2,57 @@ import bookingService from "../services/bookingService.js";
 import { getDashboardStats } from "../repositories/bookingRepository.js";
 
 const bookingController = {
-  async create(req, res) {
+  async create(req, res, next) {
     try {
       const result = await bookingService.create(req.body, req.user?.id);
       res.status(201).json(result);
     } catch (err) {
-      if (err.status === 400) return res.status(400).json({ error: err.message });
-      res.status(500).json({ error: "Failed to create booking" });
+      next(err);
     }
   },
 
-  async list(req, res) {
+  async list(req, res, next) {
     try {
-      const result = await bookingService.list();
+      const result = await bookingService.list(req.query);
       res.json(result);
     } catch (err) {
-      res.status(500).json({ error: "Failed to fetch bookings" });
+      next(err);
     }
   },
 
-  async listMine(req, res) {
+  async listMine(req, res, next) {
     try {
-      const result = await bookingService.listMine(req.user.id);
+      const result = await bookingService.listMine(req.user.id, req.query);
       res.json(result);
     } catch (err) {
-      res.status(500).json({ error: "Failed to fetch your bookings" });
+      next(err);
     }
   },
 
-  async updateStatus(req, res) {
+  async cancelMine(req, res, next) {
+    try {
+      const result = await bookingService.cancelMine(req.user.id, req.params.id);
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  async updateStatus(req, res, next) {
     try {
       const result = await bookingService.updateStatus(req.params.id, req.body.status);
       res.json(result);
     } catch (err) {
-      if (err.status === 400) return res.status(400).json({ error: err.message });
-      if (err.status === 404) return res.status(404).json({ error: err.message });
-      res.status(500).json({ error: "Failed to update booking" });
+      next(err);
     }
   },
 
-  async stats(req, res) {
+  async stats(req, res, next) {
     try {
       const data = await getDashboardStats();
       res.json({ data });
     } catch (err) {
-      console.error("stats error:", err);
-      res.status(500).json({ error: "Failed to load dashboard stats" });
+      next(err);
     }
   },
 };

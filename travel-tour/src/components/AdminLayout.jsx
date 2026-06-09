@@ -54,7 +54,7 @@ export default function AdminLayout() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, ease }}
                 className={`text-xl sm:text-2xl font-extrabold leading-tight truncate ${darkMode ? "text-white" : "text-[#0a0f1e]"}`}
-                style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+                style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
               >
                 {title}
               </motion.h1>

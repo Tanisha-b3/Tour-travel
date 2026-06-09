@@ -1,0 +1,9 @@
+Server running on http://localhost:5000 (development)
+MongoDB connected
+
+📧 [emailService] (dev / no SMTP) message prepared →
+   To:      tanu12@gmail.com
+   Subject: Booking confirmed — Bali, Indonesia
+   From:    [object Object]
+   Text:    Booking confirmed — Bali, Indonesia
+
