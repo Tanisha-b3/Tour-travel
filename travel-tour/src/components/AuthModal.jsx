@@ -272,8 +272,8 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
     </button>
   );
 
-  // Dynamic height based on tab
-  const modalHeight = tab === "login" ? "h-[80vh] sm:h-auto sm:max-h-[580px]" : "h-[95vh] sm:h-auto sm:max-h-[680px]";
+  // Dynamic height based on tab — consistent max-h on all sizes for reliable scroll
+  const modalHeight = tab === "login" ? "max-h-[85vh] sm:max-h-[580px]" : "max-h-[92vh] sm:max-h-[680px]";
 
   return (
     <AnimatePresence>

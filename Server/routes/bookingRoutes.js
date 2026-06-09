@@ -57,4 +57,5 @@ router.patch(
   bookingController.updateStatus,
 );
 
+
 export default router;

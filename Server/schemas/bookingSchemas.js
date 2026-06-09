@@ -18,7 +18,7 @@ export const createBookingBody = z.object({
   name:            z.string().trim().min(2).max(80),
   email:           z.string().trim().toLowerCase().email().max(120),
   confirmEmail:    z.string().trim().toLowerCase().email().max(120),
-  phone:           z.string().trim().min(7).max(30),
+  phone:           z.string().trim().regex(/^\d{10}$/, "Phone must be exactly 10 digits"),
   address:         z.string().trim().min(5).max(300),
   nationality:     z.string().trim().min(2).max(80),
   checkIn:         z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid check-in date"),

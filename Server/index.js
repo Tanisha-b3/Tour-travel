@@ -109,6 +109,10 @@ mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 10000 })
   .then(async () => {
     console.log("MongoDB connected");
     await seedIfEmpty();
+    try {
+      await mongoose.connection.db.collection("users").dropIndex("refreshTokens.jti_1");
+      console.log("Dropped stale index refreshTokens.jti_1");
+    } catch (_) {}
   })
   .catch((err) => console.error("MongoDB connection error:", err));
 

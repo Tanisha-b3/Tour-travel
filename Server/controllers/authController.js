@@ -99,3 +99,12 @@ export async function changePassword(req, res) {
     sendErr(res, err);
   }
 }
+
+export async function googleAuth(req, res) {
+  try {
+    const result = await authService.googleLogin(req.body, metaFromReq(req));
+    sendOk(res, result);
+  } catch (err) {
+    sendErr(res, err);
+  }
+}

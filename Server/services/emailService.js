@@ -1,8 +1,9 @@
 import nodemailer from "nodemailer";
 
-const FROM_ADDRESS = process.env.MAIL_FROM || "Airventure <no-reply@airventure.com>";
+const FROM_ADDRESS = process.env.SMTP_USER || "Airventure <no-reply@airventure.com>";
 const APP_NAME = "Airventure";
 const FRONTEND_URL = process.env.Frontend_URL || "http://localhost:5173";
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "").split(",").map((e) => e.trim()).filter(Boolean);
 
 function isSmtpConfigured() {
   return Boolean(process.env.SMTP_HOST && process.env.SMTP_PORT && process.env.SMTP_USER && process.env.SMTP_PASS);
@@ -175,6 +176,33 @@ export async function sendBookingStatusUpdate({ name, email, tourName, status, b
     to: email,
     subject: `Booking ${normalized} — ${safeTour}`,
     html: layout({ title: "Booking Updated", body, preheader: `Your booking status is now ${normalized}.` }),
+  });
+}
+
+export async function sendAdminBookingNotification({ name, email, tourName, bookingId, total, currency, checkIn, checkOut, guests }) {
+  if (ADMIN_EMAILS.length === 0) return { ok: false, error: "no admin emails configured" };
+  const safeName = escapeHtml(name || "customer");
+  const safeTour = escapeHtml(tourName || "N/A");
+  const body = `
+    <h1 style="margin:0 0 8px;font-size:22px;color:#1E3259;">📦 New booking received</h1>
+    <p style="margin:0 0 18px;color:#4B6DA8;font-size:14px;line-height:1.6;">
+      A new booking has been placed on <strong>${APP_NAME}</strong>. Review the details below.
+    </p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F4F7FD;border:1px solid #EBF0FA;border-radius:12px;padding:14px 18px;margin:8px 0 6px;">
+      ${row("Reference", `<span style="font-family:monospace;">#${String(bookingId).slice(-8).toUpperCase()}</span>`)}
+      ${row("Customer", safeName)}
+      ${row("Email", escapeHtml(email || "—"))}
+      ${row("Tour", safeTour)}
+      ${row("Check-in", escapeHtml(checkIn || "—"))}
+      ${row("Check-out", escapeHtml(checkOut || "—"))}
+      ${row("Guests", `${guests || 1}`)}
+      ${row("Total", `<span style="color:#31487A;">${money(total, currency)}</span>`)}
+    </table>
+    ${ctaButton(`${FRONTEND_URL}/admin/bookings`, "Manage Bookings")}`;
+  return send({
+    to: ADMIN_EMAILS.join(","),
+    subject: `New booking — ${safeTour} (${money(total, currency)})`,
+    html: layout({ title: "New Booking", body, preheader: `${safeName} just booked ${safeTour}.` }),
   });
 }
 

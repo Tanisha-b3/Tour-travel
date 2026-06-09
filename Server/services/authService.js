@@ -1,7 +1,10 @@
 import bcrypt from "bcryptjs";
+import { OAuth2Client } from "google-auth-library";
 import * as userRepository from "../repositories/userRepository.js";
 import { sendWelcome } from "./emailService.js";
 import { issueTokensForUser } from "./tokenService.js";
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "")
   .split(",")
@@ -120,4 +123,52 @@ export async function changePassword(userId, { currentPassword, newPassword }) {
   const { revokeAllForUser } = await import("./tokenService.js");
   await revokeAllForUser(userId);
   return { ok: true };
+}
+
+export async function googleLogin({ idToken }, meta = {}) {
+  if (!idToken) {
+    throw Object.assign(new Error("Google ID token is required"), { status: 400 });
+  }
+
+  let payload;
+  try {
+    const ticket = await googleClient.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    payload = ticket.getPayload();
+  } catch {
+    throw Object.assign(new Error("Invalid Google token"), { status: 401 });
+  }
+
+  const { sub: googleId, email, name, picture } = payload;
+  const normalized = normalizeEmail(email);
+
+  let user = await userRepository.findByEmail(normalized);
+
+  if (user) {
+    if (!user.googleId) {
+      const { updateById } = await import("../repositories/userRepository.js");
+      await updateById(user._id, { googleId });
+    }
+  } else {
+    const role = resolveRole(normalized);
+    user = await userRepository.create({
+      name: name || "Google User",
+      email: normalized,
+      password: null,
+      googleId,
+      avatar: picture || "",
+      role,
+    });
+
+    try {
+      await sendWelcome({ name: user.name, email: user.email });
+    } catch (err) {
+      console.error("[authService] welcome email failed:", err.message);
+    }
+  }
+
+  const tokens = await issueTokensForUser(user, meta);
+  return { user: sanitizeUser(user), ...tokens };
 }

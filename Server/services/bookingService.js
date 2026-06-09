@@ -1,6 +1,6 @@
 import bookingRepository from "../repositories/bookingRepository.js";
 import { processTestPayment } from "./paymentService.js";
-import { sendBookingConfirmation, sendBookingStatusUpdate } from "./emailService.js";
+import { sendBookingConfirmation, sendBookingStatusUpdate, sendAdminBookingNotification } from "./emailService.js";
 import { shapePage } from "../utils/pagination.js";
 
 function safeEmail(booking) {
@@ -81,6 +81,22 @@ const bookingService = {
       });
     } catch (err) {
       console.error("[bookingService] confirmation email failed:", err.message);
+    }
+
+    try {
+      await sendAdminBookingNotification({
+        name: data.name,
+        email: safeEmail(data),
+        tourName: data.tourName,
+        bookingId: data._id,
+        total: data.total,
+        currency: data.currency,
+        checkIn: data.checkIn,
+        checkOut: data.checkOut,
+        guests: data.guests,
+      });
+    } catch (err) {
+      console.error("[bookingService] admin notification email failed:", err.message);
     }
 
     return { data };
