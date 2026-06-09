@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 import {
   loginUser,
   registerUser,
+  googleLoginUser,
   getMe,
   refreshAccessToken,
   logoutRequest,
@@ -71,6 +72,13 @@ export function AuthProvider({ children }) {
     return result;
   }, []);
 
+  const loginWithGoogle = useCallback(async (idToken) => {
+    const result = await googleLoginUser(idToken);
+    setToken(getAccessToken());
+    setUser(result.user);
+    return result;
+  }, []);
+
   const logout = useCallback(async () => {
     await logoutRequest();
     setToken(null);
@@ -90,7 +98,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout, authModal, openAuthModal, closeAuthModal, setUser: updateUser }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, loginWithGoogle, logout, authModal, openAuthModal, closeAuthModal, setUser: updateUser }}>
       {children}
     </AuthContext.Provider>
   );

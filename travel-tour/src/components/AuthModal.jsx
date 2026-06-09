@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import { useTheme } from "../context/ThemeContext";
@@ -126,7 +127,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
   const [globalError, setGlobalError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const { login, register } = useAuth();
+  const { login, register, loginWithGoogle } = useAuth();
   const addToast = useToast();
   const { darkMode } = useTheme();
   const firstFieldRef = useRef(null);
@@ -176,6 +177,24 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
     setTouched({});
     setGlobalError("");
     setFields({ name: "", email: "", password: "", confirmPassword: "" });
+  };
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      setSubmitting(true);
+      setGlobalError("");
+      await loginWithGoogle(credentialResponse.credential);
+      addToast("success", "Signed in with Google!");
+      onClose();
+    } catch (err) {
+      setGlobalError(err.message || "Google sign-in failed. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    setGlobalError("Google sign-in was cancelled or failed.");
   };
 
   const handleChange = (field) => (e) => {
@@ -236,7 +255,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
       type="button"
       tabIndex={-1}
       onClick={toggle}
-      className={`absolute right-3 top-1/2 -translate-y-1/2 transition-colors cursor-pointer ${
+      className={`absolute right-3 top-1/2 -translate-y-1/2 transition-colors cursor-pointer pointer-events-auto ${
         darkMode ? "text-slate-500 hover:text-slate-300" : "text-slate-400 hover:text-slate-600"
       }`}
     >
@@ -254,7 +273,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
   );
 
   // Dynamic height based on tab
-  const modalHeight = tab === "login" ? "h-[80vh] sm:max-h-[600px]" : "h-[95vh] sm:h-[680px]";
+  const modalHeight = tab === "login" ? "h-[80vh] sm:h-auto sm:max-h-[580px]" : "h-[95vh] sm:h-auto sm:max-h-[680px]";
 
   return (
     <AnimatePresence>
@@ -302,17 +321,17 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
               onClick={onClose}
               whileHover={{ rotate: 90, scale: 1.1 }}
               whileTap={{ scale: 0.88 }}
-              className={`absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
+              className={`absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
                 darkMode ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-100 hover:text-slate-700"
               }`}
               aria-label="Close"
             >
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4.5 h-4.5">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5">
                 <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
               </svg>
             </motion.button>
 
-            <div className="px-7 pt-6 pb-8 overflow-y-auto flex-1 min-h-0 overscroll-contain [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20">
+            <div className="px-5 pt-4 pb-6 sm:px-7 sm:pt-6 sm:pb-8 overflow-y-auto flex-1 min-h-0 overscroll-contain [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20">
               {/* Header */}
               <div className="text-center mb-6">
                 <div className={`w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg ${
@@ -347,6 +366,26 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                     {t === "login" ? "Login" : "Sign Up"}
                   </button>
                 ))}
+              </div>
+
+              {/* Google Sign-In */}
+              <div className="w-full flex justify-center">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  useOneTap
+                  theme={darkMode ? "filled_blue" : "outline"}
+                  size="large"
+                  width="100%"
+                  text={tab === "login" ? "continue_with" : "signup_with"}
+                />
+              </div>
+
+              {/* Divider */}
+              <div className="flex items-center gap-3 my-4">
+                <div className={`flex-1 h-px ${darkMode ? "bg-white/10" : "bg-slate-200"}`} />
+                <span className={`text-xs font-medium ${darkMode ? "text-slate-500" : "text-slate-400"}`}>or</span>
+                <div className={`flex-1 h-px ${darkMode ? "bg-white/10" : "bg-slate-200"}`} />
               </div>
 
               {/* Global error */}
@@ -449,10 +488,10 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                           ))}
                         </div>
                         <div className="flex justify-between items-center">
-                          <p className={`text-[10px] ${darkMode ? "text-slate-500" : "text-slate-400"}`}>
-                            Use uppercase, numbers & symbols
+                          <p className={`text-[11px] ${darkMode ? "text-slate-500" : "text-slate-400"}`}>
+                            Uppercase, numbers & symbols
                           </p>
-                          <p className={`text-[10px] font-semibold ${
+                          <p className={`text-[11px] font-semibold ${
                             pwStrength.score <= 1 ? "text-red-500" :
                             pwStrength.score <= 2 ? "text-amber-500" :
                             pwStrength.score <= 3 ? "text-yellow-500" : "text-emerald-500"

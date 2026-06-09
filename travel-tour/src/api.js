@@ -34,4 +34,5 @@ export {
   aiChat,
   aiPlan,
   aiRecommend,
+  googleLoginUser,
 } from "./services/api";

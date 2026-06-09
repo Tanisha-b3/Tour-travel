@@ -220,6 +220,15 @@ export async function loginUser(payload) {
   return rest;
 }
 
+/** Login or register via Google OAuth. */
+export async function googleLoginUser(idToken) {
+  const json = await request("/auth/google", { method: "POST", body: { idToken } });
+  const { accessToken, refreshToken, accessTokenExpiresIn, ...rest } = json.data || {};
+  if (accessToken)  persistAccess(accessToken, accessTokenExpiresIn);
+  if (refreshToken) persistRefresh(refreshToken);
+  return rest;
+}
+
 /** Get current user profile (requires token). */
 export async function getMe(token) {
   const json = await request("/auth/me", { token });
