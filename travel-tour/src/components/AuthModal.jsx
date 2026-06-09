@@ -305,9 +305,9 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
             className={`relative w-full max-w-[440px] rounded-2xl shadow-2xl overflow-hidden flex flex-col ${
               darkMode ? "bg-gradient-to-br from-[#1a2a45] to-[#152238]" : "bg-white"
             }`}
-            // On login: fit content (no scroll). On signup: cap at 90vh so it scrolls.
+            // On login: fit content (no scroll). On signup: cap at 80vh so it scrolls.
             style={{
-              maxHeight: tab === "signup" ? "90vh" : "none",
+              maxHeight: tab === "signup" ? "90vh" : "97vh",
             }}
           >
             {/* Top accent gradient bar */}
