@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { GoogleLogin } from "@react-oauth/google";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import { useTheme } from "../context/ThemeContext";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -56,7 +56,7 @@ function Field({ label, id, type = "text", value, onChange, onBlur, placeholder,
   const isValid = touched && !error && value;
 
   return (
-    <div>
+    <div className="mb-4">
       <label htmlFor={id} className={`block text-xs font-semibold mb-1.5 tracking-wide ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
         {label}
       </label>
@@ -72,18 +72,18 @@ function Field({ label, id, type = "text", value, onChange, onBlur, placeholder,
           className={`w-full px-4 py-3 rounded-xl text-sm outline-none transition-all duration-200 border ${
             hasError
               ? darkMode
-                ? "bg-red-500/10 border-red-500/50 text-white placeholder:text-slate-500 pr-10"
-                : "bg-red-50 border-red-400 text-[#0a0f1e] placeholder:text-slate-400 pr-10"
+                ? "bg-red-500/10 border-red-500/50 text-white placeholder:text-slate-500"
+                : "bg-red-50 border-red-400 text-[#0a0f1e] placeholder:text-slate-400"
               : isValid
               ? darkMode
-                ? "bg-emerald-500/10 border-emerald-500/40 text-white placeholder:text-slate-500 pr-10"
-                : "bg-emerald-50/60 border-emerald-400 text-[#0a0f1e] placeholder:text-slate-400 pr-10"
+                ? "bg-emerald-500/10 border-emerald-500/40 text-white placeholder:text-slate-500"
+                : "bg-emerald-50/60 border-emerald-400 text-[#0a0f1e] placeholder:text-slate-400"
               : darkMode
-              ? "bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-[#31487A]/50 focus:bg-white/10 pr-10"
-              : "bg-slate-50 border-slate-200 text-[#0a0f1e] placeholder:text-slate-400 focus:border-[#31487A]/50 focus:bg-white pr-10"
-          }`}
+              ? "bg-white/5 border-white/10 text-white placeholder:text-slate-500 focus:border-[#31487A]/50 focus:bg-white/10"
+              : "bg-slate-50 border-slate-200 text-[#0a0f1e] placeholder:text-slate-400 focus:border-[#31487A]/50 focus:bg-white"
+          } ${suffix ? "pr-10" : ""}`}
         />
-        {/* State icon */}
+        {/* State icon or suffix */}
         <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
           {suffix}
           {!suffix && hasError && (
@@ -134,7 +134,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
   const modalRef = useRef(null);
 
   /* sync tab when prop changes */
-  useEffect(() => { 
+  useEffect(() => {
     if (isOpen) {
       setTab(initialTab);
     }
@@ -179,23 +179,24 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
     setFields({ name: "", email: "", password: "", confirmPassword: "" });
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    try {
-      setSubmitting(true);
-      setGlobalError("");
-      await loginWithGoogle(credentialResponse.credential);
-      addToast("success", "Signed in with Google!");
-      onClose();
-    } catch (err) {
-      setGlobalError(err.message || "Google sign-in failed. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleGoogleError = () => {
-    setGlobalError("Google sign-in was cancelled or failed.");
-  };
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (response) => {
+      try {
+        setSubmitting(true);
+        setGlobalError("");
+        await loginWithGoogle(response.credential || response.access_token);
+        addToast("success", "Signed in with Google!");
+        onClose();
+      } catch (err) {
+        setGlobalError(err.message || "Google sign-in failed. Please try again.");
+      } finally {
+        setSubmitting(false);
+      }
+    },
+    onError: () => {
+      setGlobalError("Google sign-in was cancelled or failed.");
+    },
+  });
 
   const handleChange = (field) => (e) => {
     setFields((f) => ({ ...f, [field]: e.target.value }));
@@ -272,9 +273,6 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
     </button>
   );
 
-  // Dynamic height based on tab — consistent max-h on all sizes for reliable scroll
-  const modalHeight = tab === "login" ? "max-h-[85vh] sm:max-h-[580px]" : "max-h-[92vh] sm:max-h-[680px]";
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -284,83 +282,114 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center sm:px-4"
+          className="fixed inset-0 z-[70] flex items-center justify-center p-4"
           onClick={onClose}
         >
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/55 backdrop-blur-sm" />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            onClick={onClose}
+          />
 
-          {/* Modal */}
+          {/* Modal — height animates between tabs */}
           <motion.div
             ref={modalRef}
-            initial={{ opacity: 0, scale: 0.95, y: 24 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 24 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.28, ease }}
             onClick={(e) => e.stopPropagation()}
-            className={`relative w-full sm:max-w-[440px] ${modalHeight} flex flex-col rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden ${
-              darkMode ? "bg-[#203354]" : "bg-white"
+            className={`relative w-full max-w-[440px] rounded-2xl shadow-2xl overflow-hidden flex flex-col ${
+              darkMode ? "bg-gradient-to-br from-[#1a2a45] to-[#152238]" : "bg-white"
             }`}
+            // On login: fit content (no scroll). On signup: cap at 90vh so it scrolls.
+            style={{
+              maxHeight: tab === "signup" ? "90vh" : "none",
+            }}
           >
-            {/* Top accent line */}
-            <div className="h-1 bg-gradient-to-r from-[#31487A] via-[#31487A] to-[#818cf8]" />
+            {/* Top accent gradient bar */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#31487A] via-[#4a6fa5] to-[#818cf8]" />
 
-            {/* Ambient glows */}
-            <div className="pointer-events-none absolute -top-24 -right-24 w-48 h-48 rounded-full opacity-20"
+            {/* Background decorative circles */}
+            <div className="pointer-events-none absolute -top-32 -right-32 w-64 h-64 rounded-full opacity-10"
               style={{ background: "radial-gradient(circle, #31487A, transparent 70%)" }} />
-            <div className="pointer-events-none absolute -bottom-20 -left-20 w-40 h-40 rounded-full opacity-15"
+            <div className="pointer-events-none absolute -bottom-32 -left-32 w-64 h-64 rounded-full opacity-10"
               style={{ background: "radial-gradient(circle, #818cf8, transparent 70%)" }} />
-
-            {/* Drag handle (mobile) */}
-            <div className="sm:hidden flex justify-center pt-3">
-              <div className={`w-10 h-1 rounded-full ${darkMode ? "bg-white/20" : "bg-slate-200"}`} />
-            </div>
 
             {/* Close button */}
             <motion.button
               onClick={onClose}
               whileHover={{ rotate: 90, scale: 1.1 }}
               whileTap={{ scale: 0.88 }}
-              className={`absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer ${
-                darkMode ? "text-slate-500 hover:bg-white/10 hover:text-white" : "text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+              className={`absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer ${
+                darkMode
+                  ? "text-slate-400 hover:bg-white/10 hover:text-white"
+                  : "text-slate-400 hover:bg-slate-100 hover:text-slate-700"
               }`}
               aria-label="Close"
             >
-              <svg viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="w-4.5 h-4.5">
                 <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
               </svg>
             </motion.button>
 
-            <div className="px-5 pt-4 pb-6 sm:px-7 sm:pt-6 sm:pb-8 overflow-y-auto flex-1 min-h-0 overscroll-contain [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-white/20">
+            {/*
+              Inner content:
+              - Login  → overflow-y-hidden (no scroll, modal sizes to content)
+              - Signup → overflow-y-auto   (scrolls when taller than maxHeight)
+            */}
+            <div
+              className={`px-8 pt-8 pb-10 ${
+                tab === "signup" ? "overflow-y-auto" : "overflow-y-hidden"
+              }`}
+              style={{
+                // Signup: scrollable region fills the capped modal height.
+                // Login:  no constraint — modal naturally wraps its content.
+                flex: tab === "signup" ? "1 1 auto" : "0 0 auto",
+                scrollbarWidth: "thin",
+              }}
+            >
               {/* Header */}
-              <div className="text-center mb-6">
-                <div className={`w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg ${
-                  darkMode ? "bg-gradient-to-br from-[#31487A]/20 to-[#31487A]/10 border border-white/10" : "bg-gradient-to-br from-[#31487A]/10 to-[#31487A]/10 border border-[#31487A]/20"
-                }`}>
-                  <span className="text-2xl">✈️</span>
-                </div>
+              <div className="text-center mb-8">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+                  className={`w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg ${
+                    darkMode
+                      ? "bg-gradient-to-br from-[#31487A]/30 to-[#31487A]/20 border border-white/10"
+                      : "bg-gradient-to-br from-[#31487A]/10 to-[#31487A]/5 border border-[#31487A]/20"
+                  }`}
+                >
+                  <span className="text-3xl">✈️</span>
+                </motion.div>
                 <h2
-                  className={`text-2xl font-bold ${darkMode ? "text-white" : "text-[#0a0f1e]"}`}
+                  className={`text-2xl font-bold mb-1 ${darkMode ? "text-white" : "text-[#0a0f1e]"}`}
                   style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
                 >
                   {tab === "login" ? "Welcome Back" : "Create Account"}
                 </h2>
-                <p className={`text-sm mt-1 ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
+                <p className={`text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
                   {tab === "login" ? "Sign in to continue your journey" : "Start your adventure with us"}
                 </p>
               </div>
 
               {/* Tab switcher */}
-              <div className={`flex rounded-xl p-1 mb-6 ${darkMode ? "bg-white/5" : "bg-slate-100"}`}>
+              <div className={`flex rounded-xl p-1 mb-6 ${darkMode ? "bg-white/10" : "bg-slate-100"}`}>
                 {["login", "signup"].map((t) => (
                   <button
                     key={t}
                     type="button"
                     onClick={() => switchTab(t)}
-                    className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer border-none ${
+                    className={`flex-1 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer ${
                       tab === t
-                        ? "bg-gradient-to-r from-[#31487A] to-[#31487A] text-white shadow-md shadow-[#31487A]/25"
-                        : darkMode ? "text-slate-400 hover:text-white" : "text-slate-500 hover:text-[#0a0f1e]"
+                        ? "bg-gradient-to-r from-[#31487A] to-[#4a6fa5] text-white shadow-lg"
+                        : darkMode
+                          ? "text-slate-400 hover:text-white hover:bg-white/5"
+                          : "text-slate-500 hover:text-[#0a0f1e] hover:bg-white"
                     }`}
                   >
                     {t === "login" ? "Login" : "Sign Up"}
@@ -369,22 +398,31 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
               </div>
 
               {/* Google Sign-In */}
-              <div className="w-full flex justify-center">
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={handleGoogleError}
-                  useOneTap
-                  theme={darkMode ? "filled_blue" : "outline"}
-                  size="large"
-                  width="100%"
-                  text={tab === "login" ? "continue_with" : "signup_with"}
-                />
-              </div>
+              <motion.button
+                type="button"
+                onClick={() => googleLogin()}
+                disabled={submitting}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                className={`w-full py-3 rounded-xl text-sm font-semibold flex items-center justify-center gap-3 border transition-all duration-200 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed mb-6 ${
+                  darkMode
+                    ? "bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20"
+                    : "bg-white border-slate-200 text-[#0a0f1e] hover:bg-slate-50 hover:border-slate-300"
+                }`}
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                {tab === "login" ? "Continue with Google" : "Sign up with Google"}
+              </motion.button>
 
               {/* Divider */}
-              <div className="flex items-center gap-3 my-4">
+              <div className="flex items-center gap-3 mb-6">
                 <div className={`flex-1 h-px ${darkMode ? "bg-white/10" : "bg-slate-200"}`} />
-                <span className={`text-xs font-medium ${darkMode ? "text-slate-500" : "text-slate-400"}`}>or</span>
+                <span className={`text-xs font-medium ${darkMode ? "text-slate-500" : "text-slate-400"}`}>or continue with email</span>
                 <div className={`flex-1 h-px ${darkMode ? "bg-white/10" : "bg-slate-200"}`} />
               </div>
 
@@ -392,10 +430,10 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
               <AnimatePresence>
                 {globalError && (
                   <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="mb-4 overflow-hidden"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="mb-6"
                   >
                     <div className={`flex items-start gap-2.5 text-sm px-4 py-3 rounded-xl ${
                       darkMode ? "bg-red-500/10 text-red-400 border border-red-500/20" : "bg-red-50 text-red-600 border border-red-200"
@@ -410,10 +448,9 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
               </AnimatePresence>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} noValidate className="space-y-4">
-
+              <form onSubmit={handleSubmit} noValidate>
                 {/* Name — signup only */}
-                <AnimatePresence>
+                <AnimatePresence mode="wait">
                   {tab === "signup" && (
                     <motion.div
                       key="name-field"
@@ -421,7 +458,6 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="overflow-hidden"
                     >
                       <Field
                         label="Full Name"
@@ -453,7 +489,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                 />
 
                 {/* Password */}
-                <div>
+                <div className="mb-4">
                   <Field
                     label="Password"
                     id="password"
@@ -467,6 +503,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                     darkMode={darkMode}
                     suffix={eyeSuffix(showPassword, () => setShowPassword((v) => !v))}
                   />
+
                   {/* Password strength bar — signup only */}
                   <AnimatePresence>
                     {tab === "signup" && fields.password && (
@@ -475,23 +512,23 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
                         transition={{ duration: 0.15 }}
-                        className="mt-2 overflow-hidden"
+                        className="mt-2"
                       >
-                        <div className="flex gap-1 mb-1">
+                        <div className="flex gap-1 mb-1.5">
                           {[1, 2, 3, 4, 5].map((i) => (
                             <div
                               key={i}
-                              className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+                              className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
                                 i <= pwStrength.score ? pwStrength.color : darkMode ? "bg-white/10" : "bg-slate-200"
                               }`}
                             />
                           ))}
                         </div>
                         <div className="flex justify-between items-center">
-                          <p className={`text-[11px] ${darkMode ? "text-slate-500" : "text-slate-400"}`}>
-                            Uppercase, numbers & symbols
+                          <p className={`text-[10px] ${darkMode ? "text-slate-500" : "text-slate-400"}`}>
+                            Use uppercase, numbers & symbols
                           </p>
-                          <p className={`text-[11px] font-semibold ${
+                          <p className={`text-[10px] font-semibold ${
                             pwStrength.score <= 1 ? "text-red-500" :
                             pwStrength.score <= 2 ? "text-amber-500" :
                             pwStrength.score <= 3 ? "text-yellow-500" : "text-emerald-500"
@@ -505,7 +542,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                 </div>
 
                 {/* Confirm password — signup only */}
-                <AnimatePresence>
+                <AnimatePresence mode="wait">
                   {tab === "signup" && (
                     <motion.div
                       key="confirm-field"
@@ -513,7 +550,6 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="overflow-hidden"
                     >
                       <Field
                         label="Confirm Password"
@@ -536,16 +572,15 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                 <motion.button
                   type="submit"
                   disabled={submitting}
-                  whileHover={!submitting ? { scale: 1.015, y: -1 } : {}}
-                  whileTap={!submitting ? { scale: 0.98 } : {}}
-                  className="w-full py-3.5 rounded-xl text-white font-semibold text-sm cursor-pointer border-none mt-1 disabled:opacity-60 disabled:cursor-not-allowed relative overflow-hidden group"
+                  whileHover={!submitting ? { scale: 1.01, y: -1 } : {}}
+                  whileTap={!submitting ? { scale: 0.99 } : {}}
+                  className="w-full py-3.5 rounded-xl text-white font-semibold text-sm cursor-pointer mt-2 disabled:opacity-60 disabled:cursor-not-allowed relative overflow-hidden group"
                   style={{
-                    background: "linear-gradient(135deg, #31487A 0%, #31487A 100%)",
-                    boxShadow: "0 6px 24px rgba(49,72,122,0.3)",
+                    background: "linear-gradient(135deg, #31487A 0%, #4a6fa5 100%)",
+                    boxShadow: "0 4px 15px rgba(49,72,122,0.3)",
                   }}
                 >
-                  {/* Shine sweep */}
-                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-500 pointer-events-none" />
+                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-500 pointer-events-none" />
                   {submitting ? (
                     <span className="flex items-center justify-center gap-2">
                       <motion.span
@@ -553,25 +588,38 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
                         transition={{ duration: 0.9, repeat: Infinity, ease: "linear" }}
                         className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
                       />
-                      {tab === "login" ? "Signing in…" : "Creating account…"}
+                      {tab === "login" ? "Signing in..." : "Creating account..."}
                     </span>
                   ) : (
-                    tab === "login" ? "Sign In →" : "Create Account →"
+                    <span className="flex items-center justify-center gap-2">
+                      {tab === "login" ? "Sign In" : "Create Account"}
+                      <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
+                      </svg>
+                    </span>
                   )}
                 </motion.button>
               </form>
 
               {/* Switch tab */}
-              <p className={`text-center mt-4 text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
+              <p className={`text-center mt-6 text-sm ${darkMode ? "text-slate-400" : "text-slate-500"}`}>
                 {tab === "login" ? (
                   <>Don't have an account?{" "}
-                    <button type="button" onClick={() => switchTab("signup")} className="text-[#31487A] font-semibold bg-transparent border-none cursor-pointer hover:underline">
+                    <button
+                      type="button"
+                      onClick={() => switchTab("signup")}
+                      className="text-[#4a6fa5] font-semibold bg-transparent border-none cursor-pointer hover:underline transition-all"
+                    >
                       Sign up free
                     </button>
                   </>
                 ) : (
                   <>Already have an account?{" "}
-                    <button type="button" onClick={() => switchTab("login")} className="text-[#31487A] font-semibold bg-transparent border-none cursor-pointer hover:underline">
+                    <button
+                      type="button"
+                      onClick={() => switchTab("login")}
+                      className="text-[#4a6fa5] font-semibold bg-transparent border-none cursor-pointer hover:underline transition-all"
+                    >
                       Log in
                     </button>
                   </>
