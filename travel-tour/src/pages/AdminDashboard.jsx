@@ -54,7 +54,7 @@ export default function AdminDashboard() {
         <StatCard icon="🗺️" label="Destinations" value={counts.destinations} tone="sky" delay={0} />
         <StatCard icon="📅" label="Total Bookings" value={counts.bookings} tone="emerald" delay={0.05} />
         <StatCard icon="💬" label="Testimonials" value={counts.testimonials} tone="violet" delay={0.1} />
-        <StatCard icon="💰" label="Total Revenue" value={`$${revenue.toLocaleString()}`} tone="amber" delay={0.15} />
+        <StatCard icon="💰" label="Total Revenue" value={`\u20B9${revenue.toLocaleString()}`} tone="amber" delay={0.15} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -141,7 +141,7 @@ export default function AdminDashboard() {
                       <p className="text-xs text-slate-500 truncate">{b.tourName} · {b.guests} guest{b.guests !== 1 ? "s" : ""}</p>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className={`text-sm font-bold ${darkMode ? "text-white" : "text-[#0a0f1e]"}`}>${b.total?.toLocaleString()}</p>
+                       <p className={`text-sm font-bold ${darkMode ? "text-white" : "text-[#0a0f1e]"}`}>₹{b.total?.toLocaleString()}</p>
                       <span className={`inline-block mt-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border ${s.cls}`}>{s.label}</span>
                     </div>
                   </div>

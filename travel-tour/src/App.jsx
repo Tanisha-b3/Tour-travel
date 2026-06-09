@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
+import BackToTop from "./components/BackToTop";
 import HomePage from "./pages/HomePage";
 import DestinationsPage from "./pages/DestinationsPage";
 import TourDetailPage from "./pages/TourDetailPage";
@@ -11,6 +11,11 @@ import BookingPage from "./pages/BookingPage";
 import ToursPage from "./pages/ToursPage";
 import WishlistPage from "./pages/WishlistPage";
 import MyBookings from "./pages/MyBookings";
+import ProfilePage from "./pages/ProfilePage";
+import TravelPlannerPage from "./pages/TravelPlannerPage";
+import ChatAssistantPage from "./pages/ChatAssistantPage";
+import RecommendationsPage from "./pages/RecommendationsPage";
+import ExploreMapPage from "./pages/ExploreMapPage";
 import AdminLayout from "./components/AdminLayout";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminDestinations from "./pages/AdminDestinations";
@@ -18,15 +23,6 @@ import AdminDestinationForm from "./pages/AdminDestinationForm";
 import AdminTestimonials from "./pages/AdminTestimonials";
 import AdminBookings from "./pages/AdminBookings";
 import ProtectedRoute from "./components/ProtectedRoute";
-
-/* Reset scroll on every route change */
-function RouteScrollReset() {
-  const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }, [pathname]);
-  return null;
-}
 
 /* Page transition wrapper */
 const pageVariants = {
@@ -77,8 +73,13 @@ function AnimatedRoutes() {
           <Route path="/tour/:id"     element={<TourDetailPage />} />
           <Route path="/book/:id"     element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
           <Route path="/booking/:id"  element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
-          <Route path="/wishlist"     element={<WishlistPage />} />
-          <Route path="/my-bookings"  element={<ProtectedRoute><MyBookings /></ProtectedRoute>} />
+          <Route path="/wishlist"        element={<ProtectedRoute><WishlistPage /></ProtectedRoute>} />
+          <Route path="/my-bookings"     element={<ProtectedRoute><MyBookings /></ProtectedRoute>} />
+          <Route path="/profile"         element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+          <Route path="/travel-planner"  element={<ProtectedRoute><TravelPlannerPage /></ProtectedRoute>} />
+          <Route path="/chat"            element={<ProtectedRoute><ChatAssistantPage /></ProtectedRoute>} />
+          <Route path="/recommendations" element={<ProtectedRoute><RecommendationsPage /></ProtectedRoute>} />
+          <Route path="/explore-map"     element={<ProtectedRoute><ExploreMapPage /></ProtectedRoute>} />
 
           {/* Admin section (protected) */}
           <Route
@@ -111,7 +112,6 @@ function AppShell() {
   if (isAdmin) {
     return (
       <div className="min-h-screen bg-white dark:bg-[#1E2E4F] transition-colors duration-300">
-        <RouteScrollReset />
         <AnimatedRoutes />
         <ScrollToTop />
       </div>
@@ -122,11 +122,11 @@ function AppShell() {
     <div className="min-h-screen bg-white dark:bg-[#1E2E4F] transition-colors duration-300">
       <Navbar />
       <main>
-        <RouteScrollReset />
         <AnimatedRoutes />
       </main>
       <Footer />
       <ScrollToTop />
+      <BackToTop />
     </div>
   );
 }

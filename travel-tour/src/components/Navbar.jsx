@@ -19,18 +19,44 @@ import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../context/AuthContext";
 import AuthModal from "./AuthModal";
 
-const NAV_LINKS = [
+// Links visible to ALL users (both logged out and logged in)
+const PUBLIC_NAV_LINKS = [
   { to: "/", label: "Home", end: true },
   { to: "/destinations", label: "Destinations" },
   { to: "/tours", label: "Tours" },
 ];
 
+// Links visible ONLY to logged-in users (shown after login on desktop)
+const AUTHENTICATED_NAV_LINKS = [
+  { to: "/travel-planner", label: "AI Planner", highlight: true },
+  // { to: "/explore-map", label: "Map" },
+  
+];
+
+// Get desktop nav links based on authentication status
+const getDesktopNavLinks = (isAuthenticated) => {
+  const links = [...PUBLIC_NAV_LINKS];
+  if (isAuthenticated) {
+    links.push(...AUTHENTICATED_NAV_LINKS);
+  }
+  return links;
+};
+
+// Drawer links configuration with visibility flags
 const DRAWER_LINKS = [
-  { to: "/", label: "Home", icon: "🏠" },
-  { to: "/destinations", label: "Destinations", icon: "🗺️" },
-  { to: "/tours", label: "Tours", icon: "🧳" },
-  { to: "/wishlist", label: "Wishlist", icon: "♡", count: true },
+  { type: "section", label: "Main" },
+  { to: "/", label: "Home", icon: "🏠", public: true, end: true },
+  { to: "/destinations", label: "Destinations", icon: "🗺️", public: true },
+  { to: "/tours", label: "Tours", icon: "🧳", public: true },
+  { type: "section", label: "Discover", authOnly: true },
+  { to: "/travel-planner", label: "AI Travel Planner", icon: "✨", authOnly: true },
+  { to: "/chat", label: "Chat Assistant", icon: "💬", authOnly: true },
+  { to: "/recommendations", label: "For You", icon: "🎯", authOnly: true },
+  // { to: "/explore-map", label: "Explore Map", icon: "🧭", authOnly: true },
+  { type: "section", label: "Account", authOnly: true },
+  { to: "/wishlist", label: "Wishlist", icon: "♡", count: true, authOnly: true },
   { to: "/my-bookings", label: "My Bookings", icon: "📅", authOnly: true },
+  { to: "/profile", label: "My Profile", icon: "👤", authOnly: true },
 ];
 
 const ease = [0.22, 1, 0.36, 1];
@@ -47,18 +73,22 @@ function useCountUp(target) {
 }
 
 export default function Navbar() {
-  const [isOpen, setIsOpen]         = useState(false);
-  const [scrolled, setScrolled]     = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const location                    = useLocation();
+  const location = useLocation();
   const { darkMode, toggleDarkMode } = useTheme();
-  const { wishlist }                = useApp();
+  const { wishlist } = useApp();
   const { user, logout, authModal, openAuthModal, closeAuthModal } = useAuth();
-  const wishCount                   = useCountUp(wishlist.length);
-  const userMenuRef                 = useRef(null);
+  const wishCount = useCountUp(wishlist.length);
+  const userMenuRef = useRef(null);
 
-  const isHome      = location.pathname === "/";
+  const isHome = location.pathname === "/";
   const transparent = isHome && !scrolled;
+  const isAuthenticated = !!user;
+
+  // Get the appropriate nav links for desktop based on auth status
+  const desktopNavLinks = getDesktopNavLinks(isAuthenticated);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 50);
@@ -66,11 +96,16 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  useEffect(() => { setIsOpen(false); setUserMenuOpen(false); }, [location]);
+  useEffect(() => {
+    setIsOpen(false);
+    setUserMenuOpen(false);
+  }, [location]);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   useEffect(() => {
@@ -109,16 +144,16 @@ export default function Navbar() {
   };
 
   const drawerVariants = {
-    hidden:  { x: "100%", opacity: 0.5 },
+    hidden: { x: "100%", opacity: 0.5 },
     visible: { x: 0, opacity: 1, transition: { type: "spring", stiffness: 320, damping: 32 } },
-    exit:    { x: "100%", opacity: 0, transition: { duration: 0.22, ease: "easeIn" } },
+    exit: { x: "100%", opacity: 0, transition: { duration: 0.22, ease: "easeIn" } },
   };
   const stagger = {
-    hidden:  {},
+    hidden: {},
     visible: { transition: { staggerChildren: 0.06, delayChildren: 0.08 } },
   };
   const slideIn = {
-    hidden:  { x: 24, opacity: 0 },
+    hidden: { x: 24, opacity: 0 },
     visible: { x: 0, opacity: 1, transition: { type: "spring", stiffness: 340, damping: 26 } },
   };
 
@@ -127,6 +162,34 @@ export default function Navbar() {
     : darkMode
     ? "bg-[#111C30]/90 backdrop-blur-2xl py-3 shadow-[0_1px_0_rgba(75,109,168,0.15)]"
     : "bg-white/90 backdrop-blur-2xl py-3 shadow-[0_1px_0_rgba(49,72,122,0.1)]";
+
+  // Filter drawer links based on authentication status
+  const getVisibleDrawerItems = () => {
+    const result = [];
+    let currentSection = null;
+    let hasItemsInSection = false;
+
+    for (const item of DRAWER_LINKS) {
+      if (item.type === "section") {
+        // Push previous section if it had items
+        if (currentSection && hasItemsInSection) {
+          result.push(currentSection);
+        }
+        currentSection = item;
+        hasItemsInSection = false;
+      } else if (item.public) {
+        result.push(item);
+        hasItemsInSection = true;
+      } else if (item.authOnly && isAuthenticated) {
+        result.push(item);
+        hasItemsInSection = true;
+      }
+    }
+
+    return result;
+  };
+
+  const visibleDrawerItems = getVisibleDrawerItems();
 
   return (
     <>
@@ -150,7 +213,6 @@ export default function Navbar() {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navBg}`}
       >
         <div className="max-w-[1200px] mx-auto px-4 sm:px-6 flex justify-between items-center">
-
           {/* Logo */}
           <Link
             to="/"
@@ -173,7 +235,7 @@ export default function Navbar() {
               className={`text-[17px] sm:text-[19px] font-black tracking-tight transition-opacity ${
                 transparent ? "text-white" : darkMode ? "text-white" : "text-[#1E3259]"
               }`}
-              style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", letterSpacing: "-0.01em" }}
+              style={{ fontFamily: "'Playfair Display', Georgia, serif", letterSpacing: "-0.01em" }}
             >
               Air
               <span
@@ -191,11 +253,30 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Desktop nav */}
+          {/* Desktop Navigation - Shows different links based on auth */}
           <div className="hidden md:flex items-center gap-1">
-            {NAV_LINKS.map(({ to, label, end }) => (
+            {desktopNavLinks.map(({ to, label, end, highlight }) => (
               <NavLink key={to} to={to} end={end} className={linkCls}>
-                {label}
+                {({ isActive }) => (
+                  <>
+                    <span className="relative z-10 inline-flex items-center gap-1">
+                      {highlight && <span className="text-[10px]">✨</span>}
+                      {label}
+                    </span>
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-underline"
+                        className="absolute left-3 right-3 -bottom-0.5 h-[2px] rounded-full"
+                        style={{
+                          background: transparent
+                            ? "linear-gradient(90deg, #B8CCEB, #EBF0FA)"
+                            : "linear-gradient(90deg, #1E3259, #4B6DA8)",
+                        }}
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </>
+                )}
               </NavLink>
             ))}
 
@@ -242,7 +323,11 @@ export default function Navbar() {
                       transparent ? "text-white/60" : darkMode ? "text-[#7A99CC]" : "text-[#4B6DA8]"
                     }`}
                   >
-                    <path fillRule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                    <path
+                      fillRule="evenodd"
+                      d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </motion.button>
 
@@ -286,9 +371,59 @@ export default function Navbar() {
                         }`}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                          <path fillRule="evenodd" d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z" clipRule="evenodd" />
+                          <path
+                            fillRule="evenodd"
+                            d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                         My Bookings
+                      </Link>
+                      <Link
+                        to="/profile"
+                        onClick={() => setUserMenuOpen(false)}
+                        className={`w-full text-left px-4 py-3 text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer border-none no-underline ${
+                          darkMode
+                            ? "bg-transparent text-[#7A99CC] hover:bg-[#31487A]/20 hover:text-white"
+                            : "bg-transparent text-[#4B6DA8] hover:bg-[#EBF0FA] hover:text-[#1E3259]"
+                        }`}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                          <path d="M10 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-7 14a7 7 0 1 1 14 0 1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z" />
+                        </svg>
+                        My Profile
+                      </Link>
+                       <Link
+                        to="/chat"
+                        onClick={() => setUserMenuOpen(false)}
+                        className={`w-full text-left px-4 py-3 text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer border-none no-underline ${
+                          darkMode
+                            ? "bg-transparent text-[#7A99CC] hover:bg-[#31487A]/20 hover:text-white"
+                            : "bg-transparent text-[#4B6DA8] hover:bg-[#EBF0FA] hover:text-[#1E3259]"
+                        }`}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                          <path d="M10 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-7 14a7 7 0 1 1 14 0 1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z" />
+                        </svg>
+                        Chat Assistant
+                      </Link>
+                      <Link
+                        to="/recommendations"
+                        onClick={() => setUserMenuOpen(false)}
+                        className={`w-full text-left px-4 py-3 text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer border-none no-underline ${
+                          darkMode
+                            ? "bg-transparent text-[#7A99CC] hover:bg-[#31487A]/20 hover:text-white"
+                            : "bg-transparent text-[#4B6DA8] hover:bg-[#EBF0FA] hover:text-[#1E3259]"
+                        }`}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                          <path
+                            fillRule="evenodd"
+                            d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 015.656 5.656L10 17.657l-6.828-6.828a4 4 0 010-5.656z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        Recommendations
                       </Link>
                       {user.role === "admin" && (
                         <Link
@@ -301,13 +436,20 @@ export default function Navbar() {
                           }`}
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                            <path fillRule="evenodd" d="M10 1.75a.75.75 0 0 1 .69.462l1.666 3.95 4.342.42a.75.75 0 0 1 .422 1.31l-3.246 2.84.91 4.349a.75.75 0 0 1-1.115.778L10 13.348l-3.67 1.762a.75.75 0 0 1-1.115-.778l.91-4.35-3.246-2.84a.75.75 0 0 1 .422-1.31l4.342-.42 1.666-3.95A.75.75 0 0 1 10 1.75Z" clipRule="evenodd" />
+                            <path
+                              fillRule="evenodd"
+                              d="M10 1.75a.75.75 0 0 1 .69.462l1.666 3.95 4.342.42a.75.75 0 0 1 .422 1.31l-3.246 2.84.91 4.349a.75.75 0 0 1-1.115.778L10 13.348l-3.67 1.762a.75.75 0 0 1-1.115-.778l.91-4.35-3.246-2.84a.75.75 0 0 1 .422-1.31l4.342-.42 1.666-3.95A.75.75 0 0 1 10 1.75Z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                           Admin Panel
                         </Link>
                       )}
                       <button
-                        onClick={() => { logout(); setUserMenuOpen(false); }}
+                        onClick={() => {
+                          logout();
+                          setUserMenuOpen(false);
+                        }}
                         className={`w-full text-left px-4 py-3 text-sm font-medium transition-colors flex items-center gap-2 cursor-pointer border-none ${
                           darkMode
                             ? "bg-transparent text-[#7A99CC] hover:bg-[#31487A]/20 hover:text-white"
@@ -315,8 +457,16 @@ export default function Navbar() {
                         }`}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                          <path fillRule="evenodd" d="M3 4.25A2.25 2.25 0 0 1 5.25 2h5.5A2.25 2.25 0 0 1 13 4.25v2a.75.75 0 0 1-1.5 0v-2a.75.75 0 0 0-.75-.75h-5.5a.75.75 0 0 0-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 0 0 .75-.75v-2a.75.75 0 0 1 1.5 0v2A2.25 2.25 0 0 1 10.75 18h-5.5A2.25 2.25 0 0 1 3 15.75V4.25Z" clipRule="evenodd" />
-                          <path fillRule="evenodd" d="M19 10a.75.75 0 0 0-.75-.75H8.704l1.048-.943a.75.75 0 1 0-1.004-1.114l-2.5 2.25a.75.75 0 0 0 0 1.114l2.5 2.25a.75.75 0 1 0 1.004-1.114l-1.048-.943h9.546A.75.75 0 0 0 19 10Z" clipRule="evenodd" />
+                          <path
+                            fillRule="evenodd"
+                            d="M3 4.25A2.25 2.25 0 0 1 5.25 2h5.5A2.25 2.25 0 0 1 13 4.25v2a.75.75 0 0 1-1.5 0v-2a.75.75 0 0 0-.75-.75h-5.5a.75.75 0 0 0-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 0 0 .75-.75v-2a.75.75 0 0 1 1.5 0v2A2.25 2.25 0 0 1 10.75 18h-5.5A2.25 2.25 0 0 1 3 15.75V4.25Z"
+                            clipRule="evenodd"
+                          />
+                          <path
+                            fillRule="evenodd"
+                            d="M19 10a.75.75 0 0 0-.75-.75H8.704l1.048-.943a.75.75 0 1 0-1.004-1.114l-2.5 2.25a.75.75 0 0 0 0 1.114l2.5 2.25a.75.75 0 1 0 1.004-1.114l-1.048-.943h9.546A.75.75 0 0 0 19 10Z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                         Logout
                       </button>
@@ -341,6 +491,7 @@ export default function Navbar() {
               </motion.div>
             )}
 
+            {/* Wishlist Icon - Only shown when logged in */}
             {user && (
               <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }}>
                 <Link
@@ -409,23 +560,47 @@ export default function Navbar() {
             >
               <AnimatePresence mode="wait" initial={false}>
                 {darkMode ? (
-                  <motion.svg key="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                  <motion.svg
+                    key="sun"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className="w-[17px] h-[17px]"
-                    initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.25 }}>
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                  >
                     <circle cx="12" cy="12" r="5" />
-                    <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                    <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                    <line x1="12" y1="1" x2="12" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="23" />
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                    <line x1="1" y1="12" x2="3" y2="12" />
+                    <line x1="21" y1="12" x2="23" y2="12" />
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
                   </motion.svg>
                 ) : (
-                  <motion.svg key="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                  <motion.svg
+                    key="moon"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     className="w-[17px] h-[17px]"
-                    initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.25 }}>
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                  >
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                   </motion.svg>
                 )}
@@ -444,13 +619,18 @@ export default function Navbar() {
                   }`}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                    <path fillRule="evenodd" d="M10 1.75a.75.75 0 0 1 .69.462l1.666 3.95 4.342.42a.75.75 0 0 1 .422 1.31l-3.246 2.84.91 4.349a.75.75 0 0 1-1.115.778L10 13.348l-3.67 1.762a.75.75 0 0 1-1.115-.778l.91-4.35-3.246-2.84a.75.75 0 0 1 .422-1.31l4.342-.42 1.666-3.95A.75.75 0 0 1 10 1.75Z" clipRule="evenodd" />
+                    <path
+                      fillRule="evenodd"
+                      d="M10 1.75a.75.75 0 0 1 .69.462l1.666 3.95 4.342.42a.75.75 0 0 1 .422 1.31l-3.246 2.84.91 4.349a.75.75 0 0 1-1.115.778L10 13.348l-3.67 1.762a.75.75 0 0 1-1.115-.778l.91-4.35-3.246-2.84a.75.75 0 0 1 .422-1.31l4.342-.42 1.666-3.95A.75.75 0 0 1 10 1.75Z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   <span className="hidden xl:inline">Admin</span>
                 </Link>
               </motion.div>
             )}
 
+            {/* Book Now Button - Only shown when logged in */}
             {user && (
               <motion.div
                 whileHover={{ scale: 1.04, y: -1.5 }}
@@ -467,12 +647,18 @@ export default function Navbar() {
                 >
                   <span className="relative z-10">Book Now</span>
                   <motion.svg
-                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
                     className="w-3.5 h-3.5 relative z-10"
                     animate={{ x: [0, 2, 0] }}
                     transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                   >
-                    <path fillRule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clipRule="evenodd" />
+                    <path
+                      fillRule="evenodd"
+                      d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z"
+                      clipRule="evenodd"
+                    />
                   </motion.svg>
                   <span className="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full bg-white/15 skew-x-12 transition-transform duration-500 pointer-events-none" />
                 </Link>
@@ -482,28 +668,42 @@ export default function Navbar() {
 
           {/* Mobile controls */}
           <div className="flex items-center gap-1 md:hidden">
-            <Link
-              to="/wishlist"
-              aria-label={`Wishlist (${wishCount} items)`}
-              className={`relative w-11 h-11 flex items-center justify-center rounded-xl ${
-                transparent ? "text-white/80" : darkMode ? "text-[#7A99CC]" : "text-[#4B6DA8]"
-              }`}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                fill={wishCount > 0 ? "currentColor" : "none"} stroke="currentColor"
-                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                className={`w-[19px] h-[19px] ${wishCount > 0 ? "text-rose-400" : ""}`}>
-                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-              </svg>
-              <AnimatePresence>
-                {wishCount > 0 && (
-                  <motion.span key="mb" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                    className="absolute top-1 right-1 w-[16px] h-[16px] bg-rose-400 text-white text-[9px] rounded-full flex items-center justify-center font-bold">
-                    {wishCount}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </Link>
+            {/* Wishlist Icon on Mobile - Only shown when logged in */}
+            {user && (
+              <Link
+                to="/wishlist"
+                aria-label={`Wishlist (${wishCount} items)`}
+                className={`relative w-11 h-11 flex items-center justify-center rounded-xl ${
+                  transparent ? "text-white/80" : darkMode ? "text-[#7A99CC]" : "text-[#4B6DA8]"
+                }`}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill={wishCount > 0 ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={`w-[19px] h-[19px] ${wishCount > 0 ? "text-rose-400" : ""}`}
+                >
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                </svg>
+                <AnimatePresence>
+                  {wishCount > 0 && (
+                    <motion.span
+                      key="mb"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      className="absolute top-1 right-1 w-[16px] h-[16px] bg-rose-400 text-white text-[9px] rounded-full flex items-center justify-center font-bold"
+                    >
+                      {wishCount}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </Link>
+            )}
 
             <button
               onClick={toggleDarkMode}
@@ -512,10 +712,41 @@ export default function Navbar() {
                 transparent ? "text-white/80" : darkMode ? "text-amber-300" : "text-[#4B6DA8]"
               }`}
             >
-              {darkMode
-                ? <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
-                : <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
-              }
+              {darkMode ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-[18px] h-[18px]"
+                >
+                  <circle cx="12" cy="12" r="5" />
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="w-[18px] h-[18px]"
+                >
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              )}
             </button>
 
             <button
@@ -529,9 +760,17 @@ export default function Navbar() {
                   <motion.span
                     key={i}
                     animate={
-                      i === 0 ? (isOpen ? { rotate: 45, y: 7 }      : { rotate: 0, y: 0 }) :
-                      i === 1 ? (isOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }) :
-                                (isOpen ? { rotate: -45, y: -7 }    : { rotate: 0, y: 0 })
+                      i === 0
+                        ? isOpen
+                          ? { rotate: 45, y: 7 }
+                          : { rotate: 0, y: 0 }
+                        : i === 1
+                        ? isOpen
+                          ? { opacity: 0, scaleX: 0 }
+                          : { opacity: 1, scaleX: 1 }
+                        : isOpen
+                        ? { rotate: -45, y: -7 }
+                        : { rotate: 0, y: 0 }
                     }
                     transition={{ duration: 0.22, ease: "easeInOut" }}
                     className={`block h-[2px] w-5 rounded-full origin-center ${
@@ -596,11 +835,17 @@ export default function Navbar() {
                 darkMode ? "border-[#31487A]/25" : "border-[#EBF0FA]"
               }`}
             >
-              <Link to="/" onClick={() => setIsOpen(false)} className="flex items-center gap-2 no-underline">
+              <Link
+                to="/"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-2 no-underline"
+              >
                 <span className="text-[18px]">✈️</span>
                 <span
-                  className={`text-[17px] font-black tracking-tight ${darkMode ? "text-white" : "text-[#1E3259]"}`}
-                  style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+                  className={`text-[17px] font-black tracking-tight ${
+                    darkMode ? "text-white" : "text-[#1E3259]"
+                  }`}
+                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
                 >
                   Air
                   <span
@@ -627,28 +872,43 @@ export default function Navbar() {
                     : "text-[#4B6DA8] hover:bg-[#EBF0FA] hover:text-[#1E3259]"
                 }`}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="w-5 h-5"
+                >
                   <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
                 </svg>
               </motion.button>
             </div>
 
-            {/* Drawer links */}
+            {/* Drawer links - filtered based on auth */}
             <motion.nav
               variants={stagger}
               initial="hidden"
               animate="visible"
               className="relative z-10 flex flex-col gap-1 px-3 py-3 flex-1 overflow-y-auto"
-              style={{ fontFamily: "'DM Sans', sans-serif" }}
+              style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              {DRAWER_LINKS.filter(
-                (item) => (!item.authOnly || user) && (user || item.to !== "/wishlist")
-              ).map((item) => {
+              {visibleDrawerItems.map((item) => {
+                if (item.type === "section") {
+                  return (
+                    <motion.div
+                      key={`sec-${item.label}`}
+                      variants={slideIn}
+                      className="pt-3 pb-1 px-4 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-[#7A99CC]/60"
+                    >
+                      {item.label}
+                    </motion.div>
+                  );
+                }
                 const isActive = location.pathname === item.to;
                 return (
                   <motion.div key={item.label} variants={slideIn}>
                     <Link
                       to={item.to}
+                      onClick={() => setIsOpen(false)}
                       className={`relative flex items-center gap-3.5 px-4 min-h-[52px] rounded-xl font-medium text-base transition-all no-underline overflow-hidden group/link ${
                         isActive
                           ? darkMode
@@ -682,10 +942,16 @@ export default function Navbar() {
                       )}
                       {!isActive && (
                         <motion.svg
-                          xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 16 16"
+                          fill="currentColor"
                           className="w-3.5 h-3.5 opacity-0 -translate-x-1 group-hover/link:opacity-40 group-hover/link:translate-x-0 transition-all duration-200"
                         >
-                          <path fillRule="evenodd" d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 0 1 0-1.06Z" clipRule="evenodd" />
+                          <path
+                            fillRule="evenodd"
+                            d="M6.22 4.22a.75.75 0 0 1 1.06 0l3.25 3.25a.75.75 0 0 1 0 1.06l-3.25 3.25a.75.75 0 0 1-1.06-1.06L8.94 8 6.22 5.28a.75.75 0 0 1 0-1.06Z"
+                            clipRule="evenodd"
+                          />
                         </motion.svg>
                       )}
                     </Link>
@@ -714,16 +980,27 @@ export default function Navbar() {
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                     <div className="min-w-0">
-                      <p className={`text-sm font-semibold truncate ${darkMode ? "text-white" : "text-[#1E3259]"}`}>
+                      <p
+                        className={`text-sm font-semibold truncate ${
+                          darkMode ? "text-white" : "text-[#1E3259]"
+                        }`}
+                      >
                         {user.name}
                       </p>
-                      <p className={`text-xs truncate ${darkMode ? "text-[#7A99CC]" : "text-[#4B6DA8]"}`}>
+                      <p
+                        className={`text-xs truncate ${
+                          darkMode ? "text-[#7A99CC]" : "text-[#4B6DA8]"
+                        }`}
+                      >
                         {user.email}
                       </p>
                     </div>
                   </div>
                   <button
-                    onClick={() => { logout(); setIsOpen(false); }}
+                    onClick={() => {
+                      logout();
+                      setIsOpen(false);
+                    }}
                     className="w-full flex items-center justify-center gap-2 text-white py-3.5 rounded-full font-semibold text-[15px] cursor-pointer border-none"
                     style={{
                       background: "linear-gradient(135deg, #c0392b 0%, #e74c3c 100%)",
@@ -731,8 +1008,16 @@ export default function Navbar() {
                     }}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                      <path fillRule="evenodd" d="M3 4.25A2.25 2.25 0 0 1 5.25 2h5.5A2.25 2.25 0 0 1 13 4.25v2a.75.75 0 0 1-1.5 0v-2a.75.75 0 0 0-.75-.75h-5.5a.75.75 0 0 0-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 0 0 .75-.75v-2a.75.75 0 0 1 1.5 0v2A2.25 2.25 0 0 1 10.75 18h-5.5A2.25 2.25 0 0 1 3 15.75V4.25Z" clipRule="evenodd" />
-                      <path fillRule="evenodd" d="M19 10a.75.75 0 0 0-.75-.75H8.704l1.048-.943a.75.75 0 1 0-1.004-1.114l-2.5 2.25a.75.75 0 0 0 0 1.114l2.5 2.25a.75.75 0 1 0 1.004-1.114l-1.048-.943h9.546A.75.75 0 0 0 19 10Z" clipRule="evenodd" />
+                      <path
+                        fillRule="evenodd"
+                        d="M3 4.25A2.25 2.25 0 0 1 5.25 2h5.5A2.25 2.25 0 0 1 13 4.25v2a.75.75 0 0 1-1.5 0v-2a.75.75 0 0 0-.75-.75h-5.5a.75.75 0 0 0-.75.75v11.5c0 .414.336.75.75.75h5.5a.75.75 0 0 0 .75-.75v-2a.75.75 0 0 1 1.5 0v2A2.25 2.25 0 0 1 10.75 18h-5.5A2.25 2.25 0 0 1 3 15.75V4.25Z"
+                        clipRule="evenodd"
+                      />
+                      <path
+                        fillRule="evenodd"
+                        d="M19 10a.75.75 0 0 0-.75-.75H8.704l1.048-.943a.75.75 0 1 0-1.004-1.114l-2.5 2.25a.75.75 0 0 0 0 1.114l2.5 2.25a.75.75 0 1 0 1.004-1.114l-1.048-.943h9.546A.75.75 0 0 0 19 10Z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     Logout
                   </button>
@@ -740,7 +1025,10 @@ export default function Navbar() {
               ) : (
                 <div className="space-y-2.5">
                   <button
-                    onClick={() => { openAuthModal("login"); setIsOpen(false); }}
+                    onClick={() => {
+                      openAuthModal("login");
+                      setIsOpen(false);
+                    }}
                     className="w-full flex items-center justify-center gap-2 text-white py-3.5 rounded-full font-semibold text-[15px] cursor-pointer border-none"
                     style={{
                       background: "linear-gradient(135deg, #1E3259 0%, #31487A 55%, #4B6DA8 100%)",
@@ -750,7 +1038,10 @@ export default function Navbar() {
                     Login
                   </button>
                   <button
-                    onClick={() => { openAuthModal("signup"); setIsOpen(false); }}
+                    onClick={() => {
+                      openAuthModal("signup");
+                      setIsOpen(false);
+                    }}
                     className={`w-full py-3 rounded-full font-semibold text-[15px] cursor-pointer border-none transition-colors ${
                       darkMode
                         ? "bg-[#31487A]/20 text-[#7A99CC] hover:bg-[#31487A]/30 hover:text-white"

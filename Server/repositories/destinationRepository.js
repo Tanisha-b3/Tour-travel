@@ -1,8 +1,15 @@
 import Destination from "../models/Destination.js";
 
 const destinationRepository = {
-  findAll(filter) {
-    return Destination.find(filter).sort({ id: 1 }).lean();
+  findAll(filter = {}, sort = { id: 1 }, { skip = 0, limit = 0 } = {}) {
+    const q = Destination.find(filter).sort(sort).lean();
+    if (skip)  q.skip(skip);
+    if (limit) q.limit(limit);
+    return q;
+  },
+
+  count(filter = {}) {
+    return Destination.countDocuments(filter);
   },
 
   findById(id) {

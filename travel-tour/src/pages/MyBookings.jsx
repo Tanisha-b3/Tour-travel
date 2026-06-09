@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { fetchMyBookings, fetchMyTestimonials } from "../api";
+import { fetchMyBookings, fetchMyTestimonials, cancelMyBooking } from "../api";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { useToast } from "../context/ToastContext";
 import { CardSkeleton } from "../components/Skeleton";
 import ReviewModal from "../components/ReviewModal";
+import ConfirmDialog from "../components/ConfirmDialog";
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -17,17 +18,18 @@ const STATUS_STYLES = {
 };
 
 export default function MyBookings() {
-  const { token, user } = useAuth(); // Also get user to check authentication
+  const { token } = useAuth(); // Also get user to check authentication
   const { darkMode } = useTheme();
   const addToast = useToast();
   const [bookings, setBookings] = useState([]);
   const [reviewedIds, setReviewedIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
   const [reviewing, setReviewing] = useState(null);
+  const [cancelling, setCancelling] = useState(null);
+  const [cancelLoading, setCancelLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const load = async () => {
-    // Check if token exists
     if (!token) {
       console.log("No token found, user not authenticated");
       setLoading(false);
@@ -35,46 +37,38 @@ export default function MyBookings() {
       return;
     }
 
-    console.log("Token exists, fetching bookings...");
     setLoading(true);
     setError(null);
-    
+
     try {
-      // Fetch bookings and testimonials in parallel with better error handling
       const [bookingsResponse, testimonialsResponse] = await Promise.all([
-        fetchMyBookings(token).catch(err => {
+        fetchMyBookings(token, { limit: 100 }).catch((err) => {
           console.error("Error fetching bookings:", err);
           return { data: [] };
         }),
-        fetchMyTestimonials(token).catch(err => {
+        fetchMyTestimonials(token, { limit: 100 }).catch((err) => {
           console.error("Error fetching testimonials:", err);
           return [];
-        })
+        }),
       ]);
 
-      console.log("Bookings response:", bookingsResponse);
-      console.log("Testimonials response:", testimonialsResponse);
-
-      // Extract bookings data correctly
       const bookingsData = bookingsResponse?.data || bookingsResponse || [];
-      const testimonialsData = Array.isArray(testimonialsResponse) ? testimonialsResponse : (testimonialsResponse?.data || []);
-      
+      const testimonialsData = Array.isArray(testimonialsResponse)
+        ? testimonialsResponse
+        : testimonialsResponse?.data || [];
+
       setBookings(bookingsData);
-      
-      // Extract reviewed booking IDs
+
       const reviewedBookingIds = new Set(
-        testimonialsData.map(item => {
-          // Handle different possible structures
-          if (typeof item === 'string') return item;
-          return String(item.booking?._id || item.booking || item._id || '');
-        }).filter(id => id && id !== 'undefined')
+        testimonialsData
+          .map((item) => {
+            if (typeof item === "string") return item;
+            return String(item.booking?._id || item.booking || item._id || "");
+          })
+          .filter((id) => id && id !== "undefined")
       );
-      
+
       setReviewedIds(reviewedBookingIds);
-      
-      console.log(`Loaded ${bookingsData.length} bookings`);
-      console.log(`Reviewed bookings: ${Array.from(reviewedBookingIds)}`);
-      
     } catch (err) {
       console.error("Failed to load bookings:", err);
       setError(err.message || "Failed to load bookings");
@@ -97,10 +91,25 @@ export default function MyBookings() {
     }
   }, [bookings]);
 
+  const handleCancel = async () => {
+    if (!cancelling) return;
+    setCancelLoading(true);
+    try {
+      const updated = await cancelMyBooking(cancelling._id, token);
+      setBookings((prev) => prev.map((b) => (b._id === cancelling._id ? { ...b, ...(updated || {}), status: updated?.status || "cancelled" } : b)));
+      addToast("success", "Booking cancelled.");
+    } catch (err) {
+      addToast("error", err.message || "Failed to cancel booking");
+    } finally {
+      setCancelLoading(false);
+      setCancelling(null);
+    }
+  };
+
   return (
     <div
       className="pt-[88px] min-h-screen bg-[#f8f6f1] dark:bg-[#192338]"
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
+      style={{ fontFamily: "'Inter', sans-serif" }}
     >
       <div className="max-w-[900px] mx-auto px-5 sm:px-6 py-10">
         <motion.div
@@ -114,7 +123,7 @@ export default function MyBookings() {
           </span>
           <h1
             className="text-4xl sm:text-5xl font-extrabold text-slate-800 dark:text-white mb-2"
-            style={{ fontFamily: "'Cormorant Garamond', Georgia, serif" }}
+            style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
           >
             My Bookings
           </h1>
@@ -186,7 +195,7 @@ export default function MyBookings() {
                 const statusStyle = STATUS_STYLES[booking.status] || STATUS_STYLES.pending;
                 const reviewed = reviewedIds.has(String(booking._id));
                 const canReview = booking.status !== "cancelled" && !reviewed;
-                
+
                 return (
                   <motion.article
                     key={booking._id || i}
@@ -219,6 +228,13 @@ export default function MyBookings() {
                         <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
                           📅 {booking.checkIn || "N/A"} → {booking.checkOut || "N/A"} · 👥 {booking.guests || 1} guest{booking.guests !== 1 ? "s" : ""} · {booking.tripType || "Standard"}
                         </p>
+                        {(booking.email || booking.phone) && (
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mb-1 break-words">
+                            {booking.email && <>✉️ {booking.email}</>}
+                            {booking.email && booking.phone && <> · </>}
+                            {booking.phone && <>📞 {booking.phone}</>}
+                          </p>
+                        )}
                         <p className="text-xs text-slate-500 dark:text-slate-400">
                           Booked on {booking.createdAt ? new Date(booking.createdAt).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "Recently"}
                         </p>
@@ -236,6 +252,16 @@ export default function MyBookings() {
                               <path d="M12 2.5l2.95 6.36 6.55.62-4.95 4.55 1.45 6.47L12 17.27l-6 3.23 1.45-6.47L2.5 9.48l6.55-.62L12 2.5z" />
                             </svg>
                             Write Review
+                          </motion.button>
+                        )}
+                        {booking.status !== "cancelled" && (
+                          <motion.button
+                            whileHover={{ scale: 1.04 }}
+                            whileTap={{ scale: 0.96 }}
+                            onClick={() => setCancelling(booking)}
+                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold border border-rose-300/60 text-rose-500 dark:border-rose-400/40 dark:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer bg-transparent"
+                          >
+                            ✕ Cancel
                           </motion.button>
                         )}
                         <div className="text-left sm:text-right">
@@ -261,6 +287,16 @@ export default function MyBookings() {
           onSuccess={() => setReviewedIds((prev) => new Set([...prev, String(reviewing._id)]))}
         />
       )}
+
+      <ConfirmDialog
+        isOpen={Boolean(cancelling)}
+        onClose={() => (cancelLoading ? null : setCancelling(null))}
+        onConfirm={handleCancel}
+        title="Cancel this booking?"
+        message={cancelling ? `We'll mark “${cancelling.tourName || cancelling.name}” as cancelled${cancelling.paymentStatus === "paid" ? " and queue the refund" : ""}. You can still write a review later.` : ""}
+        confirmText="Cancel Booking"
+        loading={cancelLoading}
+      />
     </div>
   );
 }
