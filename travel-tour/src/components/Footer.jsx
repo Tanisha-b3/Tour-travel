@@ -30,7 +30,12 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-black text-slate-400">
+    <footer className="relative bg-black text-slate-400">
+      <div
+        aria-hidden="true"
+        className="absolute top-0 left-0 right-0 h-px"
+        style={{ background: "linear-gradient(90deg, transparent 0%, #31487A 50%, transparent 100%)" }}
+      />
       {/* Newsletter */}
       {/* <div className="py-16 px-6" style={{ background: "linear-gradient(135deg, #1E2E4F 0%, #31487A 60%, #4f46e5 100%)" }}>
         <div className="max-w-[680px] mx-auto text-center text-white">
@@ -72,9 +77,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Brand */}
           <div>
-            <Link to="/" className="flex items-center gap-2 no-underline mb-4">
-              <span className="text-2xl">✈️</span>
-              <span className="text-xl font-extrabold text-white">Airventure</span>
+            <Link to="/" className="flex items-center gap-2 no-underline mb-4 group">
+              <span className="text-2xl transition-transform duration-300 group-hover:rotate-12">✈️</span>
+              <span
+                className="text-xl font-extrabold bg-clip-text text-transparent"
+                style={{ backgroundImage: "linear-gradient(135deg, #FFFFFF 0%, #B8CCEB 60%, #7A99CC 100%)" }}
+              >
+                Airventure
+              </span>
             </Link>
             <p className="text-sm text-slate-500 leading-relaxed mb-6">
               We curate unforgettable travel experiences that create memories to last a lifetime. Your adventure starts here.
@@ -86,8 +96,12 @@ export default function Footer() {
                 { label: "Instagram",icon: "◎" },
                 { label: "YouTube",  icon: "▶" },
               ].map((s) => (
-                <a key={s.label} href="#" aria-label={s.label}
-                  className="w-9 h-9 rounded-full bg-white/8 flex items-center justify-center text-sm text-slate-400 font-bold hover:bg-gradient-to-r hover:from-[#31487A] hover:to-[#31487A] hover:text-white hover:-translate-y-0.5 transition-all">
+                <a
+                  key={s.label}
+                  href="#"
+                  aria-label={s.label}
+                  className="w-9 h-9 rounded-full bg-white/8 flex items-center justify-center text-sm text-slate-400 font-bold hover:bg-gradient-to-r hover:from-[#1E3259] hover:to-[#4B6DA8] hover:text-white hover:-translate-y-0.5 hover:shadow-[0_6px_18px_rgba(49,72,122,0.35)] transition-all"
+                >
                   {s.icon}
                 </a>
               ))}

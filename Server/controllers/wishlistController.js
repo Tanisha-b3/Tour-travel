@@ -1,42 +1,39 @@
 import wishlistService from "../services/wishlistService.js";
 
 const wishlistController = {
-  async list(req, res) {
+  async list(req, res, next) {
     try {
       const result = await wishlistService.list(req.user.id);
       res.json(result);
     } catch (err) {
-      res.status(500).json({ error: "Failed to fetch wishlist" });
+      next(err);
     }
   },
 
-  async add(req, res) {
+  async add(req, res, next) {
     try {
       const result = await wishlistService.add(req.user.id, req.body.destinationId);
       res.json(result);
     } catch (err) {
-      if (err.status) return res.status(err.status).json({ error: err.message });
-      res.status(500).json({ error: "Failed to add to wishlist" });
+      next(err);
     }
   },
 
-  async remove(req, res) {
+  async remove(req, res, next) {
     try {
       const result = await wishlistService.remove(req.user.id, req.params.destinationId);
       res.json(result);
     } catch (err) {
-      if (err.status) return res.status(err.status).json({ error: err.message });
-      res.status(500).json({ error: "Failed to remove from wishlist" });
+      next(err);
     }
   },
 
-  async sync(req, res) {
+  async sync(req, res, next) {
     try {
       const result = await wishlistService.sync(req.user.id, req.body.items);
       res.json(result);
     } catch (err) {
-      if (err.status) return res.status(err.status).json({ error: err.message });
-      res.status(500).json({ error: "Failed to sync wishlist" });
+      next(err);
     }
   },
 };

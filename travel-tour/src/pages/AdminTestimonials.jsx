@@ -27,7 +27,7 @@ export default function AdminTestimonials() {
 
   const load = () => {
     setLoading(true);
-    fetchTestimonials()
+    fetchTestimonials({ limit: 100 })
       .then(setItems)
       .catch((e) => addToast("error", e.message))
       .finally(() => setLoading(false));

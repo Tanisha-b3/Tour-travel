@@ -1,0 +1,8 @@
+(node:17884) [MONGOOSE] Warning: mongoose: Duplicate schema index on {"id":1} for model "Destination". This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:17884) [MONGOOSE] Warning: mongoose: Duplicate schema index on {"items.destinationId":1} for model "Wishlist". This is often due to declaring an index using both "index: true" and "schema.index()". Please remove the duplicate index definition.
+(node:17884) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:17884) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:17884) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:17884) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:17884) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.

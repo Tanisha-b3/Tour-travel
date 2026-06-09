@@ -17,7 +17,6 @@ const EMPTY = {
   description: "",
   price: "",
   duration: "",
-  rating: 0,
   category: "beach",
   type: "beach",
   location: "",
@@ -40,7 +39,7 @@ function validateField(name, value) {
       const n = Number(value);
       if (value === "" || value === null || value === undefined) return "Price is required";
       if (!Number.isFinite(n) || n < 0) return "Enter a valid price (0 or more)";
-      if (n > 999999) return "Price must be under $999,999";
+      if (n > 999999) return "Price must be under ₹9,99,999";
       return "";
     }
     case "duration":
@@ -56,12 +55,6 @@ function validateField(name, value) {
     case "image":
       if (!String(value).trim()) return "Cover image is required";
       return "";
-    case "rating": {
-      const r = Number(value);
-      if (value !== 0 && value !== "0" && !value) return "";
-      if (!Number.isFinite(r) || r < 0 || r > 5) return "Rating must be between 0 and 5";
-      return "";
-    }
     default:
       return "";
   }
@@ -298,7 +291,6 @@ export default function AdminDestinationForm() {
         description: d.description || "",
         price: d.price ?? "",
         duration: d.duration || "",
-        rating: d.rating ?? 0,
         category: d.category || "beach",
         type: d.type || "beach",
         location: d.location || "",
@@ -356,7 +348,6 @@ export default function AdminDestinationForm() {
     const payload = {
       ...form,
       price: Number(form.price),
-      rating: Number(form.rating) || 0,
     };
     try {
       if (isEdit) {
@@ -397,16 +388,12 @@ export default function AdminDestinationForm() {
           </Field>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-5">
-          <Field label="Price (USD) *" darkMode={darkMode} error={touched.price && errors.price}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+          <Field label="Price (IN RUPEES) *" darkMode={darkMode} error={touched.price && errors.price}>
             <input type="number" min="0" max="999999" value={form.price} onChange={handleChange("price")} onBlur={handleBlur("price")} className={inputCls(darkMode, touched.price && errors.price)} placeholder="1299" />
           </Field>
           <Field label="Duration *" darkMode={darkMode} error={touched.duration && errors.duration} hint="e.g. 7 Days / 6 Nights">
             <input value={form.duration} onChange={handleChange("duration")} onBlur={handleBlur("duration")} className={inputCls(darkMode, touched.duration && errors.duration)} placeholder="7 Days / 6 Nights" maxLength={40} />
-          </Field>
-          <Field label="Rating" darkMode={darkMode} hint="0 to 5">
-            <input type="number" min="0" max="5" step="0.1" value={form.rating} onChange={handleChange("rating")} onBlur={handleBlur("rating")} className={inputCls(darkMode, touched.rating && errors.rating)} placeholder="4.8" />
-            {touched.rating && errors.rating && <p className="text-[11px] text-rose-500 mt-1">{errors.rating}</p>}
           </Field>
         </div>
 
