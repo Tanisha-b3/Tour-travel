@@ -125,20 +125,41 @@ export async function changePassword(userId, { currentPassword, newPassword }) {
   return { ok: true };
 }
 
+async function fetchGoogleUserInfo(accessToken) {
+  const res = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  if (!res.ok) {
+    throw Object.assign(new Error("Failed to verify Google access token"), { status: 401 });
+  }
+  const data = await res.json();
+  return { sub: data.id, email: data.email, name: data.name, picture: data.picture };
+}
+
 export async function googleLogin({ idToken }, meta = {}) {
   if (!idToken) {
     throw Object.assign(new Error("Google ID token is required"), { status: 400 });
   }
 
   let payload;
-  try {
-    const ticket = await googleClient.verifyIdToken({
-      idToken,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-    payload = ticket.getPayload();
-  } catch {
-    throw Object.assign(new Error("Invalid Google token"), { status: 401 });
+  const isJwt = idToken.startsWith("eyJ");
+
+  if (isJwt) {
+    try {
+      const ticket = await googleClient.verifyIdToken({
+        idToken,
+        audience: process.env.GOOGLE_CLIENT_ID,
+      });
+      payload = ticket.getPayload();
+    } catch {
+      throw Object.assign(new Error("Invalid Google token"), { status: 401 });
+    }
+  } else {
+    try {
+      payload = await fetchGoogleUserInfo(idToken);
+    } catch {
+      throw Object.assign(new Error("Invalid Google access token"), { status: 401 });
+    }
   }
 
   const { sub: googleId, email, name, picture } = payload;
