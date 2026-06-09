@@ -214,7 +214,7 @@ export default function DestinationsPage() {
           <motion.button
             onClick={clearFilters}
             whileTap={{ scale: 0.97 }}
-            className="py-2.5 px-4 rounded-xl text-xs font-semibold cursor-pointer transition-all border border-rose-200 text-rose-500 bg-rose-50 hover:bg-rose-100 active:bg-rose-100 flex items-center gap-1.5"
+            className="py-2.5 px-4 rounded-xl text-xs font-semibold cursor-pointer transition-all border border-rose-200 dark:border-rose-500/30 text-rose-500 bg-rose-50 dark:bg-rose-500/15 hover:bg-rose-100 dark:hover:bg-rose-500/25 active:bg-rose-100 flex items-center gap-1.5"
             style={{ minHeight: 40 }}
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5">
@@ -239,10 +239,9 @@ export default function DestinationsPage() {
 
   return (
     <div
-      className="pt-[64px] min-h-screen"
+      className="pt-[64px] min-h-screen bg-gradient-to-b from-[#f0f4f8] to-[#e8edf3] dark:from-[#0d1527] dark:to-[#0b1220]"
       style={{
         fontFamily: "'Inter', system-ui, sans-serif",
-        background: "linear-gradient(180deg, #f0f4f8 0%, #e8edf3 100%)",
       }}
     >
       <style>{`
@@ -373,11 +372,8 @@ export default function DestinationsPage() {
             className="max-w-[1200px] mx-auto"
           >
             <div
-              className="rounded-2xl border border-white/40 dark:border-white/[0.08] shadow-2xl"
+              className="rounded-2xl border border-white/40 dark:border-white/[0.08] shadow-2xl bg-white/96 dark:bg-[#1E2E4F]/96 backdrop-blur-xl"
               style={{
-                background: "rgba(255,255,255,0.96)",
-                backdropFilter: "blur(20px)",
-                WebkitBackdropFilter: "blur(20px)",
                 boxShadow: "0 24px 60px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.08)",
               }}
             >
@@ -399,7 +395,7 @@ export default function DestinationsPage() {
                     onFocus={() => setFocused(true)}
                     onBlur={() => setFocused(false)}
                     aria-label="Search destinations"
-                    className="w-full py-3 pl-10 pr-4 rounded-xl text-sm outline-none transition-all bg-slate-50 text-slate-800 placeholder:text-slate-400 border-2 border-transparent focus:border-sky-400 focus:ring-4 focus:ring-sky-400/15 focus:bg-white"
+                    className="w-full py-3 pl-10 pr-4 rounded-xl text-sm outline-none transition-all bg-slate-50 dark:bg-white/5 text-slate-800 dark:text-slate-200 placeholder:text-slate-400 border-2 border-transparent focus:border-sky-400 focus:ring-4 focus:ring-sky-400/15 focus:bg-white dark:focus:bg-white/8"
                     style={{ minHeight: 44 }}
                   />
                 </div>
@@ -424,8 +420,8 @@ export default function DestinationsPage() {
                     aria-expanded={showFilters}
                     className={`relative py-3 px-3.5 sm:px-4 rounded-xl text-sm font-semibold cursor-pointer flex items-center justify-center gap-1.5 transition-all border ${
                       showFilters || hasFilters
-                        ? "border-sky-400 text-sky-500 bg-sky-50 shadow-md"
-                        : "border-slate-200 text-slate-500 bg-white hover:border-sky-300 hover:text-sky-500"
+                        ? "border-sky-400 text-sky-500 bg-sky-50 dark:bg-sky-500/15 shadow-md"
+                        : "border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 bg-white dark:bg-white/5 hover:border-sky-300 hover:text-sky-500"
                     }`}
                     style={{ minHeight: 44 }}
                   >
@@ -459,7 +455,7 @@ export default function DestinationsPage() {
                     transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
                     style={{ overflow: "hidden" }}
                   >
-                    <div className="border-t border-slate-100">
+                    <div className="border-t border-slate-100 dark:border-white/10">
                       {renderFilterPanel(false)}
                     </div>
                   </motion.div>
@@ -503,7 +499,7 @@ export default function DestinationsPage() {
                     className={`shrink-0 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold cursor-pointer transition-all flex items-center gap-1.5 whitespace-nowrap ${
                       isActive
                         ? "text-white shadow-lg"
-                        : "text-slate-600 border border-slate-200 bg-white hover:border-sky-300 hover:text-sky-500 active:scale-95"
+                        : "text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5 hover:border-sky-300 hover:text-sky-500 active:scale-95"
                     }`}
                     style={isActive ? {
                       background: "linear-gradient(135deg, #0EA5E9 0%, #3B82F6 100%)",
@@ -529,14 +525,14 @@ export default function DestinationsPage() {
               exit={{ opacity: 0 }}
               className="flex flex-wrap items-center justify-between gap-2 mb-4 sm:mb-5 px-0.5"
             >
-              <p className="text-xs sm:text-sm text-slate-500">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
                 {data.length === 0 ? (
                   "No destinations found"
                 ) : (
                   <>
-                    <span className="font-semibold text-slate-700">{displayed.length}</span>
-                    <span className="text-slate-400"> of </span>
-                    <span className="font-semibold text-slate-700">{data.length}</span>
+                    <span className="font-semibold text-slate-700 dark:text-slate-200">{displayed.length}</span>
+                    <span className="text-slate-400 dark:text-slate-500"> of </span>
+                    <span className="font-semibold text-slate-700 dark:text-slate-200">{data.length}</span>
                     <span> destination{data.length !== 1 ? "s" : ""}</span>
                   </>
                 )}
@@ -545,7 +541,7 @@ export default function DestinationsPage() {
                 <motion.button
                   onClick={clearFilters}
                   whileTap={{ scale: 0.97 }}
-                  className="text-xs font-semibold text-sky-500 bg-sky-50 px-3 py-1.5 rounded-full hover:bg-sky-100 active:bg-sky-100 transition-colors flex items-center gap-1 cursor-pointer border-none"
+                  className="text-xs font-semibold text-sky-500 bg-sky-50 dark:bg-sky-500/15 px-3 py-1.5 rounded-full hover:bg-sky-100 dark:hover:bg-sky-500/25 active:bg-sky-100 transition-colors flex items-center gap-1 cursor-pointer border-none"
                   style={{ minHeight: 30 }}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3">
@@ -587,12 +583,12 @@ export default function DestinationsPage() {
               🗺️
             </motion.span>
             <h3
-              className="text-2xl sm:text-3xl font-bold text-slate-800 mb-3"
+              className="text-2xl sm:text-3xl font-bold text-slate-800 dark:text-white mb-3"
               style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
             >
               No destinations found
             </h3>
-            <p className="text-slate-500 text-sm sm:text-base mb-7 max-w-sm sm:max-w-md px-4">
+            <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base mb-7 max-w-sm sm:max-w-md px-4">
               We couldn't find any places matching your criteria. Try broadening your search or explore all destinations.
             </p>
             <motion.button
@@ -643,7 +639,7 @@ export default function DestinationsPage() {
                 className="text-center mt-10 sm:mt-16"
               >
                 <div className="flex items-center justify-center gap-2.5 sm:gap-4 mb-4 sm:mb-5 px-2">
-                  <div className="h-1 flex-1 max-w-[100px] sm:max-w-[200px] bg-slate-200 rounded-full overflow-hidden">
+                  <div className="h-1 flex-1 max-w-[100px] sm:max-w-[200px] bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
                     <motion.div
                       className="h-full rounded-full"
                       style={{ background: "linear-gradient(90deg, #0EA5E9, #3B82F6)" }}
@@ -652,16 +648,16 @@ export default function DestinationsPage() {
                       transition={{ duration: 0.55, ease }}
                     />
                   </div>
-                  <span className="text-[11px] sm:text-xs text-slate-400 font-mono font-medium tabular-nums">
+                  <span className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 font-mono font-medium tabular-nums">
                     {displayed.length} / {data.length}
                   </span>
-                  <div className="h-1 flex-1 max-w-[100px] sm:max-w-[200px] bg-slate-200 rounded-full" />
+                  <div className="h-1 flex-1 max-w-[100px] sm:max-w-[200px] bg-slate-200 dark:bg-white/10 rounded-full" />
                 </div>
 
                 <motion.button
                   onClick={() => setPage((p) => p + 1)}
                   whileTap={{ scale: 0.97 }}
-                  className="w-full sm:w-auto group bg-white border border-slate-200 text-slate-700 px-6 sm:px-10 py-3 sm:py-3.5 rounded-full font-semibold cursor-pointer text-sm hover:border-sky-400 hover:text-sky-500 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 mx-auto shadow-md hover:shadow-xl"
+                  className="w-full sm:w-auto group bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 px-6 sm:px-10 py-3 sm:py-3.5 rounded-full font-semibold cursor-pointer text-sm hover:border-sky-400 hover:text-sky-500 active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 mx-auto shadow-md hover:shadow-xl"
                   style={{ minHeight: 48 }}
                 >
                   <span>Discover More</span>
@@ -707,15 +703,15 @@ export default function DestinationsPage() {
               onDragEnd={(_, info) => {
                 if (info.offset.y > 100 || info.velocity.y > 500) setShowFilters(false);
               }}
-              className="fixed inset-x-0 bottom-0 z-50 lg:hidden bg-white rounded-t-3xl shadow-2xl max-h-[88vh] flex flex-col"
+              className="fixed inset-x-0 bottom-0 z-50 lg:hidden bg-white dark:bg-[#1E2E4F] rounded-t-3xl shadow-2xl max-h-[88vh] flex flex-col"
               style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
             >
               {/* Drag handle */}
               <div className="flex justify-center pt-2.5 pb-1">
-                <div className="w-10 h-1.5 bg-slate-300 rounded-full" />
+                <div className="w-10 h-1.5 bg-slate-300 dark:bg-slate-600 rounded-full" />
               </div>
               <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100">
-                <h3 className="text-base font-bold text-slate-800" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                <h3 className="text-base font-bold text-slate-800 dark:text-white" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
                   Filters
                   {activeFilterCount > 0 && (
                     <span className="ml-2 inline-flex items-center justify-center w-5 h-5 bg-sky-500 text-white text-[10px] font-bold rounded-full align-middle">
@@ -726,7 +722,7 @@ export default function DestinationsPage() {
                 <button
                   onClick={() => setShowFilters(false)}
                   aria-label="Close filters"
-                  className="w-9 h-9 rounded-full hover:bg-slate-100 active:bg-slate-200 flex items-center justify-center cursor-pointer border-none bg-transparent text-slate-500"
+                  className="w-9 h-9 rounded-full hover:bg-slate-100 dark:hover:bg-white/10 active:bg-slate-200 dark:active:bg-white/15 flex items-center justify-center cursor-pointer border-none bg-transparent text-slate-500 dark:text-slate-400"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                     <path d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />

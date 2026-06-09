@@ -264,10 +264,9 @@ export default function ToursPage() {
 
   return (
     <div
-      className="pt-[64px] min-h-screen"
+      className="pt-[64px] min-h-screen bg-gradient-to-b from-[#f0f4f8] to-[#e8edf3] dark:from-[#0d1527] dark:to-[#0b1220]"
       style={{
         fontFamily: "'Inter', system-ui, sans-serif",
-        background: "linear-gradient(180deg, #f0f4f8 0%, #e8edf3 100%)",
       }}
     >
       {/* Hide pill scrollbar */}

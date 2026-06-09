@@ -19,9 +19,8 @@ export default function Skeleton({ className = "" }) {
       initial="initial"
       animate="animate"
       aria-hidden="true"
-      className={`rounded-xl skeleton-shimmer ${className}`}
+      className={`rounded-xl skeleton-shimmer bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 dark:from-[#1F2D42] dark:via-[#3D5878] dark:to-[#1F2D42] ${className}`}
       style={{
-        background: "linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)",
         backgroundSize: "200% 100%",
       }}
     />
